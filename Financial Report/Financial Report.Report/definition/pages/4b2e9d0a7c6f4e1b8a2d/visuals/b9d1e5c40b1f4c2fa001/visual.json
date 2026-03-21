@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Operating Expenses Display"
+                  "Property": "Operating Expenses Card Display"
                 }
               },
-              "queryRef": "_Measures.Operating Expenses Display",
-              "nativeQueryRef": "Operating Expenses"
+              "queryRef": "_Measures.Operating Expenses Card Display",
+              "nativeQueryRef": "Operating Expenses Card Display"
             }
           ]
         }
@@ -35,7 +35,23 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "labels": [
+      "label": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ],
+      "value": [
         {
           "properties": {
             "fontSize": {
@@ -59,44 +75,53 @@
                 }
               }
             },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                      "Value": "1D"
-                }
-              }
-            },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "2L"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#223430'"
+                    }
+                  }
                 }
               }
             }
+          },
+          "selector": {
+            "metadata": "_Measures.Operating Expenses Card Display"
           }
         }
-      ],
-      "categoryLabels": [
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
         {
           "properties": {
-            "fontSize": {
+            "show": {
               "expr": {
                 "Literal": {
-                      "Value": "9D"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Operating Expenses'"
                 }
               }
             },
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif"
+                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif'"
                 }
               }
             },
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "9D"
                 }
               }
             },

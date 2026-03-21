@@ -34,7 +34,14 @@ This file captures what we have learned about handling PBIP report files, TMDL s
 - Slicer polish sometimes requires structural changes such as separating labels from controls.
 - IQD formatting affects layout; a card that fit in USD may crowd in IQD.
 - KPI rows and slicer rails should be treated as reusable components across pages.
-- For the repeated top monetary KPI cards, do not introduce helper `... KPI` or `... KPI Plain` measure aliases just to fight compact-number formatting. The safer pattern is to bind those cards directly to the real business measures, leave one visible category caption in the standard grey card-label style, remove the extra visual title, and force non-compact display units at the visual level.
+- The old helper `... KPI` / `... KPI Plain` aliases are retired. They leaked internal captions in live Desktop validation and should not be reintroduced.
+- For the repeated top monetary KPI cards, card-level `labelPrecision` and `labelDisplayUnits` alone are not reliable enough when Power BI insists on compact text like `2bn`.
+- The safer current pattern for those repeated top monetary cards is:
+- bind the card to a dedicated text-returning `... Card Display` measure
+- hide the built-in card label
+- set the card title explicitly to the business caption
+- keep the value typography on the card itself
+- use the text measure to enforce compact `bn / M` output with two decimals
 - If two pages answer the same question with nearly the same visual, reassign one of them to a different business angle instead of keeping both. In the current 7-page set:
 - `Income Statement` should own profitability mix
 - `Revenue Insights` should own sales-type revenue mix

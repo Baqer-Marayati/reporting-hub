@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total Assets"
+                  "Property": "Total Assets Card Display"
                 }
               },
-              "queryRef": "_Measures.Total Assets",
-              "nativeQueryRef": "Total Assets"
+              "queryRef": "_Measures.Total Assets Card Display",
+              "nativeQueryRef": "Total Assets Card Display"
             }
           ]
         }
@@ -35,7 +35,23 @@
     },
     "drillFilterOtherVisuals": true,
     "objects": {
-      "labels": [
+      "label": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ],
+      "value": [
         {
           "properties": {
             "fontSize": {
@@ -59,44 +75,53 @@
                 }
               }
             },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "2L"
-                }
-              }
-            },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                      "Value": "1D"
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#223430'"
+                    }
+                  }
                 }
               }
             }
+          },
+          "selector": {
+            "metadata": "_Measures.Total Assets Card Display"
           }
         }
-      ],
-      "categoryLabels": [
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
         {
           "properties": {
-            "fontSize": {
+            "show": {
               "expr": {
                 "Literal": {
-                      "Value": "9D"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Total Assets'"
                 }
               }
             },
             "fontFamily": {
               "expr": {
                 "Literal": {
-                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif"
+                  "Value": "'''Segoe UI'', wf_segoe-ui_normal, helvetica, arial, sans-serif'"
                 }
               }
             },
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "9D"
                 }
               }
             },

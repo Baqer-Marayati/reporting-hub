@@ -1,7 +1,7 @@
 # Current Status
 
 ## Date
-- Last updated: March 21, 2026
+- Last updated: March 22, 2026
 
 ## Active Project
 - `/Users/baqer/Dropbox/Work/PowerBI/Al Jazeera Reporting Hub/Financial Report`
@@ -108,15 +108,14 @@ These pages were physically removed from the report definition during cleanup so
 - `Executive Overview` no longer repeats the department-opex story from `Cost Structure`; the lower-right chart now shows `Net Revenue by Sales Type`.
 - Added dedicated KPI display measures for compact top cards so rendered values can show two decimal places reliably without relying on Power BI's compact-number auto-formatting.
 - Rewired the top monetary KPI cards on `Executive Overview`, `Income Statement`, `Revenue Insights`, `Cost Structure`, and `Balance Sheet` to those dedicated display measures.
-- After review screenshots showed those new plain-KPI bindings were less stable than the original measure path, the core monetary KPI cards were rewired back to the original SAP-backed measures and forced to render full values with two decimals instead of compact `bn / M` shorthand.
+- After review screenshots showed that card-level precision settings alone were still not enough, the core monetary KPI cards were moved to dedicated text-returning `... Card Display` measures so they can render explicit two-decimal compact text like `2.00bn د.ع.‏` consistently.
 - `Actual vs Budget` lower-right broken chart was replaced with a stable summary card using `GLTableVariancePct` so the page stops throwing an error in that slot.
 - `Cashflow` lower-left broken chart was simplified from a fragile series-and-filter configuration to a direct previous-month cashflow chart using `Cashflow_cashGoingIn_previous` and `Cashflow_cashGoingOut_previous`.
 - Replaced the remaining live compact-text KPI display measures on the kept 7 pages so they now render explicit IQD values with two decimals instead of `bn / M` shorthand.
 - Removed the inert `Dimension` slicer from `Actual vs Budget` and cleaned the page interaction map so it no longer references deleted or non-existent visual IDs.
 - Corrected the stale `CashflowPeriod` query reference on the `Cashflow` page so the page definition is internally consistent again.
-- Follow-up screenshots showed that the helper-based `KPI Plain` strategy was still leaking internal captions into the first five pages' top monetary cards.
-- The top monetary cards on `Executive Overview`, `Income Statement`, `Revenue Insights`, `Cost Structure`, and `Balance Sheet` were then rewired away from the helper `... KPI` / `... KPI Plain` layers and back to the real business measures.
-- Those cards now follow a safer single-caption pattern: show the built-in category label in the standard grey 9pt style, remove the extra visual title, and force non-compact display units at the value layer.
-- The old helper KPI measures were removed from `_Measures.tmdl` because the report no longer references them.
+- Follow-up screenshots confirmed the old helper-based `KPI Plain` strategy was unsafe and leaked internal captions into the first five pages' top monetary cards, so those legacy helper measures were removed from `_Measures.tmdl`.
+- The top monetary cards on `Executive Overview`, `Income Statement`, `Revenue Insights`, `Cost Structure`, and `Balance Sheet` now use an explicit title plus a hidden built-in label, with the card value bound to dedicated `... Card Display` text measures.
+- Those `... Card Display` measures are limited to the repeated top money cards only. They format compact `bn / M` output with two decimals explicitly instead of relying on Power BI's compact-number engine to honor `labelPrecision`.
 - `Executive Overview`'s `Revenue Mix by Location` donut was adjusted to render all three location labels more reliably.
 - Per user direction, `Actual vs Budget` and `Cashflow` are now intentionally left untouched while refinement continues on the first five pages only.
