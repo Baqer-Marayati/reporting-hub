@@ -10,6 +10,9 @@ This file captures what we have learned about handling PBIP report files, TMDL s
 - Page and visual JSON should be read before making assumptions about what Power BI is actually doing.
 - `PBIP` should remain the development master even when a `PBIX` review snapshot is created for convenience or faster server transfer.
 - If a `PBIX` review copy exists, treat it as disposable output, not as the place where new fixes should live.
+- For server handoff, use a generated zip package instead of copying the whole PBIP folder manually.
+- The standard package path is `Exports/Server Packages/Financial Report - ready.zip`, created by `./scripts/package-report.sh`.
+- Generated server-transfer zips should stay out of Git history; the export folder exists in the repo, but the zip outputs are ignored.
 
 ## TMDL Handling
 - TMDL is useful for adding compatibility tables, measures, and semantic aliases.

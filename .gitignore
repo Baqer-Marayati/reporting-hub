@@ -1,2 +1,4 @@
 .DS_Store
 **/.DS_Store
+Exports/Server Packages/*.zip
+!Exports/Server Packages/.gitkeep

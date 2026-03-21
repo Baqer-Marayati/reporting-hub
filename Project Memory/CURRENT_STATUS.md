@@ -119,3 +119,7 @@ These pages were physically removed from the report definition during cleanup so
 - Those `... Card Display` measures are limited to the repeated top money cards only. They format compact `bn / M` output with two decimals explicitly instead of relying on Power BI's compact-number engine to honor `labelPrecision`.
 - `Executive Overview`'s `Revenue Mix by Location` donut was adjusted to render all three location labels more reliably.
 - Per user direction, `Actual vs Budget` and `Cashflow` are now intentionally left untouched while refinement continues on the first five pages only.
+- Added a dedicated server-transfer export routine:
+- generated packages now live in `Exports/Server Packages`
+- `./scripts/package-report.sh` rebuilds the stable handoff file `Financial Report - ready.zip`
+- those generated zip artifacts are intentionally ignored by Git
