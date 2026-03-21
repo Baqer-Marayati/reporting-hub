@@ -1,0 +1,68 @@
+table userpersonalizations
+	lineageTag: f287150c-387f-44e9-a5e1-74d6caff5660
+
+	column userSID
+		dataType: string
+		lineageTag: 21569092-8c31-4feb-abfc-7fc496b1a03f
+		summarizeBy: none
+		sourceColumn: userSID
+
+		annotation SummarizationSetBy = Automatic
+
+	column systemId
+		dataType: string
+		lineageTag: ae1315c1-2b4e-4ec3-8e51-b94cb877b89b
+		summarizeBy: none
+		sourceColumn: systemId
+
+		annotation SummarizationSetBy = Automatic
+
+	column timeZone
+		dataType: string
+		lineageTag: 9c975631-c07b-4b66-8442-74d19311864b
+		summarizeBy: none
+		sourceColumn: timeZone
+
+		annotation SummarizationSetBy = Automatic
+
+	column timeZoneDisplayName
+		dataType: string
+		lineageTag: aa09d828-151e-48bd-8a08-940e81d2d3af
+		summarizeBy: none
+		sourceColumn: timeZoneDisplayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column userID
+		dataType: string
+		lineageTag: d0670315-c84e-4440-8039-729f3bce866e
+		summarizeBy: none
+		sourceColumn: userID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 49cd5420-35f5-486f-8bfe-3097c5f6121e
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition userpersonalizations = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    userpersonalizations_table = #"wiise/powerBI/v1.0"{[Name="userpersonalizations",Signature="table"]}[Data]
+				in
+				    userpersonalizations_table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

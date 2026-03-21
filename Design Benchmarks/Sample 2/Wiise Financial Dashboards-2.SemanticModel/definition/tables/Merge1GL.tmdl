@@ -1,0 +1,164 @@
+table Merge1GL
+	lineageTag: 3eeb4d3a-d655-4f53-a303-00489f7985d5
+
+	column id
+		dataType: string
+		lineageTag: 7ec1ac2d-d04d-4970-a189-c50876e7f38c
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: 005b841e-f592-42f0-b8d1-4a97fbf28396
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 5575ce9f-3c6f-4a62-a502-88bfd9975c01
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: 41ffad5e-50ab-4669-a059-dab60ee3b935
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: fd885cd0-71ec-4b13-9074-d4110566f9d3
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: 97905349-7d12-43ed-a34e-681340d92fcb
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryEntryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 5118e8a1-fd07-4813-9f2e-b01487db59b3
+		summarizeBy: sum
+		sourceColumn: accountSubcategoryEntryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: 00e29932-e4bd-4928-9ce8-b4b9a6252c4c
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 91fd63e6-81bc-4d28-9ff9-0b7cb5e3854f
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetName
+		dataType: string
+		lineageTag: 9a3e8843-5241-4449-b9e5-9a1229a1f26c
+		summarizeBy: none
+		sourceColumn: budgetName
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 02468b66-e373-4d29-8f33-3bec3a027004
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 6305d020-e2c0-4ab9-8622-45ea4bc1db03
+			defaultHierarchy: LocalDateTable_0e7dc2a0-6ea5-491d-b125-bf39ee50228e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column description
+		dataType: string
+		lineageTag: b0e2eb90-03a8-4823-a81f-8f3722c1cfe4
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: 14524e9e-c9e0-4f7b-83cf-caf9accef7b8
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: 5a4c51bb-2587-4343-8aeb-9ccc35ea87e4
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColumnName
+		dataType: string
+		lineageTag: 02a8d0d5-0e2e-4df8-8252-3685ba7d1b5e
+		summarizeBy: none
+		sourceColumn: ColumnName
+
+		annotation SummarizationSetBy = Automatic
+
+	column DimensionValue
+		dataType: string
+		lineageTag: e5773b3f-a093-476f-9a35-64a71ec7ab85
+		summarizeBy: none
+		sourceColumn: DimensionValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'dimensionValues.dimensionId'
+		dataType: string
+		lineageTag: af2117a7-2ed4-444e-9792-c5e324f02846
+		summarizeBy: none
+		sourceColumn: dimensionValues.dimensionId
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Merge1GL = m
+		mode: import
+		source =
+				let
+				    Source = Table.NestedJoin(glBudgetUnpivoted, {"DimensionValue"}, dimensionValues, {"code"}, "dimensionValues", JoinKind.LeftOuter),
+				    #"Expanded dimensionValues" = Table.ExpandTableColumn(Source, "dimensionValues", {"dimensionId"}, {"dimensionValues.dimensionId"})
+				in
+				    #"Expanded dimensionValues"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

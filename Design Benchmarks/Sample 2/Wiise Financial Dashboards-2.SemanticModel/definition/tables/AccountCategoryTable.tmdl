@@ -1,0 +1,21 @@
+table AccountCategoryTable
+	lineageTag: bbaa6d23-5825-4d94-8da8-f940dba168c2
+
+	column Category
+		lineageTag: fc69c404-8c6b-49ce-9e48-679eaf373235
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Category]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AccountCategoryTable = calculated
+		mode: import
+		source =
+				DATATABLE("Category", STRING,{
+				    {"Income"},
+				    {"Expense"}
+				})
+
+	annotation PBI_Id = b8a37bf5a821481bb6ebb4fcf9628520
+

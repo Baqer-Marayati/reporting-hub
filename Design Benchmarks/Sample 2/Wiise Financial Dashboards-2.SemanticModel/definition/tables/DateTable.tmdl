@@ -1,0 +1,149 @@
+table DateTable
+	lineageTag: ec5a6d09-ce64-4443-991b-5794b62e6011
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 9c6fa9a7-cacd-4d0b-ad42-745a15af9e5d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 4e10b7a1-678a-47fc-bb47-e923b58dade0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 7e71bc25-6b31-4039-b5b5-3548439d5c38
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		formatString: 0
+		lineageTag: 160c9f9d-16b2-4f40-a6b0-5f8c5fda9bf7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 7fd0bea6-8624-4359-8f3e-c1e2e1918705
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: 8b7ebce7-a16d-456c-acce-2a8010bfad85
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: 8125e996-0669-42d0-8a27-00286a95903f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		formatString: 0
+		lineageTag: 2fc077f7-200b-4c71-81cc-77bf0874770e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a8b8bc6f-7e2c-4d92-8b54-aa2da9fa72e2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IsWeekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsPreviousMonthToDate =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			
+			VAR CurrentDay = DAY(TodayDate)
+			VAR CurrentMonth = MONTH(TodayDate)
+			VAR CurrentYear = YEAR(TodayDate)
+			
+			VAR PrevMonth = IF(CurrentMonth = 1, 12, CurrentMonth - 1)
+			VAR PrevYear = IF(CurrentMonth = 1, CurrentYear - 1, CurrentYear)
+			
+			VAR StartDate = DATE(PrevYear, PrevMonth, 1)
+			VAR EndDate = DATE(PrevYear, PrevMonth, CurrentDay)
+			
+			RETURN
+			    IF(
+			        'DateTable'[Date] >= StartDate && 'DateTable'[Date] <= EndDate,
+			        TRUE(),
+			        FALSE()
+			    )
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3baa20a1-7038-43e3-856d-5872c8dc46f0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name Short'
+		lineageTag: e38a9717-bb68-4cf9-985b-144c9483bd45
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name Short]
+		sortByColumn: MonthsortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthsortOrder = YEAR([Date]) *100 + Month([Date])
+		formatString: 0
+		lineageTag: 88a55484-716f-4b48-95bc-dbe3d0cb0cc6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    CALENDAR(
+				        MIN(generalLedgerEntries[postingDate]), -- Dynamic start date based on the earliest date in your Sales table
+				        MAX(generalLedgerEntries[postingDate])  -- Dynamic end date based on the latest date in your Sales table
+				    ),
+				    "Year", YEAR([Date]),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Month", MONTH([Date]), -- Numeric month (1 = January, 2 = February)
+				    "Month Name", FORMAT([Date], "MMMM"), -- Full name of the month (January, February, etc.)
+				    "Month Name Short", FORMAT([Date], "MMM YY"), -- Full name of the month (January, February, etc.)
+				    "Day", DAY([Date]),
+				    "Day Name", FORMAT([Date], "dddd"), -- Day name (e.g., Monday, Tuesday, etc.)
+				    "Weekday Number", WEEKDAY([Date], 2), -- 2 makes Monday = 1 and Sunday = 7
+				    "IsWeekend", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE()) -- TRUE for Saturday/Sunday, FALSE otherwise
+				)
+
+	annotation PBI_Id = 56cab8a3af2342068588a2711634dcff
+

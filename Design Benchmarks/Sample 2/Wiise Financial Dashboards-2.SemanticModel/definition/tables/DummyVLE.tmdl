@@ -1,0 +1,66 @@
+table DummyVLE
+	lineageTag: 8b9a526b-9e29-4863-b535-668a50532147
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 00f4bfdb-146c-4687-ac79-5196c985e9f3
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		variation Variation
+			isDefault
+			relationship: 9f72b904-7d42-4e5f-82c1-47029b8f127c
+			defaultHierarchy: LocalDateTable_0f3b0be9-32fc-466b-adec-73a09d57d9e5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e56891f2-3cf2-45dd-80f5-9c18818eae7c
+		summarizeBy: none
+		sourceColumn: dueDate
+
+		variation Variation
+			isDefault
+			relationship: 4a7f1086-739d-4354-b0e8-ef3bed791622
+			defaultHierarchy: LocalDateTable_1c10f897-e263-4e0a-bd2e-1c5e9db213bc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column amount
+		dataType: int64
+		formatString: 0
+		lineageTag: 746a7ae0-f9a1-4438-8fd3-831f030c12dd
+		summarizeBy: none
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+	column remainingAmount
+		dataType: int64
+		formatString: 0
+		lineageTag: 85b7d7aa-c330-4c9f-a21d-c1efb000ba4f
+		summarizeBy: none
+		sourceColumn: remainingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DummyVLE = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMtQ31DcyMDBQ0kFmQnBsLAA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [postingDate = _t, dueDate = _t, amount = _t, remainingAmount = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"postingDate", type date}, {"dueDate", type date}, {"amount", Int64.Type}, {"remainingAmount", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

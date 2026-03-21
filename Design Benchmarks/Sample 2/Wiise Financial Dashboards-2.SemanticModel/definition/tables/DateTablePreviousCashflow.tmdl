@@ -1,0 +1,177 @@
+table DateTablePreviousCashflow
+	lineageTag: 3c525e94-f221-44cb-8e28-9744067afd78
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 2f8f7625-5573-474b-97a1-eb93541b7ac9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: c5335f39-134c-4d4f-9290-7f9ddda83180
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 049381fe-9ddc-4eff-b65a-3f62ca2325e8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		formatString: 0
+		lineageTag: a28f73de-6c90-4862-8f12-1fe650b131fd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		lineageTag: f00beaac-252c-4f7e-a62c-cb8fdd196cc3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: YearMonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 0a77c5b2-ba18-4f95-9e68-4f175746b726
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name Short'
+		lineageTag: 8d40cc6b-5484-449d-b525-1c21c3aa653c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name Short]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: e22d7db0-1d6e-4125-af1b-0cc1ae20a9ee
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: 885b4862-166d-4d73-8279-133430ed3ecc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		formatString: 0
+		lineageTag: 58eaa353-921a-4b1c-a523-485d5b610199
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c804018d-1047-41e1-83ae-b94425ad90ec
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IsWeekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthStart
+		formatString: General Date
+		lineageTag: 1a5112f0-3f74-431a-bf22-2a7849f96b98
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthStart]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthEnd
+		formatString: General Date
+		lineageTag: 7082054a-dcb3-4c3d-916c-5c8730d99016
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthEnd]
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthNum
+		formatString: 0
+		lineageTag: 19f4d086-a07a-421a-bfd5-ac9511fe486c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [YearMonthNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsInLast6Months_Previous = ```
+			
+			VAR TodayDate = [TodayLocal]
+			VAR OneYearAgo = EDATE(TodayDate, -6)
+			VAR DateVal= DateTablePreviousCashflow[Date]
+			RETURN
+			IF(ISBLANK(DateVal), FALSE,
+			    DateVal >= OneYearAgo &&
+			    DateVal <= TodayDate)
+			
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c8bd1f37-f372-4396-9e7a-06877bf3c581
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTablePreviousCashflow = calculated
+		mode: import
+		source =
+				
+				VAR MinDateRaw =
+				    MINX ( bankAccountLedgerEntries, bankAccountLedgerEntries[postingDate] )
+				VAR MaxDateRaw =
+				    MAXX ( bankAccountLedgerEntries, bankAccountLedgerEntries[postingDate]  )
+				VAR MinDate = COALESCE ( MinDateRaw, DATE ( 2000, 1, 1 ) )
+				VAR MaxDate = COALESCE ( MaxDateRaw, DATE ( 2000, 1, 2 ) )
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR(
+				        MinDate, -- Dynamic start date based on the earliest date in your Sales table
+				        MaxDate  -- Dynamic end date based on the latest date in your Sales table
+				    ),
+				    "Year", YEAR([Date]),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Month", MONTH([Date]), -- Numeric month (1 = January, 2 = February)
+				    "Month Year", FORMAT([Date], "MMM YY"), -- Numeric month (1 = January, 2 = February)
+				    "Month Name", FORMAT([Date], "MMMM"), -- Full name of the month (January, February, etc.)
+				    "Month Name Short", FORMAT([Date], "MMM YY"), -- Full name of the month (January, February, etc.)
+				    "Day", DAY([Date]),
+				    "Day Name", FORMAT([Date], "dddd"), -- Day name (e.g., Monday, Tuesday, etc.)
+				    "Weekday Number", WEEKDAY([Date], 2), -- 2 makes Monday = 1 and Sunday = 7
+				    "IsWeekend", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE()), -- TRUE for Saturday/Sunday, FALSE otherwise
+				    "MonthStart", DATE(YEAR([Date]), MONTH([Date]), 1),
+				    "MonthEnd", EOMONTH([Date], 0),
+				    "YearMonthNum", YEAR([Date]) * 100 + MONTH([Date])
+				)
+
+	annotation PBI_Id = 7de122c3f1464d9689ab1f7070f1f02d
+

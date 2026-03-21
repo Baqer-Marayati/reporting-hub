@@ -1,0 +1,256 @@
+relationship a1496a22-0ea0-48b2-b5ae-ddcb511eb630
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BudgetVsActualTable.Date
+	toColumn: LocalDateTable_b4d2cf0e-a1fb-4333-95a4-acddee3fe09e.Date
+
+relationship 756cb5f9-9d0b-40fb-9eb5-41edf576ebfe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BudgetVsActualTable.WeekStartDate
+	toColumn: LocalDateTable_e5288d25-58bf-4220-a263-d10b2360fc96.Date
+
+relationship 09d151dc-cadb-ce80-820e-5a09dc2dcfae
+	fromColumn: generalLedgerEntries.postingDate
+	toColumn: BudgetVsActualTable.Date
+
+relationship b3b904d5-30a3-a767-9edb-c4f337a93b83
+	fromColumn: glBudgetEntries.date
+	toColumn: BudgetVsActualTable.Date
+
+relationship 6966bca2-7206-e471-de00-576ee60309a3
+	fromColumn: generalLedgerEntries.postingDate
+	toColumn: DateTable.Date
+
+relationship 45d92ec5-0d4e-47b4-8a3c-335acb9a4e27
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dimensions.lastModifiedDateTime
+	toColumn: LocalDateTable_e30edc15-5264-4900-a8f6-55fb5a8d802b.Date
+
+relationship 393e991e-e091-48ea-8680-8eeefdda33c1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dimensionValues.lastModifiedDateTime
+	toColumn: LocalDateTable_b585c176-8ea3-4725-86df-173c2e3fbe93.Date
+
+relationship acb7bad7-a376-45be-b0cc-433c8f08d09d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: generalLedgerSetup.allowPostingFrom
+	toColumn: LocalDateTable_76ad04c4-e15d-4641-b48d-355d0a700fd8.Date
+
+relationship 8d5709dc-ff1c-44c0-a887-b9d30d2ee32b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: generalLedgerSetup.allowPostingTo
+	toColumn: LocalDateTable_2fba97db-af5c-4b52-8354-6a414578f41e.Date
+
+relationship d88d0bb2-8d5a-43a3-ac53-255d89174d7b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: generalLedgerSetup.lastModifiedDateTime
+	toColumn: LocalDateTable_ef41af85-4dfc-4226-8326-e9aa98d3f7d0.Date
+
+relationship 9387b31b-87b0-4f01-9944-1602ca310c6d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: glBudgetUnpivoted.date
+	toColumn: LocalDateTable_9122bc82-35ba-4aad-81b3-eed8feadca6d.Date
+
+relationship 6305d020-e2c0-4ab9-8622-45ea4bc1db03
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Merge1GL.date
+	toColumn: LocalDateTable_0e7dc2a0-6ea5-491d-b125-bf39ee50228e.Date
+
+relationship f025a123-95bb-4dcb-88b7-7b4d0b8a48a3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: accountingPeriods.startingDate
+	toColumn: LocalDateTable_cd8c8ff5-74ad-4904-a91d-f66da3d1a740.Date
+
+relationship 9d7a5db3-0a88-4128-873d-5be42ca761f7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: accountingPeriods.lastModifiedDateTime
+	toColumn: LocalDateTable_796275e7-8998-45fd-b31e-890be43f4c0c.Date
+
+relationship 1d8dc452-45c6-4a4f-816b-328c096334cb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: generalLedgerEntriesUnpivoted.postingDate
+	toColumn: LocalDateTable_259dffc0-9ced-4579-8a1f-8f9ff4dc2926.Date
+
+relationship d109d909-8bed-40d0-b94d-12856d57b2b8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Merge1GLE.postingDate
+	toColumn: LocalDateTable_de0c8d17-e261-42af-9993-6320a6d86de3.Date
+
+relationship AutoDetected_6fb9e428-ecd7-4a13-a814-f9cbbcaec9d0
+	fromColumn: generalLedgerEntriesUnpivoted.ColumnName
+	toColumn: ColumnMapGLE.ColumnName
+
+relationship AutoDetected_242259c3-ca96-47d5-a5a7-e45bb5ba08d2
+	fromColumn: Merge1GLE.ColumnName
+	toColumn: ColumnMapGLE.ColumnName
+
+relationship AutoDetected_92d42bb6-fd60-4b65-91f5-fb46af939547
+	fromColumn: glBudgetEntries.ooooooo
+	toColumn: 'Dummy Budget'.ooooooo
+
+relationship AutoDetected_a567ead6-447c-4bc4-a3d7-9541a0d1efa8
+	fromColumn: dimensions.oooooooooo
+	toColumn: DummyDimension.oooooooooo
+
+relationship AutoDetected_7c4aeeb8-35ad-4275-92f5-ab4e39f7213b
+	fromColumn: glBudgetEntries.oooooooooo
+	toColumn: DummyDimension.oooooooooo
+
+relationship 2fcde00f-c36c-4185-9d3f-79b8350dabee
+	joinOnDateBehavior: datePartOnly
+	fromColumn: customerLedgerEntries.documentDate
+	toColumn: LocalDateTable_ff74419d-29f1-4598-9448-5124aaf7ac50.Date
+
+relationship 538b9bf7-0b6e-c0f4-99c8-fa932b35a027
+	fromColumn: vendorLedgerEntries.DueCategory
+	toColumn: DueCategorySortTable.DueCategory
+
+relationship af30a38e-d15b-85a5-e3ba-7c4fb5d6e90b
+	fromColumn: customerLedgerEntries.DueCategory_AR
+	toColumn: DueCategorySortTable_AR.DueCategory
+
+relationship a43acb39-944d-4541-9bea-8007955f69fc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Last Refresh Date'.'Refresh Date'
+	toColumn: LocalDateTable_c6901a6f-dd32-4ecd-9ff9-95c96c9db09a.Date
+
+relationship 6483661b-40ad-d3e0-ed4b-c51e3ee89f3c
+	isActive: false
+	fromColumn: generalLedgerEntries.postingDate
+	toColumn: DateTableAccountPayables.Date
+
+relationship 9f8d1282-340a-8a39-18f9-6ce20a73dc79
+	isActive: false
+	fromColumn: vendorLedgerEntries.postingDate
+	toColumn: DateTableAccountPayables.Date
+
+relationship 9f72b904-7d42-4e5f-82c1-47029b8f127c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DummyVLE.postingDate
+	toColumn: LocalDateTable_0f3b0be9-32fc-466b-adec-73a09d57d9e5.Date
+
+relationship 4a7f1086-739d-4354-b0e8-ef3bed791622
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DummyVLE.dueDate
+	toColumn: LocalDateTable_1c10f897-e263-4e0a-bd2e-1c5e9db213bc.Date
+
+relationship AutoDetected_aa35f3be-3948-4c24-97bd-4d700f12a584
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DummyVLE.amount
+	toColumn: 'Dummy Budget'.amount
+
+relationship 954bac70-659f-4750-aa97-0cf372475c6c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DummyCLE.postingDate
+	toColumn: LocalDateTable_6f52d2cf-2c74-4892-a763-ae1342d3e129.Date
+
+relationship ca779d41-5979-4e3c-a49e-8ab9e36a9da1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DummyCLE.dueDate
+	toColumn: LocalDateTable_50e4f8b4-f59e-4e6f-babd-5000f9540320.Date
+
+relationship AutoDetected_e3901ea0-5fa5-451d-a9eb-35a5461595c3
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: DummyCLE.remainingAmount
+	toColumn: DummyVLE.remainingAmount
+
+relationship 391924aa-ea62-5f01-5f58-6844f62f0172
+	fromColumn: bankAccountLedgerEntries.postingDate
+	toColumn: DateTablePreviousCashflow.Date
+
+relationship 70136176-b747-7ddf-5a37-5d96f562bf16
+	fromColumn: customerLedgerEntries.dueDate
+	toColumn: DateTableProjectedCashflow.Date
+
+relationship 322f7ab0-b464-9f0a-fffd-6911290dffe1
+	fromColumn: vendorLedgerEntries.dueDate
+	toColumn: DateTableProjectedCashflow.Date
+
+relationship c67d82c8-d541-d485-2a41-c82b9d2a9eee
+	isActive: false
+	fromColumn: vendorLedgerEntries.postingDate
+	toColumn: DateTableCashflowAPAR.Date
+
+relationship 59642fdb-35fd-a086-0b62-f9f51f249e96
+	isActive: false
+	fromColumn: customerLedgerEntries.postingDate
+	toColumn: DateTableCashflowAPAR.Date
+
+relationship 7514bc66-dbb6-580e-0e78-7f647a43a521
+	isActive: false
+	fromColumn: generalLedgerEntries.postingDate
+	toColumn: DateTableCashflowAPAR.Date
+
+relationship 428746b7-767d-4c03-aa65-86f47b773c22
+	joinOnDateBehavior: datePartOnly
+	fromColumn: purchaseLines.postingDate
+	toColumn: LocalDateTable_399da361-5c29-4738-a967-62f5ee6b92dc.Date
+
+relationship 9d0f41ed-2c08-48a9-ab18-5694e8fb22e4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: purchaseLines.documentDate
+	toColumn: LocalDateTable_02b18f7c-74fe-4257-b38f-375ff8eba620.Date
+
+relationship 835a2c29-b59e-4bbc-9aea-d0e9694e7370
+	joinOnDateBehavior: datePartOnly
+	fromColumn: accounts.lastModifiedDateTime
+	toColumn: LocalDateTable_646bbeba-a785-4fc1-b6db-e4bfa3249f51.Date
+
+relationship 3fc90386-7b46-26a5-b68c-a130c3841e5a
+	fromColumn: purchaseLines.shortcutDimension1Code
+	toColumn: DimensionCode1Slicer.dimensionCode
+
+relationship d269532e-4c89-383d-556b-76eed29ab7a1
+	fromColumn: generalLedgerEntries.globalDimension1Code
+	toColumn: DimensionCode1Slicer.dimensionCode
+
+relationship 7e775ebd-8666-b1a0-ffa0-1219e308919f
+	fromColumn: glBudgetEntries.globalDimension1Code
+	toColumn: DimensionCode1Slicer.dimensionCode
+
+relationship 70cfd856-5f98-8446-acf0-9fe313ee77ed
+	fromColumn: purchaseLines.shortcutDimension2Code
+	toColumn: DimensionCode2Slicer.dimensionCode
+
+relationship 5323517d-5fe0-8bd9-96bc-e233dfa9e011
+	fromColumn: generalLedgerEntries.globalDimension2Code
+	toColumn: DimensionCode2Slicer.dimensionCode
+
+relationship 06e03c7a-c6de-9f0d-6a01-121a6ff83b7c
+	fromColumn: glBudgetEntries.globalDimension2Code
+	toColumn: DimensionCode2Slicer.dimensionCode
+
+relationship bf43a73b-563e-3601-4143-547334a5e6aa
+	fromColumn: purchaseLines.no
+	toColumn: accounts.number
+
+relationship f43b361e-8910-1708-8af9-11bfb462540b
+	fromColumn: generalLedgerEntries.no
+	toColumn: accounts.number
+
+relationship 57bb0026-c3c1-c598-4c0f-47f2b1835ff4
+	fromColumn: glBudgetEntries.no
+	toColumn: accounts.number
+
+relationship 1625303e-3e33-7ddd-5939-d15fe9f09277
+	fromColumn: CommitmentDocumentTable.'Account No'
+	toColumn: accounts.number
+
+relationship b2d8823d-a6eb-416f-ba49-1744c21acc16
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CommitmentDocumentTable.Date
+	toColumn: LocalDateTable_4490e0f7-b8fd-46e1-822c-202982b41604.Date
+
+relationship 2892d6e3-a1c8-d6d2-4c47-f82ff8c6a34f
+	fromColumn: purchaseLines.date
+	toColumn: DateTableCommitment.Date
+
+relationship c670deb3-2109-6ea5-c04e-fc6a3e1ac666
+	fromColumn: generalLedgerEntries.postingDate
+	toColumn: DateTableCommitment.Date
+
+relationship acd34cdc-d000-b6f3-dc6e-d87bc9ac325f
+	fromColumn: glBudgetEntries.date
+	toColumn: DateTableCommitment.Date
+

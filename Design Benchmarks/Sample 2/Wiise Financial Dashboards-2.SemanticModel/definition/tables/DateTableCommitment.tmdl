@@ -1,0 +1,142 @@
+table DateTableCommitment
+	lineageTag: e354e0a9-e681-471f-80ba-29da6a95dec0
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: dd/mm/yy
+		lineageTag: be5437c2-9401-4a2f-889f-4b4eb06656b1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Year
+		formatString: 0
+		lineageTag: f96fe2b9-9582-4e32-a510-47e17465f586
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: a00e7abe-e0ba-45b6-b831-9d9297c5f701
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		formatString: 0
+		lineageTag: e44cb06d-84d8-497f-b41e-a8ecff0d4608
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: a1aa26b5-f89e-4d5e-97dc-c9d76e83e374
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name Short'
+		lineageTag: be3a2cb3-57d4-4491-b54c-8333e5b643f7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name Short]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: 8f73f01f-4686-4da9-9f70-96a1abff6e3f
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: cfeaf252-6666-4c60-8062-c45be16617b5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		formatString: 0
+		lineageTag: d5294288-41cf-421e-a255-e252a7e1ae60
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: aa0332dc-0d18-4c72-acb9-24473c4dc5e4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IsWeekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTableCommitment = calculated
+		mode: import
+		source = ```
+				
+				VAR StartDate = 
+				    COALESCE(
+				        MINX(
+				            UNION(
+				                SELECTCOLUMNS(generalLedgerEntries, "Date", [postingDate]),
+				                SELECTCOLUMNS(glBudgetEntries, "Date", [date]),
+				                SELECTCOLUMNS(purchaseLines, "Date", [postingDate])
+				            ),
+				            [Date]
+				        ),
+				        DATE(2020, 1, 1) -- Default start date
+				    )
+				
+				VAR EndDate = 
+				    COALESCE(
+				        MAXX(
+				            UNION(
+				                SELECTCOLUMNS(generalLedgerEntries, "Date", [postingDate]),
+				                SELECTCOLUMNS(glBudgetEntries, "Date", [date]),
+				                SELECTCOLUMNS(purchaseLines, "Date", [postingDate])
+				            ),
+				            [Date]
+				        ),
+				        [TodayLocal] -- Default end date
+				    )
+				
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR(StartDate, EndDate),
+				    "Year", YEAR([Date]),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Month", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMMM"),
+				    "Month Name Short", FORMAT([Date], "MMM YY"),
+				    "Day", DAY([Date]),
+				    "Day Name", FORMAT([Date], "dddd"),
+				    "Weekday Number", WEEKDAY([Date], 2),
+				    "IsWeekend", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE())
+				)
+				```
+
+	annotation PBI_Id = fcbf246b66a74bbba8267666d170a85e
+

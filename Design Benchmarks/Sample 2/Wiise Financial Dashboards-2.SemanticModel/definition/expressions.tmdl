@@ -1,0 +1,14 @@
+expression Environment = "UAT" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
+	lineageTag: 219af173-abc2-421b-8f7a-9156dcb453e5
+
+	annotation PBI_ResultType = Text
+
+	annotation PBI_NavigationStepName = Navigation
+
+expression Company = "Cronus AU" meta [IsParameterQuery = true, IsParameterQueryRequired = true, Type = "Text"]
+	lineageTag: 8f53bd40-e758-4a39-8e0e-a639a2464b8b
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

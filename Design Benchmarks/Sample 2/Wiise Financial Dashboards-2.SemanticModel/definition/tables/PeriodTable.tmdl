@@ -1,0 +1,38 @@
+table PeriodTable
+	lineageTag: 18f01165-fb13-40f4-a540-1e3f33ad43a1
+
+	column Period
+		lineageTag: 80d15e4f-8b76-4e74-a712-bd4f2fdeb7fa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		formatString: 0
+		lineageTag: 36d4d101-87fe-46d0-b870-f8bbf62ebb75
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SortOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition PeriodTable = calculated
+		mode: import
+		source = ```
+				DATATABLE(
+					"Period", STRING,
+					"SortOrder",INTEGER, 
+					{
+						{"WTD", 1},
+						{"MTD", 2},
+						{"QTD", 3},
+						{"YTD", 4}
+					}
+				)
+				```
+
+	annotation PBI_Id = ebcc868c870b4be189a9e57df4b01cc5
+

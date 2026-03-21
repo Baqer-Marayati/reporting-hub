@@ -1,0 +1,49 @@
+table CashflowPeriod
+	lineageTag: d334d68e-ae6c-48bc-8dc8-3cf9cf85e2f6
+
+	column Period
+		lineageTag: 74eb5048-80d1-4777-a999-0159c2dc577f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Period]
+		sortByColumn: SortOrder
+
+		annotation SummarizationSetBy = Automatic
+
+	column SortOrder
+		formatString: 0
+		lineageTag: ed2846f1-6e89-4801-bc01-8ba540861546
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [SortOrder]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		formatString: 0
+		lineageTag: 98d57415-f93f-4bfb-a4bb-6a33a6e1d764
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CashflowPeriod = calculated
+		mode: import
+		source = ```
+				DATATABLE(
+					"Period", STRING,
+				    "Value",INTEGER,
+					"SortOrder",INTEGER, 
+					{
+						{"7 days", 7 ,1},
+						{"30 days", 30, 2},
+						{"60 days", 60, 3},
+				        {"90 days", 90, 4},
+						{"120 days", 120, 5}
+					}
+				)
+				```
+
+	annotation PBI_Id = b7b07bae25194c1cbb14a6c3b83e0ee5
+

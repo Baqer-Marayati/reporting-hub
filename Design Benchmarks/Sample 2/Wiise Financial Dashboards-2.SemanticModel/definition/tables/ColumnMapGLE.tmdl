@@ -1,0 +1,44 @@
+table ColumnMapGLE
+	lineageTag: 3447cb85-c009-4d94-863d-b4828f906ca1
+
+	column ColumnName
+		dataType: string
+		lineageTag: 5d8c68a5-f4a8-499c-ae29-7b6c5a936541
+		summarizeBy: none
+		sourceColumn: ColumnName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'dimensions.code'
+		dataType: string
+		lineageTag: ebe3e28b-9cc1-4790-8bed-7a9e97ee9322
+		summarizeBy: none
+		sourceColumn: dimensions.code
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: a29b2a31-2943-4d58-9e75-57c3ade5f710
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ColumnMapGLE = m
+		mode: import
+		source =
+				let
+				    Source = Table.NestedJoin(Merge1GLE, {"dimensionValues.dimensionId"}, dimensions, {"id"}, "dimensions", JoinKind.LeftOuter),
+				    #"Expanded dimensions" = Table.ExpandTableColumn(Source, "dimensions", {"code"}, {"dimensions.code"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Expanded dimensions", each ([dimensions.code] <> null)),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"id", "no", "name", "accountCategory", "accountType", "incomeBalance", "entryNo", "postingDate", "documentType", "documentNo", "description", "amount", "debitAmount", "creditAmount", "ETag", "Value", "dimensionValues.dimensionId"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Columns"),
+				    #"Removed Duplicates1" = Table.Distinct(#"Removed Duplicates", {"ColumnName"})
+				in
+				    #"Removed Duplicates1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

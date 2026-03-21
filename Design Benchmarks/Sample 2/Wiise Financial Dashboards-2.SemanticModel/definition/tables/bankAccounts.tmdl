@@ -1,0 +1,71 @@
+table bankAccounts
+	lineageTag: 06c2e813-4146-4f1d-86ca-af605bb0bbc3
+
+	column id
+		dataType: string
+		lineageTag: e9f5d18e-e765-45cf-b08d-c5dc5fcd92fa
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: f23f51ec-a83c-4296-950a-f6733a407637
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: bde2a705-6bb2-4160-8617-39c1c78c3d0b
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column blocked
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: caec5107-0346-4698-af1c-98d05d305bb7
+		summarizeBy: none
+		sourceColumn: blocked
+
+		annotation SummarizationSetBy = Automatic
+
+	column balanceLCY
+		dataType: double
+		lineageTag: a893df5b-7b63-418c-9ade-a5f4bbf39939
+		summarizeBy: sum
+		sourceColumn: balanceLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: faba2b74-1e94-4df4-aef9-333cb747e14b
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bankAccounts = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    bankAccounts_table = #"wiise/powerBI/v1.0"{[Name="bankAccounts",Signature="table"]}[Data]
+				in
+				    bankAccounts_table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

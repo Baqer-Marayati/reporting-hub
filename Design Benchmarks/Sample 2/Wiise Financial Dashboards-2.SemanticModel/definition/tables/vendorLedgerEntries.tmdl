@@ -1,0 +1,539 @@
+table vendorLedgerEntries
+	lineageTag: c651065b-5b10-48e1-ad34-09a19248ce05
+
+	measure Accountpayables = ```
+			
+			 Var beginningOfTime = Min(vendorLedgerEntries[postingDate])
+			 Var currentDate = [TodayLocal]
+			 RETURN
+			CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    DATESBETWEEN(vendorLedgerEntries[postingDate], beginningOfTime,currentDate)
+			)*-1
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: d4bd2163-8636-406c-beb9-1447ad5e2b80
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'TodayLocal 1' = ```
+			
+			VAR timeZone = CALCULATE(SELECTEDVALUE(userpersonalizations[timeZoneDisplayName]))
+			
+			
+			// Find position of "+" and "-"
+			VAR posPlus = FIND("+", timeZone, 1, 0)
+			VAR posMinus = FIND("-", timeZone, 1, 0)
+			
+			// Determine sign and position
+			VAR sign =
+			    IF(posPlus > 0, 1,
+			        IF(posMinus > 0, -1,
+			            0 // fallback if neither found
+			        )
+			    )
+			
+			VAR posSign = IF(sign = 1, posPlus, posMinus)
+			
+			// Extract the number after the sign until ":"
+			VAR offsetText =
+			    MID(
+			        timeZone,
+			        posSign + 1,
+			        FIND(":", timeZone, posSign, LEN(timeZone)) - posSign - 1
+			    )
+			
+			VAR offsetHours = sign * VALUE(offsetText)
+			
+			// Calculate local time by adding offsetHours to UTCNOW()
+			VAR localTime = UTCNOW() +  (offsetHours / 24)
+			VAR localDate = DATE(YEAR(localTime), MONTH(localTime), DAY(localTime))
+			
+			RETURN
+			   COALESCE(localDate, TODAY())
+			
+			```
+		formatString: General Date
+		displayFolder: AccountPayableMeasures
+		lineageTag: 4855cb70-e397-45a7-8e3c-80f78d1836c6
+
+	measure Accountpayables_ageingReport_nofilter =
+			
+			Var ap = CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true
+			)*-1
+			RETURN
+			COALESCE(ap,0)
+		displayFolder: AccountPayableMeasures
+		lineageTag: a7900439-94a1-45b8-8b37-9d725436cd88
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Accountpayables_notYetDue_funnel =
+			
+			Var Today = [TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    vendorLedgerEntries[dueDate] > Today
+			)*-1
+		displayFolder: AccountPayableMeasures
+		lineageTag: f36128fb-50e3-434f-99bd-c06eb69dd6f1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Accountpayables_totalPayable_funnel =
+			
+			CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true
+			)*-1
+		displayFolder: AccountPayableMeasures
+		lineageTag: 30feaee8-d5da-411a-a1f4-4699bbe5ca66
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average AP' =
+			
+			DIVIDE(
+			    [Opening AP] + [Closing AP],
+			    2
+			)
+		displayFolder: AccountPayableMeasures
+		lineageTag: b5bed3c1-3c12-4e10-a03e-6f095aae3686
+
+	measure CashonHand =
+			CALCULATE(
+			    SUM(bankAccounts[balanceLCY]))
+		displayFolder: AccountPayableMeasures
+		lineageTag: d89e5ccc-9414-44ad-ab5c-9ade3adcb10e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Closing AP' =
+			
+			VAR EOfMonth = MINX(ENDOFMONTH(DateTableAccountPayables[Date]),DateTableAccountPayables[Date])
+			RETURN
+			CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			    vendorLedgerEntries[postingDate] <= EOfMonth
+			)
+		displayFolder: AccountPayableMeasures
+		lineageTag: 16b0e003-2196-41f8-91d1-5267bcd3729a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CountOfInvoices =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(vendorLedgerEntries[documentNo]),
+			    FILTER(
+			        vendorLedgerEntries,
+			        vendorLedgerEntries[open] = TRUE &&
+			        vendorLedgerEntries[documentType] = "Invoice"
+			    )
+			)
+		formatString: 0
+		displayFolder: AccountPayableMeasures
+		lineageTag: 07ff9140-405c-4b33-9cbf-c5c891388303
+
+	measure DPO = ```
+			
+			 Var Days = 365
+			 Var AccountPayables = CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    DATESBETWEEN(vendorLedgerEntries[postingDate], [TodayLocal] - 365 ,[TodayLocal])
+			)*-1
+			 Var COGS = CALCULATE(SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Cost of Goods Sold",
+			 DATESBETWEEN( generalLedgerEntries[postingDate], [TodayLocal] - 365 ,[TodayLocal]))
+			 RETURN
+			 If(AccountPayables = 0, "--", FORMAT(Divide(AccountPayables,COGS)*Days,0))
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: bdc9616e-1816-418a-8b8c-51ee7cfad519
+
+	measure InvoiceStatusPercent_Open = ```
+			
+			 Var tomorrow = [TodayLocal] + 1
+			 Var eOfMonth = EOMONTH(tomorrow,0)
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('vendorLedgerEntries'[documentNo]),
+			    vendorLedgerEntries[open] = true,
+			    vendorLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(vendorLedgerEntries[dueDate], tomorrow,eOfMonth)
+			)
+			```
+		formatString: 0
+		displayFolder: AccountPayableMeasures
+		lineageTag: addb6d62-d546-423d-bf84-1e2f0c61c3bc
+
+	measure InvoiceStatusPercent_Overdue = ```
+			
+			 Var startOfCurrentMonth = DATE(YEAR([TodayLocal]), MONTH([TodayLocal]), 1)
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('vendorLedgerEntries'[id]),
+			    vendorLedgerEntries[open] = true,
+			    vendorLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(vendorLedgerEntries[dueDate], startOfCurrentMonth,[TodayLocal])
+			)
+			```
+		formatString: 0
+		displayFolder: AccountPayableMeasures
+		lineageTag: 94a3c2bd-0dcc-4c20-b8fb-e2f2298fe5cf
+
+	measure InvoiceStatusPercent_Paid = ```
+			
+			 Var startOfCurrentMonth = DATE(YEAR([TodayLocal]), MONTH([TodayLocal]), 1)
+			 Var eOfMonth = EOMONTH([TodayLocal],0)
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('vendorLedgerEntries'[documentNo]),
+			    vendorLedgerEntries[open] = false,
+			    vendorLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(vendorLedgerEntries[dueDate], startOfCurrentMonth,eOfMonth)
+			)
+			```
+		formatString: 0
+		displayFolder: AccountPayableMeasures
+		lineageTag: 092b4479-a908-4a81-8c1d-108c1366c8ab
+
+	measure 'Opening AP' =
+			
+			VAR sOfMonth = MINX(STARTOFMONTH(DateTableAccountPayables[Date]),DateTableAccountPayables[Date])
+			RETURN
+			CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			        vendorLedgerEntries[open] = true &&
+			        vendorLedgerEntries[postingDate] <= sOfMonth
+			)
+		displayFolder: AccountPayableMeasures
+		lineageTag: 0a12d55e-246d-4f3e-a80c-1e3b39816f4a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Overduepayables = ```
+			
+			 Var beginningOfTime = Min(vendorLedgerEntries[dueDate])
+			 Var TodayDate = [TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    DATESBETWEEN(vendorLedgerEntries[dueDate], beginningOfTime, TodayDate)
+			)*-1
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: 360211be-cce0-4236-bc87-bfcb932dca44
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payable Turnover Ratio' =
+			
+			DIVIDE(
+			    [TotalCOGS_linegraph],
+			    [Average AP]
+			)
+		displayFolder: AccountPayableMeasures
+		lineageTag: c7a25ccd-8abc-4287-af5b-17ddfe07e60e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCOGS_linegraph =
+			
+			VAR EOfMonth = ENDOFMONTH(DateTableAccountPayables[Date])
+			VAR sOfMonth = STARTOFMONTH(DateTableAccountPayables[Date])
+			RETURN
+			CALCULATE(
+			    SUM(generalLedgerEntries[amount]),
+			    generalLedgerEntries[accountCategory] = "Cost of Goods Sold",
+			    DATESBETWEEN(generalLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+		displayFolder: AccountPayableMeasures
+		lineageTag: 2d7a435e-e8b6-4cf9-8495-8c890a49c58d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOfGoodsSold_AccountPayables = ```
+			
+			 Var startOfCurrentMonth = DATE(YEAR([TodayLocal]), MONTH([TodayLocal]), 1)
+			 Var currentDate = [TodayLocal]
+			 RETURN
+			 CALCULATE(SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Cost of Goods Sold",
+			 'generalLedgerEntries'[documentType] = "Invoice",
+			 DATESBETWEEN( generalLedgerEntries[postingDate], startOfCurrentMonth,currentDate))
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: 3c8e5f76-0a02-4495-a979-8e5408d27b26
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Accountpayables_ageingReport_new = ```
+			
+			VAR TodayDate = [TodayLocal]
+			VAR SelectedBucket = SELECTEDVALUE(DueCategorySortTable[DueCategory])
+			RETURN
+			SWITCH(
+			    SelectedBucket,
+			    "Overdue",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] < TodayDate) * -1,
+			    "Due today",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] = TodayDate) * -1,
+			    "Due next 30 days",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] > TodayDate && vendorLedgerEntries[dueDate] <= TodayDate + 30) * -1,
+			    "Due next 60 days",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] > TodayDate + 30 && vendorLedgerEntries[dueDate] <= TodayDate + 60) * -1,
+			    "Due next 90 days",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] > TodayDate + 60 && vendorLedgerEntries[dueDate] <= TodayDate + 90) * -1,
+			    "Due next >90 days",
+			        CALCULATE(SUM('vendorLedgerEntries'[remainingAmount]), vendorLedgerEntries[open] = TRUE(), vendorLedgerEntries[dueDate] > TodayDate + 90) * -1
+			)
+			
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: 19d53165-bfb2-44d0-944e-a1f3c91a9db5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Accountpayables_overdue_funnel =
+			
+			Var Today = [TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('vendorLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    vendorLedgerEntries[dueDate] <= Today
+			)*-1
+		displayFolder: AccountPayableMeasures
+		lineageTag: bdd60521-de54-4ebf-a5aa-f28e1d2240eb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Payable_Turnover_Ratio_value = ```
+			
+			VAR sOfMonth = Date(Year([TodayLocal]), Month([TodayLocal]),1)
+			var EOfMonth = EOMONTH([TodayLocal], 0)
+			var totalCags = CALCULATE(
+			    SUM(generalLedgerEntries[amount]),
+			    generalLedgerEntries[accountCategory] = "Cost of Goods Sold",
+			    DATESBETWEEN(generalLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+			
+			var openingAP = 
+			CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			        vendorLedgerEntries[open] = true &&
+			        vendorLedgerEntries[postingDate] <= sOfMonth
+			)
+			
+			var closingAP = CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			    vendorLedgerEntries[postingDate] <= EOfMonth
+			)
+			
+			var averageAP = 
+			DIVIDE(
+			    openingAP + closingAP,
+			    2
+			)
+			
+			var val = 
+			DIVIDE(
+			    totalCags,averageAP
+			)
+			Return 
+			"Payable turnover ratio " & FORMAT(val,"0.00")
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: 5f631199-5e5b-4c19-98ee-94c683a229b8
+
+	column id
+		dataType: string
+		lineageTag: 018a2885-76c3-4af7-8038-7759583fcf9e
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 07576da5-f361-4a09-9610-c08bf17b5a83
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2e8481a4-cd42-4f3c-94b8-766e6d150b9d
+		summarizeBy: none
+		sourceColumn: dueDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentNo
+		dataType: string
+		lineageTag: 389f6da5-8691-4a9b-9747-90693ff9981b
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentType
+		dataType: string
+		lineageTag: 00c28bff-c9d0-4bad-9f76-70d85479a346
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column open
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e68e7a29-ed19-48e9-a990-179c4acbd0db
+		summarizeBy: none
+		sourceColumn: open
+
+		annotation SummarizationSetBy = Automatic
+
+	column appliesToDocType
+		dataType: string
+		lineageTag: 13a66c6b-f499-4662-9d49-ac9e4d7469b2
+		summarizeBy: none
+		sourceColumn: appliesToDocType
+
+		annotation SummarizationSetBy = Automatic
+
+	column appliesToDocNo
+		dataType: string
+		lineageTag: 430a4891-60b9-454b-9e92-3f10fd20cc6e
+		summarizeBy: none
+		sourceColumn: appliesToDocNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column buyFromVendorNo
+		dataType: string
+		lineageTag: c9d9c9ea-13ea-4784-ae23-ac0cd800afd6
+		summarizeBy: none
+		sourceColumn: buyFromVendorNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column vendorNo
+		dataType: string
+		lineageTag: 0cd6f4e5-2719-4d73-938e-7dd93a54dbf3
+		summarizeBy: none
+		sourceColumn: vendorNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column vendorName
+		dataType: string
+		lineageTag: b75657bb-6b6e-4bfb-95e3-d2cdbb6fa73f
+		summarizeBy: none
+		sourceColumn: vendorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: 362be42b-abef-435f-8351-a7ae265c1c3d
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column remainingAmount
+		dataType: double
+		lineageTag: cd98884c-4a3a-4b14-ba21-5202bc428da1
+		summarizeBy: sum
+		sourceColumn: remainingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column auxiliaryIndex1
+		dataType: int64
+		formatString: 0
+		lineageTag: 62242bd9-7f65-43d1-9d9e-f7bdd770af23
+		summarizeBy: sum
+		sourceColumn: auxiliaryIndex1
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: af4af72e-4ef4-427e-bba4-feae13fd97b8
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueCategory = ```
+			
+			Var TodayDate = [TodayLocal]
+			VAR DueDate= vendorLedgerEntries[dueDate]
+			Return
+			SWITCH(
+			    TRUE(),
+			    ISBLANK(DueDate), "No Due Date",
+			    DueDate < TodayDate , "Overdue",
+			    DueDate = TodayDate, "Due today",
+			    DueDate > TodayDate && DueDate <= TodayDate + 30, "Due next 30 days",
+			    DueDate > TodayDate + 30 && DueDate <= TodayDate + 60, "Due next 60 days",
+			    DueDate > TodayDate + 60 && DueDate <= TodayDate + 90, "Due next 90 days",
+			    DueDate > TodayDate + 90, "Due next >90 days"
+			)
+			 
+			```
+		displayFolder: AccountPayableMeasures
+		lineageTag: 1b05346b-481f-4776-9590-40054875cb84
+		summarizeBy: none
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column remainingAmtLCY
+		dataType: double
+		lineageTag: 55526e93-ab35-41ba-96ba-9e9aafbcbd83
+		summarizeBy: sum
+		sourceColumn: remainingAmtLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition vendorLedgerEntries = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    vendorLedgerEntries_table = #"wiise/powerBI/v1.0"{[Name="vendorLedgerEntries",Signature="table"]}[Data],
+				    #"Appended Query" = Table.Combine({vendorLedgerEntries_table, DummyVLE})
+				in
+				    #"Appended Query"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

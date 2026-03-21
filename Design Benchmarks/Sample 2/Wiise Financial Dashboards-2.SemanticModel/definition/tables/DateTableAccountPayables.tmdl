@@ -1,0 +1,190 @@
+table DateTableAccountPayables
+	lineageTag: b382cc54-93b9-4179-915b-06a28d69a7c3
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 794859b8-81d9-47b4-b1fb-5d4499d3d100
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 83ada1ee-6a6e-4db1-befb-63cbc26f08d2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 6f3108ae-a2a5-478f-b5da-39a1660972a9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		formatString: 0
+		lineageTag: 5ef13c3e-d099-4d82-af7d-8a38dbfb9c3d
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		lineageTag: 0a3854e4-3eb9-4b70-9069-e67249944183
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: YearMonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 49aa92fd-6627-4437-acec-7f283fbc94b5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name Short'
+		lineageTag: 5801d2b9-f9be-45d3-93a4-cd86cd435b86
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name Short]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: 8fb2044d-e269-41c9-bc83-f4b6230e4680
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: 2e59e12a-61e8-4af7-9296-5370386c47b3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Weekday Number'
+		formatString: 0
+		lineageTag: d279badd-fcb0-45b5-898d-08e527ebe5ff
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Weekday Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWeekend
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b6a4a14d-3bf5-49fb-bc4c-e9e0d4cf5da4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IsWeekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthStart
+		formatString: General Date
+		lineageTag: f6263f9b-7e6c-4802-89ec-a8fe7bfbb366
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthStart]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthEnd
+		formatString: General Date
+		lineageTag: 8290ad90-2c8a-4a00-9ae8-d6d44c3fdf1b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthEnd]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsInLast6Months_PTO = ```
+			
+			VAR TodayDate = [TodayLocal]
+			VAR OneYearAgo = EDATE(TodayDate, -6)
+			VAR DateVal= DateTableAccountPayables[Date]
+			RETURN
+			IF(ISBLANK(DateVal), FALSE,
+			    DateVal >= OneYearAgo &&
+			    DateVal <= TodayDate)
+			
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: fc6dd844-e111-468c-bafc-a279e625f551
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthNum
+		formatString: 0
+		lineageTag: eca4b8dc-eabe-4554-b196-c941503df187
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [YearMonthNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTableAccountPayables = calculated
+		mode: import
+		source =
+				
+				VAR MinDateRaw =
+				    MINX(
+				        UNION(
+				            SELECTCOLUMNS(vendorLedgerEntries, "Date", vendorLedgerEntries[postingDate]),
+				            SELECTCOLUMNS(generalLedgerEntries, "Date", generalLedgerEntries[postingDate])
+				        ),
+				        [Date]
+				    )
+				VAR MaxDateRaw =
+				    MAXX(
+				        UNION(
+				            SELECTCOLUMNS(vendorLedgerEntries, "Date", vendorLedgerEntries[postingDate]),
+				            SELECTCOLUMNS(generalLedgerEntries, "Date", generalLedgerEntries[postingDate])
+				        ),
+				        [Date]
+				    )
+				VAR MinDate = COALESCE(MinDateRaw, DATE(2000, 1, 1))
+				VAR MaxDate = COALESCE(MaxDateRaw, DATE(2000, 1, 2))
+				RETURN
+				
+				ADDCOLUMNS(
+				    CALENDAR(
+				        MinDate, -- Dynamic start date based on the earliest date in your Sales table
+				        MaxDate  -- Dynamic end date based on the latest date in your Sales table
+				    ),
+				    "Year", YEAR([Date]),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Month", MONTH([Date]), -- Numeric month (1 = January, 2 = February)
+				    "Month Year", FORMAT([Date], "MMM YY"), -- Numeric month (1 = January, 2 = February)
+				    "Month Name", FORMAT([Date], "MMMM"), -- Full name of the month (January, February, etc.)
+				    "Month Name Short", FORMAT([Date], "MMM YY"), -- Full name of the month (January, February, etc.)
+				    "Day", DAY([Date]),
+				    "Day Name", FORMAT([Date], "dddd"), -- Day name (e.g., Monday, Tuesday, etc.)
+				    "Weekday Number", WEEKDAY([Date], 2), -- 2 makes Monday = 1 and Sunday = 7
+				    "IsWeekend", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE()), -- TRUE for Saturday/Sunday, FALSE otherwise
+				    "MonthStart", DATE(YEAR([Date]), MONTH([Date]), 1),
+				    "MonthEnd", EOMONTH([Date], 0),
+				    "YearMonthNum", YEAR([Date]) * 100 + MONTH([Date])
+				)
+
+	annotation PBI_Id = 74f540d6ce1c483691989669a0887b43
+

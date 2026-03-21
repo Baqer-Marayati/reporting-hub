@@ -1,0 +1,30 @@
+table KPI
+	lineageTag: 33b76c14-55b1-4997-884d-f84fbea386e1
+
+	column Column1
+		dataType: string
+		lineageTag: 36eb941c-3cde-4b78-8164-76a673e17901
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition KPI = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCg9xUdJRMlSK1YlW8gWzjcDsQDDbGMyOBLNNlGJjAQ==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [KPI = _t, KPI_ID = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"KPI", type text}, {"KPI_ID", Int64.Type}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","WTD","Week to date",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","MTD","Month to date",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","QTD","Quarter to date",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","YTD","Year to date",Replacer.ReplaceText,{"KPI"}),
+				    KPI1 = #"Replaced Value3"{3}[KPI],
+				    #"Converted to Table" = #table(1, {{KPI1}})
+				in
+				    #"Converted to Table"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

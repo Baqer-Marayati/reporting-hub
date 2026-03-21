@@ -1,0 +1,67 @@
+table FiscalYearSelection
+	lineageTag: 72a7ff9a-6a3b-4bd2-963b-c7eabb09c366
+
+	measure SelectedFiscalYear = MIN('FiscalYearSelection'[value])
+		lineageTag: 3400845e-e731-4d8b-81d4-c1cf15eac778
+
+	column fiscalMonth
+		formatString: 0
+		lineageTag: a2df609d-63d3-42d1-aca5-7c1ead2eb4b6
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [fiscalMonth]
+
+		annotation SummarizationSetBy = Automatic
+
+	column label
+		lineageTag: 040758bc-91df-46a4-b3d4-858bfd022d62
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [label]
+
+		annotation SummarizationSetBy = Automatic
+
+	column id
+		formatString: 0
+		lineageTag: af3f9537-d806-4f5c-8874-b4a3039f6703
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [id]
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		lineageTag: 0e5d9fc5-89bc-4566-ad17-2367e6cbdeee
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FiscalYearSelection = calculated
+		mode: import
+		source =
+				
+				DATATABLE(
+				    "id", INTEGER,
+				    "fiscalMonth", INTEGER,
+				    "value",STRING,
+				    "label", STRING,
+				    {
+				        {1, 1, "31/12", "January – December"},
+				        {2, 2, "31/01", "February – January"},
+				        {3, 3, "28/02", "March – February"},   // Consider leap year handling separately
+				        {4, 4, "31/03", "April – March"},
+				        {5, 5, "30/04", "May – April"},
+				        {6, 6, "31/05", "June – May"},
+				        {7, 7, "30/06", "July – June"},
+				        {8, 8, "31/07", "August – July"},
+				        {9, 9, "31/08", "September – August"},
+				        {10, 10, "30/09", "October – September"},
+				        {11, 11, "31/10", "November – October"},
+				        {12, 12, "30/11", "December – November"}
+				    }
+				)
+
+	annotation PBI_Id = ab57f3f306f44ac3b862d29931cd416e
+

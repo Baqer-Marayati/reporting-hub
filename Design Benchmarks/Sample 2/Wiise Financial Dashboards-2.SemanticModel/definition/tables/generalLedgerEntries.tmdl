@@ -1,0 +1,1671 @@
+table generalLedgerEntries
+	lineageTag: 4b46c01e-2ad0-439b-b900-39a895b8162a
+
+	measure TotalRevenue = (CALCULATE( SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Income")) * -1
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		displayFolder: RevenueMeasures
+		lineageTag: b4cb9eb6-d977-45cd-bd7d-7d83afdf0bb2
+
+	measure TotalCostOfGoodsSold = CALCULATE(SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Cost of Goods Sold" )
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		displayFolder: CostOfGoodsSold
+		lineageTag: f55fb910-a1e1-4930-b102-19cacee8a398
+
+	measure RevenueFiltered =
+			
+			Switch('Period'[SelectedKPI],
+			5, [TotalRevenueYTD],
+			4, [TotalRevenueYTD],
+			2, [TotalRevenueMTD],
+			3, [TotalRevenueQTD],
+			1, [TotalRevenueWTD]
+			)
+		displayFolder: RevenueMeasures
+		lineageTag: 3c8475e3-0c35-4131-bf00-814e5a3cd37a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RevenueVariance = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalRevenuePYTD] = 0 && [TotalRevenueYTD] > 0, 1, DIVIDE(([TotalRevenueYTD] - [TotalRevenuePYTD]), [TotalRevenuePYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--", arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			4, 
+			VAR percentChange = If([TotalRevenuePYTD] = 0 && [TotalRevenueYTD] > 0, 1, DIVIDE(([TotalRevenueYTD] - [TotalRevenuePYTD]), [TotalRevenuePYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--", arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			3,  
+			VAR percentChange = If([TotalRevenue_PQTD] = 0 && [TotalRevenueQTD] > 0, 1, DIVIDE(([TotalRevenueQTD] - [TotalRevenue_PQTD]), [TotalRevenue_PQTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--", arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			2,  
+			VAR percentChange = If([TotalRevenue_PMTD] = 0 && [TotalRevenueMTD] > 0, 1, DIVIDE(([TotalRevenueMTD] - [TotalRevenue_PMTD]), [TotalRevenue_PMTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--", arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			1,  
+			VAR percentChange = If([TotalRevenue_PWTD] = 0 && [TotalRevenueWTD] > 0, 1, DIVIDE(([TotalRevenueWTD] - [TotalRevenue_PWTD]), [TotalRevenue_PWTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--", arrow & " " & FORMAT(ABS(percentChange), "0%"))
+			)
+			```
+		displayFolder: RevenueMeasures
+		lineageTag: 797d55fe-06f9-4fd0-ba89-e38090186f7d
+
+	measure TotalExpense = CALCULATE(SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Expense"  )
+		displayFolder: ExpenseMeasures
+		lineageTag: e2f2bac9-892d-49c8-b395-06bf8552c00c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenue_PMTD =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR CurrentDay = DAY(TodayDate)
+			VAR CurrentMonth = MONTH(TodayDate)
+			VAR CurrentYear = YEAR(TodayDate)
+			
+			VAR PrevMonth = IF(CurrentMonth = 1, 12, CurrentMonth - 1)
+			VAR PrevYear = IF(CurrentMonth = 1, CurrentYear - 1, CurrentYear)
+			
+			VAR StartDate = DATE(PrevYear, PrevMonth, 1)
+			VAR EndDate = DATE(PrevYear, PrevMonth, CurrentDay)
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalRevenue],
+			       generalLedgerEntries[postingDate] >= StartDate,
+			        generalLedgerEntries[postingDate] <= EndDate
+			    )
+		displayFolder: RevenueMeasures
+		lineageTag: ffda4e07-aaac-4bf7-8638-bac968606aca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueQTD =
+			
+			VAR todayDate=[TodayLocal]
+			VAR selectedPeriod = Period[SelectedKPI]
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR YearWiiseQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR startOfQuarterDate = IF(selectedPeriod=5, YearWiiseQuarter, [FiscalQuarterStartDate])
+			RETURN
+			CALCULATE (
+			        'generalLedgerEntries'[TotalRevenue],
+			        DATESBETWEEN (
+			            'generalLedgerEntries'[postingDate],
+			           startOfQuarterDate,
+			            [TodayLocal]
+			        )
+			    )
+		displayFolder: RevenueMeasures
+		lineageTag: 06ce903c-38e1-4d15-a2ae-5832d3bcbe8d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueWTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    SUM('generalLedgerEntries'[amount]),
+			    FILTER(
+			        'generalLedgerEntries',
+			        WEEKNUM('generalLedgerEntries'[postingDate], 2) = WEEKNUM(TodayDate, 2) &&
+			        YEAR('generalLedgerEntries'[postingDate]) = YEAR(TodayDate) &&
+			        'generalLedgerEntries'[postingDate] <= TodayDate &&
+			        'generalLedgerEntries'[accountcategory] = "Income"
+			    )
+			)*-1
+			```
+		displayFolder: RevenueMeasures
+		lineageTag: f94cd99f-ac1b-4f8a-bc29-5f9eb74c6062
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueMTD =
+			
+			VAR todayDate=[TodayLocal]
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 RETURN CALCULATE('generalLedgerEntries'[TotalRevenue],DATESBETWEEN('generalLedgerEntries'[postingDate],StartOfThisMonth, todayDate ))
+		displayFolder: RevenueMeasures
+		lineageTag: f622d697-8c78-4e69-a382-e2836142b4b4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenue_PQTD = ```
+			
+			VAR TodayDate=[TodayLocal]
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			
+			
+			
+			VAR EndOfPrevQTD=EDATE([TodayLocal], -3)
+			
+			
+			RETURN 
+			CALCULATE(
+			    generalLedgerEntries[TotalRevenue],
+			    DATESBETWEEN (
+			            'generalLedgerEntries'[postingDate],
+			            StartOfPrevQuarter,
+			            EndOFPrevQTD
+			        )
+			)
+			```
+		displayFolder: RevenueMeasures
+		lineageTag: d01c00ea-26fe-40e6-b4de-98030f858667
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenuePYTD =
+			
+			VAR SelectedDate = SELECTEDVALUE(FiscalYearSelection[value])  // e.g., "30/06"
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			VAR TodayDate=[TodayLocal]
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR LastYear = YEAR(TodayDate)-1
+			VAR StartOfLastCalendarYear=DATE(LastYear,1, 1)
+			VAR EndOfLastCalendarYTD=DATE(LastYear, MONTH(TodayDate), DAY(TodayDate))
+			VAR PreviousFS = DATE(YEAR([TodayLocal])-1, MONTH([FiscalYearStartDate]), DAY([FiscalYearStartDate]))
+			VAR EndFS= DATE(YEAR([TodayLocal])-1, MONTH([TodayLocal]), DAY([TodayLocal]))
+			VAR ActualStartDate=IF(selectedPeriod=5, StartOfLastCalendarYear, PreviousFS)
+			VAR ActualEndDate=IF(selectedPeriod=5, EndOfLastCalendarYTD, EndFS)
+			RETURN
+			CALCULATE (
+			        'generalLedgerEntries'[TotalRevenue],
+			        DATESBETWEEN (
+			            'generalLedgerEntries'[postingDate],
+			            ActualStartDate,
+			            ActualEndDate
+			        )
+			    )
+		displayFolder: RevenueMeasures
+		lineageTag: 065a6353-b265-44f9-a8de-f0f5c06cb7a7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenue_PWTD =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR WeekdayToday = WEEKDAY(TodayDate, 2)  -- Monday = 1
+			
+			VAR StartDate = TodayDate - WeekdayToday - 6
+			VAR EndDate = StartDate + WeekdayToday - 1
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalRevenue],
+			        FILTER(
+			            'DateTable',
+			            'DateTable'[Date] >= StartDate && 'DateTable'[Date] <= EndDate
+			        )
+			    )
+		displayFolder: RevenueMeasures
+		lineageTag: 0c51a006-ad45-4b4b-9b47-e3ad5ffe8db6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpense_PMTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR CurrentDay = DAY(TodayDate)
+			VAR CurrentMonth = MONTH(TodayDate)
+			VAR CurrentYear = YEAR(TodayDate)
+			
+			VAR PrevMonth = IF(CurrentMonth = 1, 12, CurrentMonth - 1)
+			VAR PrevYear = IF(CurrentMonth = 1, CurrentYear - 1, CurrentYear)
+			
+			VAR StartDate = DATE(PrevYear, PrevMonth, 1)
+			VAR EndDate = DATE(PrevYear, PrevMonth, CurrentDay)
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalExpense],
+			       generalLedgerEntries[postingDate] >= StartDate,
+			        generalLedgerEntries[postingDate] <= EndDate
+			    )
+			
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: 68d06de5-fc47-49af-983b-2e8885ecabf5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpense_PQTD = ```
+			
+			
+			
+			VAR TodayDate=[TodayLocal]
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			
+			
+			
+			VAR EndOfPrevQTD=EDATE([TodayLocal], -3)
+			
+			RETURN 
+			CALCULATE(
+			    [TotalExpense], -- Replace with your measure or column
+			    DATESBETWEEN('DateTable'[Date], StartOfPrevQuarter, EndOfPrevQTD)
+			)
+			
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: f3e0c2cc-5dea-4bba-aa3e-22f9cbfe69f8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpense_PWTD =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR WeekdayToday = WEEKDAY(TodayDate, 2)  -- Monday = 1
+			
+			VAR StartDate = TodayDate - WeekdayToday - 6
+			VAR EndDate = StartDate + WeekdayToday - 1
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalExpense],
+			        FILTER(
+			            'DateTable',
+			            'DateTable'[Date] >= StartDate && 'DateTable'[Date] <= EndDate
+			        )
+			    )
+		displayFolder: ExpenseMeasures
+		lineageTag: 84d36fbc-2c1f-4965-8d49-f875d3fcc043
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpensePYTD = ```
+			
+			VAR SelectedDate = SELECTEDVALUE(FiscalYearSelection[value])  // e.g., "30/06"
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			VAR TodayDate=[TodayLocal]
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR LastYear = YEAR(TodayDate)-1
+			VAR StartOfLastCalendarYear=DATE(LastYear,1, 1)
+			VAR EndOfLastCalendarYTD=DATE(LastYear, MONTH(TodayDate), DAY(TodayDate))
+			VAR PreviousFS = DATE(YEAR([TodayLocal])-1, MONTH([FiscalYearStartDate]), DAY([FiscalYearStartDate]))
+			VAR EndFS= DATE(YEAR([TodayLocal])-1, MONTH([TodayLocal]), DAY([TodayLocal]))
+			VAR ActualStartDate=IF(selectedPeriod=5, StartOfLastCalendarYear, PreviousFS)
+			VAR ActualEndDate=IF(selectedPeriod=5, EndOfLastCalendarYTD, EndFS)
+			RETURN
+			
+			        CALCULATE(
+			            'generalLedgerEntries'[TotalExpense],
+			            DATESBETWEEN(DateTable[Date], ActualStartDate, ActualEndDate)
+			        )
+			
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: f0482511-a7cf-4877-83c6-8028a23d2ec7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseMTD = ```
+			
+			 VAR todayDate=[TodayLocal]
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 RETURN 
+			 CALCULATE('generalLedgerEntries'[TotalExpense],DATESBETWEEN('generalLedgerEntries'[postingDate], StartOfThisMonth, todayDate))
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: 3d6c9c71-f964-43c4-8001-b0886276bfde
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseQTD =
+			
+			VAR todayDate=[TodayLocal]
+			VAR selectedPeriod = Period[SelectedKPI]
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR YearWiiseQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR startOfQuarterDate = IF(selectedPeriod=5, YearWiiseQuarter, [FiscalQuarterStartDate])
+			RETURN
+			 CALCULATE('generalLedgerEntries'[TotalExpense],DATESBETWEEN('generalLedgerEntries'[postingDate], startOfQuarterDate, [TodayLocal]))
+		displayFolder: ExpenseMeasures
+		lineageTag: a7eccead-b93d-4045-b085-a54b05f8d893
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseWTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('generalLedgerEntries'[amount]),
+			    FILTER(
+			        generalLedgerEntries,
+			        WEEKNUM('generalLedgerEntries'[postingDate], 2) = WEEKNUM(TodayDate, 2) &&  -- Same week
+			        YEAR('generalLedgerEntries'[postingDate]) = YEAR(TodayDate) &&              -- Same year
+			        'generalLedgerEntries'[postingDate] <= TodayDate &&                         -- Up to today
+			        'generalLedgerEntries'[accountcategory] = "Expense"            -- COGS only
+			    )
+			)
+			
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: e3302022-8233-44b8-8171-dab0fb187ad7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseYTD = ```
+			
+			var selectedPeriod = Period[SelectedKPI]
+			
+			 
+			
+			VAR startOfFs= If (selectedPeriod =5, DATE(Year([TodayLocal]), 1,1), [FiscalYearStartDate])
+			RETURN
+			 CALCULATE('generalLedgerEntries'[TotalExpense], DATESBETWEEN('generalLedgerEntries'[postingDate], startOfFs, [TodayLocal]))
+			    
+			    
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: e532ca48-5eb8-47b2-8b66-5e754591c96a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ExpenseVariance = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalExpensePYTD] = 0 && [TotalExpenseYTD] > 0, 1, DIVIDE(([TotalExpenseYTD] - [TotalExpensePYTD]), [TotalExpensePYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			4, 
+			VAR percentChange = If([TotalExpensePYTD] = 0 && [TotalExpenseYTD] > 0, 1, DIVIDE(([TotalExpenseYTD] - [TotalExpensePYTD]), [TotalExpensePYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			3,  
+			VAR percentChange = If([TotalExpense_PQTD] = 0 && [TotalExpenseQTD] > 0, 1, DIVIDE(([TotalExpenseQTD] - [TotalExpense_PQTD]), [TotalExpense_PQTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			2,  
+			VAR percentChange = If([TotalExpense_PMTD] = 0 && [TotalExpenseMTD] > 0, 1, DIVIDE(([TotalExpenseMTD] - [TotalExpense_PMTD]), [TotalExpense_PMTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			1,  
+			VAR percentChange = If([TotalExpense_PWTD] = 0 && [TotalExpenseWTD] > 0, 1, DIVIDE(([TotalExpenseWTD] - [TotalExpense_PWTD]), [TotalExpense_PWTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")))
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: c3ac4028-4658-4bbd-ba44-77f2ed14cc9d
+
+	measure ExpenseFiltered =
+			
+			Switch('Period'[SelectedKPI],
+			5, [TotalExpenseYTD],
+			4, [TotalExpenseYTD],
+			2, [TotalExpenseMTD],
+			3, [TotalExpenseQTD],
+			1, [TotalExpenseWTD]
+			)
+		displayFolder: ExpenseMeasures
+		lineageTag: 8aa8a4ed-c895-4963-8074-4da53ddfd963
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSold_PMTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR CurrentDay = DAY(TodayDate)
+			VAR CurrentMonth = MONTH(TodayDate)
+			VAR CurrentYear = YEAR(TodayDate)
+			
+			VAR PrevMonth = IF(CurrentMonth = 1, 12, CurrentMonth - 1)
+			VAR PrevYear = IF(CurrentMonth = 1, CurrentYear - 1, CurrentYear)
+			
+			VAR StartDate = DATE(PrevYear, PrevMonth, 1)
+			VAR EndDate = DATE(PrevYear, PrevMonth, CurrentDay)
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalCostOFGoodsSold],
+			       generalLedgerEntries[postingDate] >= StartDate,
+			        generalLedgerEntries[postingDate] <= EndDate
+			    )
+			
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: 1c843d18-f7a4-4f83-9580-e4e978b63757
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSold_PQTD = ```
+			
+			
+			
+			VAR TodayDate=[TodayLocal]
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			VAR EndOfPrevQTD=EDATE([TodayLocal], -3)
+			
+			
+			RETURN 
+			CALCULATE(
+			    [TotalCostOFGoodsSold], -- Replace with your measure or column
+			    DATESBETWEEN('DateTable'[Date], StartOfPrevQuarter, EndOfPrevQTD)
+			)
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: 53a8459f-7825-4993-9667-150cced73752
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSold_PWTD =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR WeekdayToday = WEEKDAY(TodayDate, 2)  -- Monday = 1
+			
+			VAR StartDate = TodayDate - WeekdayToday - 6
+			VAR EndDate = StartDate + WeekdayToday - 1
+			
+			RETURN
+			    CALCULATE(
+			        generalLedgerEntries[TotalCostOFGoodsSold],
+			        FILTER(
+			            'DateTable',
+			            'DateTable'[Date] >= StartDate && 'DateTable'[Date] <= EndDate
+			        )
+			    )
+		displayFolder: CostOfGoodsSold
+		lineageTag: e5e1ff07-47fd-4055-8a58-36d855e17913
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSold_PYTD = ```
+			
+			VAR SelectedDate = SELECTEDVALUE(FiscalYearSelection[value])  // e.g., "30/06"
+			var selectedPeriod = Period[SelectedKPI]
+			Var newFS = accountingPeriods[FiscalYearEnd]
+			VAR TodayDate=[TodayLocal]
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR LastYear = YEAR(TodayDate)-1
+			VAR StartOfLastCalendarYear=DATE(LastYear,1, 1)
+			VAR EndOfLastCalendarYTD=DATE(LastYear, MONTH(TodayDate), DAY(TodayDate))
+			VAR PreviousFS = DATE(YEAR([TodayLocal])-1, MONTH([FiscalYearStartDate]), DAY([FiscalYearStartDate]))
+			VAR EndFS= DATE(YEAR([TodayLocal])-1, MONTH([TodayLocal]), DAY([TodayLocal]))
+			VAR ActualStartDate=IF(selectedPeriod=5, StartOfLastCalendarYear, PreviousFS)
+			VAR ActualEndDate=IF(selectedPeriod=5, EndOfLastCalendarYTD, EndFS)
+			
+			RETURN
+			
+			CALCULATE(
+			            'generalLedgerEntries'[TotalCostOFGoodsSold],
+			            DATESBETWEEN('generalLedgerEntries'[postingDate], ActualStartDate, ActualEndDate)
+			        )
+			       
+			    
+			        // CALCULATE(
+			        //     'generalLedgerEntries'[TotalCostOFGoodsSold],
+			        //     DATESYTD(SAMEPERIODLASTYEAR(DateTable[Date]), "31/12")
+			        // )
+			
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: d5bec0b8-2e07-4ca0-b944-76e9ec01139c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSoldMTD = ```
+			
+			VAR todayDate=[TodayLocal]
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			RETURN 
+			CALCULATE('generalLedgerEntries'[TotalCostOFGoodsSold],DATESBETWEEN('generalLedgerEntries'[postingDate], StartOfThisMonth, todayDate))
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: 332ee935-a2e6-411f-b1f7-cf4767de6f09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSoldQTD =
+			
+			VAR todayDate=[TodayLocal]
+			VAR selectedPeriod = Period[SelectedKPI]
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR YearWiiseQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR startOfQuarterDate = IF(selectedPeriod=5, YearWiiseQuarter, [FiscalQuarterStartDate])
+			RETURN
+			
+			CALCULATE('generalLedgerEntries'[TotalCostOFGoodsSold],DATESBETWEEN('generalLedgerEntries'[postingDate], startOfQuarterDate, todayDate))
+		displayFolder: CostOfGoodsSold
+		lineageTag: d8e02d97-de8c-4635-a3f0-dda7a76fc433
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSoldWTD =
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN CALCULATE(
+			    SUM('generalLedgerEntries'[amount]),
+			    FILTER(
+			        generalLedgerEntries,
+			        WEEKNUM('generalLedgerEntries'[postingDate], 2) = WEEKNUM(TodayDate, 2) &&  -- Same week
+			        YEAR('generalLedgerEntries'[postingDate]) = YEAR(TodayDate) &&              -- Same year
+			        'generalLedgerEntries'[postingDate] <= TodayDate &&                         -- Up to today
+			        'generalLedgerEntries'[accountcategory] = "Cost of Goods Sold"            -- COGS only
+			    )
+			)
+		displayFolder: CostOfGoodsSold
+		lineageTag: 043bc8b0-0bcd-47fc-b34c-574f230680b1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCostOFGoodsSoldYTD = ```
+			
+			var selectedPeriod = Period[SelectedKPI]
+			
+			 
+			
+			VAR startOfFs= If (selectedPeriod =5, DATE(Year([TodayLocal]), 1,1), [FiscalYearStartDate])
+			RETURN
+			
+			 CALCULATE('generalLedgerEntries'[TotalCostOFGoodsSold], DATESBETWEEN('generalLedgerEntries'[postingDate], startOfFs, [TodayLocal]))
+			    
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: 2d9447a1-a8ba-459c-bf79-86c7f18bc1ea
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CostOfGoodsSoldFiltered =
+			
+			Switch('Period'[SelectedKPI],
+			5, [TotalCostOFGoodsSoldYTD],
+			4, [TotalCostOFGoodsSoldYTD],
+			2, [TotalCostOFGoodsSoldMTD],
+			3, [TotalCostOFGoodsSoldQTD],
+			1, [TotalCostOFGoodsSoldWTD]
+			)
+		displayFolder: CostOfGoodsSold
+		lineageTag: e68a62ba-60bc-4fa6-b948-3e7e84886b6d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CostOfGoodsSoldVariance = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalCostOFGoodsSold_PYTD] = 0 && [TotalCostOFGoodsSoldYTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldYTD] - [TotalCostOFGoodsSold_PYTD]), [TotalCostOFGoodsSold_PYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			4, 
+			VAR percentChange = If([TotalCostOFGoodsSold_PYTD] = 0 && [TotalCostOFGoodsSoldYTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldYTD] - [TotalCostOFGoodsSold_PYTD]), [TotalCostOFGoodsSold_PYTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			3,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PQTD] = 0 && [TotalCostOFGoodsSoldQTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldQTD] - [TotalCostOFGoodsSold_PQTD]), [TotalCostOFGoodsSold_PQTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			2,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PMTD] = 0 && [TotalCostOFGoodsSoldMTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldMTD] - [TotalCostOFGoodsSold_PMTD]), [TotalCostOFGoodsSold_PMTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%")),
+			1,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PWTD] = 0 && [TotalCostOFGoodsSoldWTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldWTD] - [TotalCostOFGoodsSold_PWTD]), [TotalCostOFGoodsSold_PWTD]))
+			Var arrow = If(percentChange > 0, UNICHAR(11014), UNICHAR(11015)) 
+			RETURN
+			IF (percentChange = 0,"--",arrow & " " & FORMAT(ABS(percentChange), "0%"))
+			)
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: d71cdb26-755e-4743-bdec-cf3e08c31f6a
+
+	measure GrossProfit =
+			
+			Switch('Period'[SelectedKPI],
+			5, [TotalRevenueYTD] - [TotalCostOFGoodsSoldYTD],
+			4, [TotalRevenueYTD] - [TotalCostOFGoodsSoldYTD],
+			3, [TotalRevenueQTD] - [TotalCostOFGoodsSoldQTD],
+			2, [TotalRevenueMTD] - [TotalCostOFGoodsSoldMTD],
+			1, [TotalRevenueWTD] - [TotalCostOFGoodsSoldWTD]
+			)
+		displayFolder: Gross Profit
+		lineageTag: 47bb1bed-c15f-40e7-a8c2-51b3ebc8a61c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure grossProfitMTD = [TotalRevenueMTD] - [TotalCostOFGoodsSoldMTD]
+		displayFolder: Gross Profit
+		lineageTag: aaec3c6e-33a5-453d-83f6-51338128e65d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure grossProfitQTD = [TotalRevenueQTD] - [TotalCostOFGoodsSoldQTD]
+		displayFolder: Gross Profit
+		lineageTag: 5ec7e8c8-a7c8-43b0-a4f8-c560faf5c1dd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure grossProfitWTD = [TotalRevenueWTD] - [TotalCostOFGoodsSoldWTD]
+		displayFolder: Gross Profit
+		lineageTag: 61768fac-1a12-4aa5-ae4c-89d1e47b9103
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure grossProfitYTD = [TotalRevenueYTD] - [TotalCostOFGoodsSoldYTD]
+		displayFolder: Gross Profit
+		lineageTag: bcdb7a49-1d7d-46dd-aa39-e707527712c4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCOGSBudgetWTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalCOGSBudget],       
+			    KEEPFILTERS(
+			        MONTH(glBudgetEntries[date]) = MONTH(TodayDate) &&
+			        YEAR(glBudgetEntries[date]) = YEAR(TodayDate)
+			    )
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: a8969026-1e91-4c75-9522-ef6f116eb15c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueBudgetWTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalRevenueBudget],       
+			    KEEPFILTERS(
+			        MONTH(glBudgetEntries[date]) = MONTH(TodayDate) &&
+			        YEAR(glBudgetEntries[date]) = YEAR(TodayDate)
+			    
+			))
+			```
+		displayFolder: Gross Profit
+		lineageTag: 19219caa-0395-4309-aad2-a73f1b32003d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure BudgetWTD = [TotalRevenueBudgetWTD] - [TotalCOGSBudgetWTD]
+		displayFolder: Gross Profit
+		lineageTag: 65b40d7f-c9bc-42b2-9694-d1b9ca5c9dcb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueBudgetQTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalRevenueBudget],
+			    KEEPFILTERS(
+			        YEAR(Glbudgetentries[date]) = YEAR(TodayDate) &&
+			        QUARTER(Glbudgetentries[date]) = QUARTER(TodayDate) &&
+			        Glbudgetentries[date] <= TodayDate  -- Current quarter, up to today
+			    )
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: 5e917f95-0e9f-4728-87cb-96f3d96b2557
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCOGSBudgetQTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalCOGSBudget],
+			    KEEPFILTERS(
+			        YEAR(Glbudgetentries[date]) = YEAR(TodayDate) &&
+			        QUARTER(Glbudgetentries[date]) = QUARTER(TodayDate) &&
+			        Glbudgetentries[date] <= TodayDate  -- Current quarter, up to today
+			    )
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: 188e647b-058f-467b-9cab-fb6d9fb0f79c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueBudgetMTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalRevenueBudget],       
+			    KEEPFILTERS(
+			        MONTH(glBudgetEntries[date]) = MONTH(TodayDate) &&
+			        YEAR(glBudgetEntries[date]) = YEAR(TodayDate)
+			    )
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: 76329c6f-4db7-4617-be58-b49e3724beed
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCOGSBudgetMTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalCOGSBudget],       
+			    KEEPFILTERS(
+			        MONTH(glBudgetEntries[date]) = MONTH(TodayDate) &&
+			        YEAR(glBudgetEntries[date]) = YEAR(TodayDate)
+			    )
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: 31ec4a56-3644-4ca8-b03c-f03396346e68
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure BudgetMTD = [TotalRevenueBudgetMTD] - [TotalCOGSBudgetMTD]
+		displayFolder: Gross Profit
+		lineageTag: 75384a5c-4257-4b6f-ab94-d63c2fa706b1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure BudgetQTD = [TotalRevenueBudgetQTD] - [TotalCOGSBudgetQTD]
+		displayFolder: Gross Profit
+		lineageTag: 3072ba7b-0384-4ea8-8e0f-ada229e744e4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure BudgetYTD = [TotalRevenueBudgetYTD_new] - [TotalCOGSBudgetYTD_new]
+		displayFolder: Gross Profit
+		lineageTag: 0a0b0bdd-cb90-45da-9905-323522a62d3e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Budgetpercent = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([BudgetYTD] = 0, 100, DIVIDE(([grossProfitYTD] - [BudgetYTD]), [BudgetYTD]))
+			Var per = IF([BudgetYTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			4, 
+			VAR percentChange = If([BudgetYTD] = 0, 100, DIVIDE(([grossProfitYTD] - [BudgetYTD]), [BudgetYTD]))
+			Var per = IF([BudgetYTD]=0, percentChange,(percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			3,  
+			VAR percentChange = If([BudgetQTD] = 0, 100,DIVIDE(([grossProfitQTD] - [BudgetQTD]), [BudgetQTD]))
+			Var per = IF([BudgetQTD]=0, percentChange,(percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			2,  
+			VAR percentChange = If([BudgetMTD] = 0 , 100, DIVIDE(([grossProfitMTD] - [BudgetMTD]), [BudgetMTD]))
+			Var per = IF([BudgetMTD]=0, percentChange,(percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			1,  
+			VAR percentChange = If([BudgetWTD] = 0, 100, DIVIDE(([grossProfitWTD] - [BudgetWTD]), [BudgetWTD]))
+			Var per = IF([BudgetWTD]=0, percentChange,(percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%"
+			)
+			```
+		displayFolder: Gross Profit
+		lineageTag: b060c218-0c7e-4d34-9976-a849e3f20d4c
+
+	measure NetProfit =
+			
+			Switch('Period'[SelectedKPI],
+			5, [NetProfitYTD],
+			4, [NetProfitYTD],
+			3, [NetProfitQTD],
+			2, [NetProfitMTD],
+			1, [NetProfitWTD]
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		displayFolder: Net Profit
+		lineageTag: 09f5363a-e164-42e2-bbbd-03891d7ef85a
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure TotalExpneseBudgetWTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			RETURN 
+			CALCULATE(
+			    [TotalExpenseBudget],       
+			    KEEPFILTERS(
+			        MONTH(glBudgetEntries[date]) = MONTH(TodayDate) &&
+			        YEAR(glBudgetEntries[date]) = YEAR(TodayDate)
+			    )
+			)
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: a07151fa-ad90-4603-b537-908a725ee408
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseBudgetMTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR todayDate=[TodayLocal]
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			
+			
+			
+			
+			RETURN 
+			CALCULATE(
+			    [TotalExpenseBudget],       
+			    DATESBETWEEN('glBudgetEntries'[date], StartOfThisMonth,todayDate)
+			)
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: d414154f-ca2f-4e40-84df-e6a822e809aa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseBudgetQTD = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR todayDate=[TodayLocal]
+			VAR selectedPeriod = Period[SelectedKPI]
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR YearWiiseQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR startOfQuarterDate = IF(selectedPeriod=5, YearWiiseQuarter, [FiscalQuarterStartDate])
+			RETURN
+			CALCULATE (
+			        'generalLedgerEntries'[TotalRevenue],
+			        DATESBETWEEN (
+			            'glBudgetEntries'[date],
+			           startOfQuarterDate,
+			            [TodayLocal]
+			        )
+			    )
+			
+			
+			
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: a149ff7f-1f9c-449e-8ec9-9561c10f959d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitBudgetpercent = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([NetProfitBudgetYTD] = 0, 100, DIVIDE(([NetProfitYTD] - [NetProfitBudgetYTD]), [NetProfitBudgetYTD]))
+			Var per = IF([NetProfitBudgetYTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			4, 
+			VAR percentChange = If([NetProfitBudgetYTD] = 0, 100, DIVIDE(([NetProfitYTD] - [NetProfitBudgetYTD]), [NetProfitBudgetYTD]))
+			Var per = IF([NetProfitBudgetYTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			3,  
+			VAR percentChange = If( [NetProfitBudgetQTD] = 0, 100, DIVIDE(([NetProfitQTD] - [NetProfitBudgetQTD]), [NetProfitBudgetQTD]))
+			Var per = IF([NetProfitBudgetQTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			2,  
+			VAR percentChange = If ( [NetProfitBudgetMTD] = 0, 100, DIVIDE(([NetProfitMTD] - [NetProfitBudgetMTD]), [NetProfitBudgetMTD]))
+			Var per = IF([NetProfitBudgetMTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%",
+			1,  
+			VAR percentChange = If([NetProfitBudgetWTD] = 0, 100, DIVIDE(([NetProfitWTD] - [NetProfitBudgetWTD]), [NetProfitBudgetWTD]))
+			Var per = IF([NetProfitBudgetWTD]=0, percentChange, (percentChange * 100) + 100)
+			RETURN
+			FORMAT(per, "0.00") & "%"
+			)
+			```
+		displayFolder: Net Profit
+		lineageTag: b10de3cd-a9c5-4a1f-b5a0-cf56ce294e63
+
+	measure NetProfitWTD = [TotalRevenueWTD] - ([TotalCostOFGoodsSoldWTD] + [TotalExpenseWTD])
+		displayFolder: Net Profit
+		lineageTag: 21f78bf4-cde5-4056-917a-11e54fe0ab88
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitQTD = [TotalRevenueQTD] - ([TotalCostOFGoodsSoldQTD] + [TotalExpenseQTD])
+		displayFolder: Net Profit
+		lineageTag: 4d843dd2-e6d4-453d-a62e-aeefb7c2301a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitMTD = [TotalRevenueMTD] - ([TotalCostOFGoodsSoldMTD] + [TotalExpenseMTD])
+		displayFolder: Net Profit
+		lineageTag: b5094459-ad4a-4dec-b73f-caac9af7134d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitYTD = [TotalRevenueYTD] - ([TotalCostOFGoodsSoldYTD] + [TotalExpenseYTD])
+		displayFolder: Net Profit
+		lineageTag: f59aa1c1-9846-405c-92e7-51d49c69d55e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitBudgetMTD = [TotalRevenueBudgetMTD] - ([TotalCOGSBudgetMTD]) + [TotalExpenseBudgetMTD]
+		displayFolder: Net Profit
+		lineageTag: e6293218-d398-4495-b570-5465ddf7bc4f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitBudgetWTD = [TotalRevenueBudgetWTD] - ([TotalCOGSBudgetWTD] + [TotalExpneseBudgetWTD])
+		displayFolder: Net Profit
+		lineageTag: d5d142a8-ef3e-4edf-8e6e-2fb6fa58e755
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitBudgetQTD = [TotalRevenueBudgetQTD] - ([TotalCOGSBudgetQTD] + [TotalExpenseBudgetQTD])
+		displayFolder: Net Profit
+		lineageTag: 470ee987-9530-4abc-b36a-19bd1381f3cb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfitBudgetYTD = [TotalRevenueBudgetYTD_new] - ([TotalCOGSBudgetYTD_new] + [TotalExpenseBudgetYTD_new])
+		displayFolder: Net Profit
+		lineageTag: 4cd6eaa2-0280-46ad-9a78-64726f6932db
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure GrossProfit_Budget =
+			
+			Switch('Period'[SelectedKPI],
+			5, If([BudgetYTD] = 0, 1,[BudgetYTD]),
+			4, If([BudgetYTD] = 0, 1,[BudgetYTD]),
+			3, If([BudgetQTD] = 0, 1, [BudgetQTD]),
+			2, If([BudgetMTD] = 0, 1 ,[BudgetMTD]),
+			1, If( [BudgetWTD] = 0 , 1, [BudgetWTD])
+			)
+		displayFolder: Gross Profit
+		lineageTag: 4cdbae85-8e2f-4090-8d28-982d0af68d95
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NetProfit_Budget =
+			
+			Switch('Period'[SelectedKPI],
+			5, If([NetProfitBudgetYTD] = 0, 1, [NetProfitBudgetYTD]),
+			4, If([NetProfitBudgetYTD] = 0, 1, [NetProfitBudgetYTD]),
+			3, If([NetProfitBudgetQTD] = 0, 1, [NetProfitBudgetQTD]),
+			2, If([NetProfitBudgetMTD] = 0, 1, [NetProfitBudgetMTD]),
+			1, If([NetProfitBudgetWTD] = 0, 1, [NetProfitBudgetWTD])
+			)
+		displayFolder: Net Profit
+		lineageTag: 0c5ea814-fcf7-43ea-8b17-b3777b2ca8b6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Space = "       "
+		lineageTag: 4083003f-1f94-46bd-be80-5a2241e1677e
+
+	measure NetProfit_gaugeValue =
+			
+			Switch('Period'[SelectedKPI],
+			5, IF([NetProfitYTD] < 0, 0,[NetProfitYTD]),
+			4, IF([NetProfitYTD] < 0, 0,[NetProfitYTD]),
+			3, IF([NetProfitQTD] < 0, 0,[NetProfitQTD]),
+			2, IF([NetProfitMTD] < 0, 0,[NetProfitMTD]),
+			1, IF([NetProfitWTD] < 0, 0,[NetProfitWTD])
+			)
+		displayFolder: Net Profit
+		lineageTag: ba3b9547-878e-4a00-b127-2782532ff8bb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure GrossProfit_gaugeValue =
+			
+			Switch('Period'[SelectedKPI],
+			5, IF([GrossProfitYTD] < 0, 0,[GrossProfitYTD]),
+			4, IF([GrossProfitYTD] < 0, 0,[GrossProfitYTD]),
+			3, IF([GrossProfitQTD] < 0, 0,[GrossProfitQTD]),
+			2, IF([GrossProfitMTD] < 0, 0,[GrossProfitMTD]),
+			1, IF([GrossProfitWTD] < 0, 0,[GrossProfitWTD])
+			)
+		displayFolder: Gross Profit
+		lineageTag: 71b482b9-950e-4763-84e9-4a98fc38d64e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Space1 = ""
+		lineageTag: 2bb37ca5-37a0-45dc-b5ef-f084e282f3a2
+
+	measure Space2 = ""
+		lineageTag: e0b83770-2c50-47b1-b1bd-e792e611db14
+
+	measure Space3 = ""
+		lineageTag: 68551e03-3ec8-438d-a163-405daf047cc1
+
+	measure TotalRevenueYTD = ```
+			
+			var selectedPeriod = Period[SelectedKPI]
+			
+			 
+			
+			VAR startOfFs= If (selectedPeriod =5, DATE(Year([TodayLocal]), 1,1), [FiscalYearStartDate])
+			RETURN
+			CALCULATE (
+			        'generalLedgerEntries'[TotalRevenue],
+			        DATESBETWEEN (
+			            'generalLedgerEntries'[postingDate],
+			            startOfFs,
+			            [TodayLocal]
+			        )
+			    )
+			```
+		displayFolder: RevenueMeasures
+		lineageTag: 3afbe063-de11-4b6e-a247-24794f2ed63c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PTYDTEST =
+			CALCULATE(
+			            'generalLedgerEntries'[TotalRevenue],
+			            DATESYTD(SAMEPERIODLASTYEAR('generalLedgerEntries'[postingDate]), "31/03")
+			        )
+		displayFolder: RevenueMeasures
+		lineageTag: e3c36d5a-5c34-4af4-89de-c7fbc601d48b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure IsCurrentFiscalYear
+		lineageTag: 8f0b422a-8e70-4498-940f-212f3337ed4a
+
+	measure IsFiscalYearSlicerDisabled =
+			
+			IF(MIN('Period'[KPI_ID]) = "4", 1, 0)
+		formatString: 0
+		lineageTag: c0920380-2f75-473d-b68e-d9fdbb41501c
+
+	measure ShowFiscalBudget = IF(SELECTEDVALUE(Period[KPI]) = "Week to date", 0,1)
+		formatString: 0
+		lineageTag: b6c13d04-31f6-4f00-a2e5-71a7a01cbcab
+
+	measure RevenueVarianceNumeric = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalRevenuePYTD] = 0 && [TotalRevenueYTD] > 0, 1, DIVIDE(([TotalRevenueYTD] - [TotalRevenuePYTD]), [TotalRevenuePYTD]))
+			RETURN
+			percentChange,
+			4, 
+			VAR percentChange = If([TotalRevenuePYTD] = 0 && [TotalRevenueYTD] > 0, 1, DIVIDE(([TotalRevenueYTD] - [TotalRevenuePYTD]), [TotalRevenuePYTD]))
+			RETURN
+			percentChange,
+			3,  
+			VAR percentChange = If([TotalRevenue_PQTD] = 0 && [TotalRevenueQTD] > 0, 1, DIVIDE(([TotalRevenueQTD] - [TotalRevenue_PQTD]), [TotalRevenue_PQTD]))
+			RETURN
+			percentChange,
+			2,  
+			VAR percentChange = If([TotalRevenue_PMTD] = 0 && [TotalRevenueMTD] > 0, 1, DIVIDE(([TotalRevenueMTD] - [TotalRevenue_PMTD]), [TotalRevenue_PMTD]))
+			RETURN
+			percentChange,
+			1,  
+			VAR percentChange = If([TotalRevenue_PWTD] = 0 && [TotalRevenueWTD] > 0, 1, DIVIDE(([TotalRevenueWTD] - [TotalRevenue_PWTD]), [TotalRevenue_PWTD]))
+			RETURN
+			percentChange
+			)
+			```
+		displayFolder: RevenueMeasures
+		lineageTag: bd9718d1-63f1-4483-9916-92e9e7564339
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ExpenseVarianceNumeric = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalExpensePYTD] = 0 && [TotalExpenseYTD] > 0, 1, DIVIDE(([TotalExpenseYTD] - [TotalExpensePYTD]), [TotalExpensePYTD]))
+			RETURN
+			percentChange,
+			4, 
+			VAR percentChange = If([TotalExpensePYTD] = 0 && [TotalExpenseYTD] > 0, 1, DIVIDE(([TotalExpenseYTD] - [TotalExpensePYTD]), [TotalExpensePYTD]))
+			RETURN
+			percentChange,
+			3,  
+			VAR percentChange = If([TotalExpense_PQTD] = 0 && [TotalExpenseQTD] > 0, 1, DIVIDE(([TotalExpenseQTD] - [TotalExpense_PQTD]), [TotalExpense_PQTD]))
+			RETURN
+			percentChange,
+			2,  
+			VAR percentChange = If([TotalExpense_PMTD] = 0 && [TotalExpenseMTD] > 0, 1, DIVIDE(([TotalExpenseMTD] - [TotalExpense_PMTD]), [TotalExpense_PMTD]))
+			RETURN
+			percentChange,
+			1,  
+			VAR percentChange = If([TotalExpense_PWTD] = 0 && [TotalExpenseWTD] > 0, 1, DIVIDE(([TotalExpenseWTD] - [TotalExpense_PWTD]), [TotalExpense_PWTD]))
+			RETURN
+			percentChange)
+			```
+		displayFolder: ExpenseMeasures
+		lineageTag: ce125ae1-6cdd-43e4-88de-7cbfe04d1c57
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CostOfGoodsSoldVarianceNumeric = ```
+			
+			Switch('Period'[SelectedKPI],
+			5, 
+			VAR percentChange = If([TotalCostOFGoodsSold_PYTD] = 0 && [TotalCostOFGoodsSoldYTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldYTD] - [TotalCostOFGoodsSold_PYTD]), [TotalCostOFGoodsSold_PYTD]))
+			RETURN
+			percentChange,
+			4, 
+			VAR percentChange = If([TotalCostOFGoodsSold_PYTD] = 0 && [TotalCostOFGoodsSoldYTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldYTD] - [TotalCostOFGoodsSold_PYTD]), [TotalCostOFGoodsSold_PYTD]))
+			RETURN
+			percentChange,
+			3,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PQTD] = 0 && [TotalCostOFGoodsSoldQTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldQTD] - [TotalCostOFGoodsSold_PQTD]), [TotalCostOFGoodsSold_PQTD]))
+			RETURN
+			percentChange,
+			2,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PMTD] = 0 && [TotalCostOFGoodsSoldMTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldMTD] - [TotalCostOFGoodsSold_PMTD]), [TotalCostOFGoodsSold_PMTD]))
+			RETURN
+			percentChange,
+			1,  
+			VAR percentChange = If([TotalCostOFGoodsSold_PWTD] = 0 && [TotalCostOFGoodsSoldWTD] > 0, 1, DIVIDE(([TotalCostOFGoodsSoldWTD] - [TotalCostOFGoodsSold_PWTD]), [TotalCostOFGoodsSold_PWTD]))
+			RETURN
+			percentChange
+			)
+			```
+		displayFolder: CostOfGoodsSold
+		lineageTag: d51d63a9-95a9-4e0c-b651-6cf3dd80616c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PercentCOGSVarianceColorFormat = ```
+			
+			VAR ValueNum = [CostOfGoodsSoldVarianceNumeric]
+			RETURN 
+			       SWITCH(
+			        TRUE(),
+			        ValueNum > 0, "#B61335",     -- Red
+			        ValueNum = 0, "#818285",     -- Black
+			        ValueNum < 0, "#056D4D"      -- Green
+			    )
+			```
+		lineageTag: 25a0019e-7200-42c6-852d-a60904b859b3
+
+	measure PercentExpenseVarianceColorFormat = ```
+			
+			VAR ValueNum = [ExpenseVarianceNumeric]
+			RETURN 
+			       SWITCH(
+			        TRUE(),
+			        ValueNum > 0, "#B61335",     -- Red
+			        ValueNum = 0, "#818285",     -- Black
+			        ValueNum < 0, "#056D4D"      -- Green
+			    )
+			```
+		lineageTag: 13c47b96-94a1-4507-8fdb-35e685fd800a
+
+	measure PercentRevenueVarianceColorFormat = ```
+			
+			VAR ValueNum = [RevenueVarianceNumeric]
+			RETURN 
+			       SWITCH(
+			        TRUE(),
+			        ValueNum < 0, "#B61335",     -- Red
+			        ValueNum = 0, "#818285",     -- Black
+			        ValueNum > 0, "#056D4D"      -- Green
+			    )
+			```
+		lineageTag: 6669fc4a-6d91-4d11-9f81-b2474b5f1958
+
+	measure DebugTotalRevenueYTD = ```
+			
+			
+			VAR TodayDate=[TodayLocal]
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			VAR TEST=EDATE([TodayLocal], -3)
+			VAR EndOfPrevQuarter = EOMONTH(StartOfPrevQuarter, 3)
+			VAR DayofMonth=DAY(TodayDate)
+			VAR EndOFPrevQTD =IF(DayofMonth >Day(EndOfPrevQuarter), EndOfPrevQuarter, StartOfPrevQuarter+DayofMonth-1)
+			
+			RETURN TEST
+			
+			```
+		formatString: General Date
+		displayFolder: RevenueMeasures
+		lineageTag: b6a4a609-3f1a-41af-870c-093b890b8ea5
+
+	measure ActualSpend = ```
+			
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(generalLedgerEntries[amount]),
+			        FILTER(
+			            generalLedgerEntries,
+			            generalLedgerEntries[accountCategory] = "Expense" && generalLedgerEntries[accountType] = "Posting" && generalLedgerEntries[incomeBalance] = "Income Statement"
+			        ),
+			        FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3f2f67d8-f71f-444b-ab6d-8d9b37eada75
+
+	measure ActualSpendDynamic = ```
+			
+			//Get value of dimension code slicer
+			VAR DimSelected = SELECTEDVALUE(DimensionCodeTable[dimensionCodeNumberName]) 
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			// Get value of dimension code no.  - either globalDimension1 or globalDimension2
+			VAR DimNoSelected =  
+			    FIRSTNONBLANK(
+			        CALCULATETABLE(
+			            VALUES(DimensionCodeTable[dimensionCodeNo]),
+			            DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			        ),
+			        1
+			    )
+			
+			VAR DimensionCodesToFilter = 
+			    CALCULATETABLE(
+			        VALUES(DimensionCodeTable[dimensionCode]),
+			        DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			    )
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(generalLedgerEntries[amount]),
+			        FILTER(
+			            generalLedgerEntries,
+			            generalLedgerEntries[accountCategory] = "Expense" 
+			            && generalLedgerEntries[accountType] = "Posting" 
+			            && generalLedgerEntries[incomeBalance] = "Income Statement"
+			            && IF(
+			                DimNoSelected = "shortcutDimension1Code",
+			                generalLedgerEntries[globalDimension1Code] IN DimensionCodesToFilter,
+			                IF(
+			                    DimNoSelected = "shortcutDimension2Code",
+			                    generalLedgerEntries[globalDimension2Code] IN DimensionCodesToFilter,
+			                    TRUE()
+			                )
+			            )
+			        ),
+			      FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			
+			```
+		lineageTag: 0cb7fd00-16c3-4e52-a222-2e172d707649
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column id
+		dataType: string
+		lineageTag: a0d6b10e-d788-4d26-a4f9-0d0690b35b89
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: 72cdd235-c048-4f0d-ae71-91bd161215fe
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: c5e8edd6-2a49-4ee3-8a3d-9408097776c3
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: 6073cc03-2c93-498e-a98f-16cdb411c859
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: 1f82771a-cd6e-4dad-9a71-f890f4866e7f
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: 0ff1ee9e-d6ed-4a77-840b-9e884946d089
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 76fc55d8-918f-498a-bc1b-c0225b5920a5
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 52947e19-80f7-4a6f-aaba-0053503f2b24
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentType
+		dataType: string
+		lineageTag: 586b0614-d079-4afe-885b-fb48d713263a
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: bd16dc50-083a-4b6e-bdb8-b91c38e360d5
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: b6fbd5e3-36a4-4756-a0ca-1c1caf789887
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: c909853f-029f-4bb5-bc85-c31c94f845da
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column debitAmount
+		dataType: double
+		lineageTag: 3da336d6-bdb1-4b2b-93ac-08fdb23ba602
+		summarizeBy: sum
+		sourceColumn: debitAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column creditAmount
+		dataType: double
+		lineageTag: 1016ddc0-c0a6-4ac7-8d84-ed855c8bcd17
+		summarizeBy: sum
+		sourceColumn: creditAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: ab82dc68-397f-422f-868b-86f3963bbd97
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCurrentOrLastYear =
+			
+			VAR CurrentYear = YEAR(TODAY())
+			VAR ThisRowYear = YEAR(generalLedgerEntries[postingDate])
+			RETURN IF(ThisRowYear IN {CurrentYear, CurrentYear - 1}, 1, 0)
+		formatString: 0
+		lineageTag: 213c5b54-c81e-4764-a37b-38d9dad23748
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Legend Label' =
+			
+			VAR CurrentYear = YEAR([TodayLocal]) -- Get the current year
+			VAR EvaluatedYear = MAX(DateTable[Year]) -- Get the year in the current filter context
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        EvaluatedYear = CurrentYear, "Current Year",       -- Check for "Current Year"
+			        EvaluatedYear = CurrentYear - 1, "Previous Year", -- Check for "Previous Year"
+			        FORMAT(EvaluatedYear, "General Number")           -- Default: Return year as text
+			    )
+		lineageTag: 76827466-029c-4427-add0-010985933929
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column isCurrentYear = IF ( YEAR ( 'generalLedgerEntries'[postingDate] ) = YEAR ( TODAY() ), 1, 0 )
+		formatString: 0
+		lineageTag: c8fbf4e7-5c17-49fb-8b29-92ce6a108372
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension1Code
+		dataType: string
+		lineageTag: 75956a0f-09fd-41e8-9f35-a724ae83a295
+		summarizeBy: none
+		sourceColumn: globalDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension2Code
+		dataType: string
+		lineageTag: 276a02ce-7c4e-445f-891d-059fe9d0ab06
+		summarizeBy: none
+		sourceColumn: globalDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension4Code
+		dataType: string
+		lineageTag: 0b370af3-3101-43d1-8e26-08074cff317b
+		summarizeBy: none
+		sourceColumn: shortcutDimension4Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension5Code
+		dataType: string
+		lineageTag: 70b4351b-a3e9-48ff-9a85-5a6e4d5c4973
+		summarizeBy: none
+		sourceColumn: shortcutDimension5Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension6Code
+		dataType: string
+		lineageTag: 1cc13606-b31d-4f83-b154-9413b68f2bcb
+		summarizeBy: none
+		sourceColumn: shortcutDimension6Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension7Code
+		dataType: string
+		lineageTag: 3ebdaaa8-5384-4176-8c39-42bdfe213308
+		summarizeBy: none
+		sourceColumn: shortcutDimension7Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension8Code
+		dataType: string
+		lineageTag: 8266912f-e7bf-4c28-9cf2-08ef14b742c8
+		summarizeBy: none
+		sourceColumn: shortcutDimension8Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column AmountABS = ABS(generalLedgerEntries[amount])
+		lineageTag: 3c60b69f-8469-4a8a-8233-18844a53f2fa
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SpacerColumn = ""
+		lineageTag: 6d3a15cc-66d9-47fa-aeaa-286ea4edc76d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column SpacerColumn2 = ""
+		lineageTag: 01333ec8-dd35-4f70-8d0e-2c547e1dfd19
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsInLast6Months =
+			
+			VAR TodayDate = [TodayLocal]
+			VAR OneYearAgo = EDATE(TodayDate, -6)
+			RETURN
+			    generalLedgerEntries[PostingDate] >= OneYearAgo &&
+			    generalLedgerEntries[PostingDate] <= TodayDate
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d3d8e922-9162-4dc7-a9c5-0fcb242f0253
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension3Code
+		dataType: string
+		lineageTag: c7d4d0ef-bf1e-40b0-a7f3-b880aafad6d7
+		summarizeBy: none
+		sourceColumn: shortcutDimension3Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: 85cbeaf3-2e37-411b-8e18-7ccf9e47df25
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	column LegendColumnForCashflow =
+			
+			VAR val = generalLedgerEntries[accountSubcategoryDescript]
+			RETURN
+			IF(
+			    ISBLANK(val) || val = "",
+			    "Undefined",
+			    generalLedgerEntries[accountSubcategoryDescript]
+			)
+		lineageTag: d532364d-0192-439a-ab1c-fe26c2420431
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'postingDate Hierarchy'
+		lineageTag: 842b053f-4cd3-4109-97fe-bcdefc0fb946
+
+		level postingDate
+			lineageTag: 1a1af9e9-f709-422f-be90-b576d09e0635
+			column: postingDate
+
+	partition generalLedgerEntries = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    generalLedgerEntries_table = #"wiise/powerBI/v1.0"{[Name="generalLedgerEntries",Signature="table"]}[Data]
+				in
+				    generalLedgerEntries_table
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

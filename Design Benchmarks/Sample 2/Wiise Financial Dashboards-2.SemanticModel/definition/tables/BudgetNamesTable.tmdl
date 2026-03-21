@@ -1,0 +1,17 @@
+table BudgetNamesTable
+	lineageTag: 81787e75-afa3-4a2a-810b-1a0280719eb3
+
+	column BudgetName
+		lineageTag: b7e44526-215c-4021-966b-7b099a7d6e6f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [BudgetName]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BudgetNamesTable = calculated
+		mode: import
+		source = UNION(ROW("BudgetName", "Select Budget"),DISTINCT(SELECTCOLUMNS(glBudgetEntries, "BudgetName", glBudgetEntries[budgetName])))
+
+	annotation PBI_Id = c73f2ac9a7eb4fb08412f9f77625228e
+

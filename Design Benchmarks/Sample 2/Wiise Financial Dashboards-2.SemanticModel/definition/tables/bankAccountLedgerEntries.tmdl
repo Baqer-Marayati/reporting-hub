@@ -1,0 +1,333 @@
+table bankAccountLedgerEntries
+	lineageTag: 703c2dcc-487c-4b16-90c5-f3b39d9e45ed
+
+	measure Cashflow_cashGoingIn =
+			
+			var selectedPeriod = Max(CashflowPeriod[Value])
+			 Var today = [TodayLocal]
+			 Var nextDate = [TodayLocal] + selectedPeriod
+			 Return
+			CALCULATE(Sum(customerLedgerEntries[remainingAmtLCY]),
+			customerLedgerEntries[open] = true,
+			DATESBETWEEN(customerLedgerEntries[dueDate], today, nextDate))
+		lineageTag: 3725731c-ef65-4da9-83dc-32a716c392a2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_cashGoingIn_previous =
+			
+			CALCULATE(Sum(bankAccountLedgerEntries[debitAmountLCY]))
+		lineageTag: c605a1ba-c90d-49c1-aade-bd75997318f3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_cashGoingOut =
+			
+			var selectedPeriod = Max(CashflowPeriod[Value])
+			 Var today = [TodayLocal]
+			 Var nextDate = [TodayLocal] + selectedPeriod
+			 Return
+			CALCULATE(Sum(vendorLedgerEntries[remainingAmtLCY]) * -1,
+			vendorLedgerEntries[open] = true,
+			DATESBETWEEN(vendorLedgerEntries[dueDate], today, nextDate))
+		lineageTag: d3aed7c2-5da2-4546-b69b-b19429f1b014
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_endingCashInHand = [CashonHand] + [Cashflow_cashGoingIn] - [Cashflow_cashGoingOut]
+		lineageTag: 91ed4b34-e6cf-43cf-8fe5-655af26b6a93
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_cashGoingOut_previous =
+			
+			CALCULATE(Sum(bankAccountLedgerEntries[creditAmountLCY]))
+		lineageTag: 3d8e31f5-64dd-486c-ae50-5e2f4fe4a114
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_cashGoingIn_projected =
+			
+			CALCULATE(Sum(customerLedgerEntries[remainingAmtLCY]))
+		lineageTag: 5d8f04cf-3cd9-4c32-81aa-e38ceeae0165
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_cashGoingOut_projected =
+			
+			CALCULATE(Sum(vendorLedgerEntries[remainingAmtLCY]))* -1
+		lineageTag: 06898662-c08c-461a-8567-d309129c6c82
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_endingCashOnHand_previous = ```
+			
+			 [CashonHand] + [Cashflow_cashGoingIn_previous] - [Cashflow_cashGoingOut_previous]
+			```
+		lineageTag: a83ba475-9f89-496f-9323-0db556df87f0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_endingCashOnHand_projected = ```
+			
+			 [CashonHand] + [Cashflow_cashGoingIn_projected] - [Cashflow_cashGoingOut_projected]
+			```
+		lineageTag: c21f5573-18ab-46d8-a230-2b99506d30c5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_expenses = CALCULATE(SUM('generalLedgerEntries'[amount]), 'generalLedgerEntries'[accountCategory] = "Expense")
+		lineageTag: 4a9c1975-4ac5-4606-acd0-a0137efa2bb7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_RTO = ```
+			
+			VAR sOfMonth = MINX(STARTOFMONTH(DateTableCashflowAPAR[Date]),DateTableCashflowAPAR[Date])
+			VAR EOfMonth = MINX(ENDOFMONTH(DateTableCashflowAPAR[Date]),DateTableCashflowAPAR[Date])
+			Var OpeningAR = CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			        customerLedgerEntries[open] = true &&
+			        customerLedgerEntries[postingDate] < sOfMonth
+			)
+			
+			Var ClosingAR = 
+			CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			     customerLedgerEntries[open] = true &&
+			    customerLedgerEntries[postingDate] <= EOfMonth
+			)
+			
+			Var AverageAR = Divide((OpeningAR + ClosingAR),2)
+			Var TotalCreditSales = 
+			CALCULATE(Sum(customerLedgerEntries[amount]),
+			customerLedgerEntries[paymentMethodCode]<>"CASH",
+			DATESBETWEEN(customerLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+			
+			Var RTO = If(AverageAR = 0, "--", Divide(TotalCreditSales, AverageAR))
+			RETURN 
+			RTO
+			```
+		lineageTag: 68750ce7-d3b2-4ee2-aa5c-f8aac78afce3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cashflow_PTO = ```
+			
+			VAR sOfMonth = MINX(STARTOFMONTH(DateTableCashflowAPAR[Date]),DateTableCashflowAPAR[Date])
+			VAR EOfMonth = MINX(ENDOFMONTH(DateTableCashflowAPAR[Date]),DateTableCashflowAPAR[Date])
+			
+			var OpeningAP = 
+			CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			        vendorLedgerEntries[open] = true &&
+			        vendorLedgerEntries[postingDate] <= sOfMonth
+			)
+			
+			
+			var ClosingAP = 
+			CALCULATE(
+			    SUM(vendorLedgerEntries[remainingAmount]) * -1,
+			    vendorLedgerEntries[postingDate] <= EOfMonth
+			)
+			
+			Var AverageAP = Divide(OpeningAP + ClosingAP,2)
+			
+			Var TotalCOGS_linegraph = 
+			VAR EOfMonth = ENDOFMONTH(DateTableCashflowAPAR[Date])
+			VAR sOfMonth = STARTOFMONTH(DateTableCashflowAPAR[Date])
+			RETURN
+			CALCULATE(
+			    SUM(generalLedgerEntries[amount]),
+			    generalLedgerEntries[accountCategory] = "Cost of Goods Sold",
+			    DATESBETWEEN(generalLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+			
+			
+			var val = 
+			DIVIDE(
+			    TotalCOGS_linegraph,AverageAP
+			)
+			
+			RETURN
+			val
+			```
+		lineageTag: c60d194f-55b8-4d70-a1d5-dd935500394d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CashflowPreviousGraph_caption = ```
+			
+			VAR TodayDate = [TodayLocal]   -- your existing Today measure
+			VAR sOfMonth = DATE(YEAR(TodayDate), MONTH(TodayDate), 1)
+			
+			VAR CashIn =
+			    CALCULATE (
+			        SUM ( bankAccountLedgerEntries[debitAmountLCY] ),
+			        bankAccountLedgerEntries[postingDate] >= sOfMonth,
+			        bankAccountLedgerEntries[postingDate] <= TodayDate
+			    )
+			VAR CashOut =
+			    CALCULATE (
+			        SUM ( bankAccountLedgerEntries[creditAmountLCY] ),
+			        bankAccountLedgerEntries[postingDate] >= sOfMonth,
+			        bankAccountLedgerEntries[postingDate] <= TodayDate
+			    )
+			VAR CurrentMonthName = FORMAT ( TodayDate, "MMMM" )
+			RETURN
+			IF (
+			    OR ( CashIn <> 0, CashOut <> 0 ),
+			    CurrentMonthName & " - MTD",
+			    BLANK()
+			)
+			
+			```
+		lineageTag: dfade06e-0669-4c48-bf77-c11242494ad2
+
+	measure CashflowProjectedGraph_caption = ```
+			
+			VAR TodayDate = [TodayLocal]   -- your existing Today measure
+			VAR EOfMonth = EOMONTH(TodayDate, 0)
+			
+			VAR CashIn =
+			    CALCULATE (
+			        Sum(customerLedgerEntries[remainingAmount]),
+			        customerLedgerEntries[dueDate] >= TodayDate,
+			        customerLedgerEntries[dueDate] <= EOfMonth
+			    )
+			VAR CashOut =
+			    CALCULATE (
+			        Sum(vendorLedgerEntries[remainingAmount]) * -1,
+			        vendorLedgerEntries[dueDate] >= TodayDate,
+			        vendorLedgerEntries[dueDate] <= EOfMonth
+			    )
+			VAR CurrentMonthName = FORMAT ( TodayDate, "MMMM" )
+			RETURN
+			IF (
+			    OR ( CashIn <> 0, CashOut <> 0 ),
+			    CurrentMonthName & " - Remaining",
+			    BLANK()
+			)
+			
+			```
+		lineageTag: 61cc92f6-afa0-4c03-ba09-476e1d86595f
+
+	measure CashflowExpenses_LegendMeasure =
+			
+			VAR ValueXYZ = SELECTEDVALUE(generalLedgerEntries[accountSubcategoryDescript])
+			RETURN
+			IF(
+			    ISBLANK(ValueXYZ),
+			    "Undefined",
+			    ValueXYZ
+			)
+		lineageTag: 4ed9bf17-7831-46a1-ada9-92c3847fc7a6
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: da1980af-47f5-49b0-b6c6-93371e73b84d
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d2c9d53e-9dad-4990-a9da-d4be63dd7eef
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentType
+		dataType: string
+		lineageTag: 9137e62f-eab8-419f-a4e7-a5c72c129b4c
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: cc5ee1ad-4857-4933-ba18-0c6baa5b692c
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column bankAccountNo
+		dataType: string
+		lineageTag: fcc053a6-ecee-414e-bc12-827f77edad7a
+		summarizeBy: none
+		sourceColumn: bankAccountNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 8473a34f-9c04-4bd1-818d-f32c5cbe0b7a
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amountLCY
+		dataType: double
+		lineageTag: 8c58771d-4ed1-4dd6-96f0-05a538446bb5
+		summarizeBy: sum
+		sourceColumn: amountLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column creditAmountLCY
+		dataType: double
+		lineageTag: 917a1f11-d705-4c42-a321-cec4ee0825b4
+		summarizeBy: sum
+		sourceColumn: creditAmountLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column debitAmountLCY
+		dataType: double
+		lineageTag: b9fe89d1-8004-4803-8388-5a7a30a94c9e
+		summarizeBy: sum
+		sourceColumn: debitAmountLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: 5bcc00cd-c361-415a-be8b-f1bcd5eb16ee
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition bankAccountLedgerEntries = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    bankAccountLedgerEntries_table = #"wiise/powerBI/v1.0"{[Name="bankAccountLedgerEntries",Signature="table"]}[Data]
+				in
+				    bankAccountLedgerEntries_table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

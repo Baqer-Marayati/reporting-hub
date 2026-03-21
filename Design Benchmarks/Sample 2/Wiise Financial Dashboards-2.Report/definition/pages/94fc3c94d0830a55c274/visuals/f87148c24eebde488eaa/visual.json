@@ -1,0 +1,176 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "f87148c24eebde488eaa",
+  "position": {
+    "x": 943.61445783132524,
+    "y": 752.77108433734929,
+    "z": 16000,
+    "height": 361.4457831325301,
+    "width": 284.33734939759034,
+    "tabOrder": 20000
+  },
+  "visual": {
+    "visualType": "donutChart",
+    "query": {
+      "queryState": {
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "generalLedgerEntries"
+                    }
+                  },
+                  "Property": "ActualSpend"
+                }
+              },
+              "queryRef": "generalLedgerEntries.ActualSpend",
+              "nativeQueryRef": "Actual",
+              "displayName": "Actual",
+              "format": "\\$#,0.00;-\\$#,0.00;\\$#,0.00"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "purchaseLines"
+                    }
+                  },
+                  "Property": "CommittedPO"
+                }
+              },
+              "queryRef": "purchaseLines.CommittedPO",
+              "nativeQueryRef": "Committed",
+              "displayName": "Committed"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "purchaseLines"
+                    }
+                  },
+                  "Property": "UnCommittedPO"
+                }
+              },
+              "queryRef": "purchaseLines.UnCommittedPO",
+              "nativeQueryRef": "UnCommitted",
+              "displayName": "UnCommitted"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "glBudgetEntries"
+                    }
+                  },
+                  "Property": "Remaining"
+                }
+              },
+              "queryRef": "glBudgetEntries.Remaining",
+              "nativeQueryRef": "Remaining"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "generalLedgerEntries"
+                  }
+                },
+                "Property": "ActualSpend"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "legend": [
+        {
+          "properties": {
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 6,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "CommitmentDocumentTable"
+                          }
+                        },
+                        "Property": "Status"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Committed'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Document status'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

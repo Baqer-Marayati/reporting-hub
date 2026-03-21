@@ -1,0 +1,393 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "48375912360d3a855548",
+  "position": {
+    "x": 53.333333333333336,
+    "y": 752.82051282051282,
+    "z": 14000,
+    "height": 362.05128205128204,
+    "width": 878.974358974359,
+    "tabOrder": 15000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Number"
+                }
+              },
+              "queryRef": "CommittmentDocumentTable.Number",
+              "nativeQueryRef": "Number"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Type"
+                }
+              },
+              "queryRef": "CommittmentDocumentTable.Type",
+              "nativeQueryRef": "Type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Status"
+                }
+              },
+              "queryRef": "CommittmentDocumentTable.Status",
+              "nativeQueryRef": "Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Vendor"
+                }
+              },
+              "queryRef": "CommitmentDocumentTable.Vendor",
+              "nativeQueryRef": "Vendor"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "CommitmentDocumentTable.Date",
+              "nativeQueryRef": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CommitmentDocumentTable"
+                    }
+                  },
+                  "Property": "Amount"
+                }
+              },
+              "queryRef": "Sum(CommittmentDocumentTable.Amount)",
+              "nativeQueryRef": "Amount1",
+              "displayName": "Amount"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "130.7727482054397D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CommittmentDocumentTable.Number"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "124.73217268846427D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CommittmentDocumentTable.Type"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "144.37875866991996D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(CommittmentDocumentTable.Amount)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "124.21455318759637D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CommittmentDocumentTable.Status"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "165.0011807422252D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CommitmentDocumentTable.Vendor"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "143.98008442336683D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "CommitmentDocumentTable.Date"
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Left'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(CommittmentDocumentTable.Amount)"
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Documents'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "59970b27b6367a051c49",
+        "ordinal": 0,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Amount"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2d7e36d646064ed11c81",
+        "ordinal": 1,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "5548fa11d7a7cbd57b39",
+        "ordinal": 2,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Number"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "9450b5dc9aa341aaca10",
+        "ordinal": 3,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Status"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "4ac6124d57dcb4321e17",
+        "ordinal": 4,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Type"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fa7ea8256b3e9b147b9c",
+        "ordinal": 5,
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "Vendor"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "78ac869b8b961ebeea34",
+        "ordinal": 6,
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CommitmentDocumentTable"
+              }
+            },
+            "Property": "DocumentsIsRowVisible"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "c",
+              "Entity": "CommitmentDocumentTable",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "c"
+                        }
+                      },
+                      "Property": "DocumentsIsRowVisible"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ],
+    "filterSortOrder": "Custom"
+  }
+}

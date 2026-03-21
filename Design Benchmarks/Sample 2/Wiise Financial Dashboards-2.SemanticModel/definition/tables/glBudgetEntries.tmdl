@@ -1,0 +1,480 @@
+table glBudgetEntries
+	lineageTag: 37295894-0d36-4e86-ad6d-d92082546cb0
+
+	measure TotalCOGSBudget = CALCULATE(Sum(glBudgetEntries[amount]), KEEPFILTERS(glBudgetEntries[accountCategory] = "Cost of Goods Sold"))
+		lineageTag: 0583497f-f01d-402f-9bb2-fee3773113fd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueBudget = CALCULATE(Sum(glBudgetEntries[amount]), KEEPFILTERS(glBudgetEntries[accountCategory] = "Income"))
+		lineageTag: fc061d8c-ee44-4223-973b-bd45dc8429e0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseBudget = CALCULATE(Sum(glBudgetEntries[amount]), KEEPFILTERS(glBudgetEntries[accountCategory] = "Expense"))
+		lineageTag: 5b9b33a5-6568-49f4-8444-de193969bbeb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalRevenueBudgetYTD_new = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			VAR TodayDate = TODAY()
+			VAR YearStartDate =DATE(Year(Today()), 1,1)
+			   -- Default to 30/06 fiscal year end
+			
+			   
+			Var FiscalEndText = accountingPeriods[FiscalYearEnd]
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Income",
+			                    DATESBETWEEN(glBudgetEntries[date],FiscalYearStart, TodayDate)
+			            ),
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Income",
+			                    DATESBETWEEN(glBudgetEntries[date], YearStartDate, TodayDate)
+			            )
+			
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: dfa39e94-b93b-45b1-9014-37c875ef1697
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCOGSBudgetYTD_new = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			VAR TodayDate = TODAY()
+			
+			
+			VAR YearStartDate =DATE(Year(Today()), 1,1)
+			
+			   
+			Var FiscalEndText = accountingPeriods[FiscalYearEnd]
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			-- Final result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			        
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Cost of Goods Sold",
+			                    DATESBETWEEN(glBudgetEntries[date], FiscalYearStart, TodayDate)
+			            ),
+			        -- Year to date (use fiscal year start logic whether fiscal selected or not)
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Cost of Goods Sold",
+			                    DATESBETWEEN(glBudgetEntries[date], YearStartDate, TodayDate)
+			            )
+			
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: 6387c382-381b-40e4-a560-83300fa6db15
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalExpenseBudgetYTD_new = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			VAR TodayDate = TODAY()
+			
+			 
+			-- Default fiscal end to 30/06 if not selected
+			
+			 
+			-- Fiscal year start logic
+			VAR YearStartDate =DATE(Year(Today()), 1,1)
+			    
+			    
+			Var FiscalEndText = accountingPeriods[FiscalYearEnd]
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			 
+			-- Final result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			      
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Expense",
+			                    DATESBETWEEN(glBudgetEntries[date], FiscalYearStart, TodayDate)
+			            ),
+			        -- Year to date (use fiscal year start logic whether fiscal selected or not)
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[amount]),
+			                    glBudgetEntries[accountCategory] = "Expense",
+			                    DATESBETWEEN(glBudgetEntries[date], YearStartDate, TodayDate)
+			            )
+			
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: 370465a9-d8ae-4f6f-95c3-ee59602fc937
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalBudget = ```
+			
+			VAR StartDate = [StartDate]
+			VAR EndDate= [EndDate]
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(glBudgetEntries[amount]),
+			        FILTER(
+			            glBudgetEntries,
+			            glBudgetEntries[accountCategory] = "Expense" && glBudgetEntries[accountType] = "Posting" && glBudgetEntries[incomeBalance] = "Income Statement"
+			        ),       
+			        FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: b69cfb0c-bef0-47f1-9240-d4630379effa
+
+	measure Remaining =
+			
+			IF(
+			    ISBLANK([TotalBudget]) || [TotalBudget] = 0,
+			    BLANK(),
+			    [TotalBudget] - ([ActualSpend] + [CommittedPO] + [UnCommittedPO])
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d6316b65-f834-44e8-acde-b9b8b82a83af
+
+	measure TotalCommitment = [ActualSpend] + [CommittedPO] + [UnCommittedPODynamic]
+		lineageTag: e8319beb-fa6a-461b-90b1-39a9e396ea5e
+
+	measure TotalBudgetDynamic = ```
+			
+			//Get value of dimension code slicer
+			VAR DimSelected = SELECTEDVALUE(DimensionCodeTable[dimensionCodeNumberName]) 
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			// Get value of dimension code number  - either globalDimension1 or globalDimension2
+			VAR DimNoSelected =  
+			    FIRSTNONBLANK(
+			        CALCULATETABLE(
+			            VALUES(DimensionCodeTable[dimensionCodeNo]),
+			            DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			        ),
+			        1
+			    )
+			
+			VAR DimensionCodesToFilter = 
+			    CALCULATETABLE(
+			        VALUES(DimensionCodeTable[dimensionCode]),
+			        DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			    )
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(glBudgetEntries[amount]),
+			        FILTER(
+			            glBudgetEntries,
+			            glBudgetEntries[accountCategory] = "Expense" 
+			            && glBudgetEntries[accountType] = "Posting" 
+			            && glBudgetEntries[incomeBalance] = "Income Statement"
+			            && IF(
+			                DimNoSelected = "shortcutDimension1Code",
+			                glBudgetEntries[globalDimension1Code] IN DimensionCodesToFilter,
+			                IF(
+			                    DimNoSelected = "shortcutDimension2Code",
+			                    glBudgetEntries[globalDimension2Code] IN DimensionCodesToFilter,
+			                    TRUE()
+			                )
+			            )
+			        ),
+			        FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		lineageTag: bbc5f415-673d-4691-8466-7aae00566e71
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCommitmentDynamic = [ActualSpendDynamic] + [CommittedPODynamic] + [UnCommittedPODynamic]
+		lineageTag: 916dab51-aa0c-4ac0-bdb7-b70c48de5564
+
+	measure TotalPercentageUsedText =
+			
+			ROUND(DIVIDE(([TotalBudget] - [Remaining]), [TotalBudget]) * 100, 2) & "% used"
+		lineageTag: 8d8cda12-45cb-40e1-996d-2046a190d819
+
+	column no
+		dataType: string
+		lineageTag: 3860fe4a-e846-40f0-bc81-fa6e47abcaf6
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 0246919b-c281-4699-8269-dfb531cc7dc7
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: c9f6db4b-e228-43bf-a555-fb327c003a69
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: 118ff1d8-cd10-4e57-a82f-c6ec4beb8ba3
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: a305e5a8-72d8-4940-b482-6e3a9157a8b3
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryEntryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 708241a6-c460-4d1b-9696-97797b06c1eb
+		summarizeBy: sum
+		sourceColumn: accountSubcategoryEntryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: 3593b191-61d8-4378-850e-25f1bb37bfdb
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 958c16d7-fac9-474b-b937-efe3755cae5c
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetName
+		dataType: string
+		lineageTag: 57645518-b571-47e5-860d-02300c61d04a
+		summarizeBy: none
+		sourceColumn: budgetName
+		sortByColumn: BudgetSortOrder
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 2b344cb2-5d05-4460-b183-533c86267979
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column description
+		dataType: string
+		lineageTag: 02f98ec9-90a6-4e36-8b00-a2dbb233ab71
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: a8e55134-8931-476f-a434-c3810a16c480
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column globalDimension1Code
+		dataType: string
+		lineageTag: 87c0ad53-b068-400a-8dcc-23747cdb0b71
+		summarizeBy: none
+		sourceColumn: globalDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension2Code
+		dataType: string
+		lineageTag: 46b76431-68b1-4baf-b80e-50227773e757
+		summarizeBy: none
+		sourceColumn: globalDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension1Code
+		dataType: string
+		lineageTag: 04d6d0a0-f91a-4cf8-b21b-6b68b887add3
+		summarizeBy: none
+		sourceColumn: budgetDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension2Code
+		dataType: string
+		lineageTag: 6598e190-5457-4a83-b3bd-97c8663e943c
+		summarizeBy: none
+		sourceColumn: budgetDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension3Code
+		dataType: string
+		lineageTag: b7a7c2b2-258c-4ff4-8e3e-9797c2dec026
+		summarizeBy: none
+		sourceColumn: budgetDimension3Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension4Code
+		dataType: string
+		lineageTag: a1dd76ae-62ad-41df-9fba-165b1f3a93de
+		summarizeBy: none
+		sourceColumn: budgetDimension4Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 6b344840-24eb-4df4-b46b-5def3694f91e
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column id
+		dataType: string
+		lineageTag: 23a07620-0bce-4912-8b6f-8813a6d98096
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column BudgetNameFormatted =
+			
+			IF(
+			    ISBLANK(glBudgetEntries[BudgetName]),
+			    "Empty",
+			    glBudgetEntries[BudgetName]
+			)
+		lineageTag: 0333e0e6-c90f-4115-b7ae-94a6feba8b15
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ooooooo
+		dataType: string
+		lineageTag: 8ab8db76-e4f2-4865-889c-7a63315466b5
+		summarizeBy: none
+		sourceColumn: ooooooo
+
+		annotation SummarizationSetBy = Automatic
+
+	column BudgetSortOrder = IF(glBudgetEntries[ooooooo]="1", 1, 0)
+		formatString: 0
+		lineageTag: cda69e25-bd01-4b69-af3a-94f90e47b187
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		lineageTag: ba8f0abc-9528-40f8-9af8-018a7efb6628
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column oooooooooo
+		dataType: string
+		lineageTag: 0d4a67c6-592a-47b1-9c3a-96bac73383a8
+		summarizeBy: none
+		sourceColumn: oooooooooo
+
+		annotation SummarizationSetBy = Automatic
+
+	partition glBudgetEntries = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    glBudgetEntries_table = #"wiise/powerBI/v1.0"{[Name="glBudgetEntries",Signature="table"]}[Data],
+				    #"Appended Query" = Table.Combine({glBudgetEntries_table, #"Dummy Budget"}),
+				    #"Appended Query1" = Table.Combine({#"Appended Query", DummyDimension})
+				in
+				    #"Appended Query1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

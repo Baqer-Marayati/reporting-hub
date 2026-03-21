@@ -1,0 +1,166 @@
+table CommitmentDocumentTable
+	lineageTag: 78008f31-f28e-4b67-82ac-ce64379f182c
+
+	measure DocumentsIsRowVisible = ```
+			
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			VAR CurrentDate = SELECTEDVALUE(CommitmentDocumentTable[Date])
+			RETURN
+			IF(
+			    NOT(ISBLANK(CurrentDate)) 
+			    && CurrentDate >= StartDate 
+			    && CurrentDate <= EndDate,
+			    1,
+			    0
+			)
+			```
+		formatString: 0
+		lineageTag: 4431126a-7e19-4a52-8405-17973474cb6b
+
+	column Number
+		lineageTag: f4a91ffd-5380-4595-b489-7d3d30924d49
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Type
+		lineageTag: 8dfcbb85-b796-4ba0-afcd-c7c4c66544d7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Type]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		lineageTag: 66b1e70f-1452-4263-85de-f0e7dc4fa2db
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Status]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 66637ed0-6fc2-4e99-b9a7-cf88a5298e5c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Amount]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vendor
+		lineageTag: ccd27a98-1a6f-4711-82bd-e5e7645e89f4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Vendor]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		formatString: dd/mm/yy
+		lineageTag: 3b74ad2c-64d6-40b0-90d3-bbf3b29962a5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: b2d8823d-a6eb-416f-ba49-1744c21acc16
+			defaultHierarchy: LocalDateTable_4490e0f7-b8fd-46e1-822c-202982b41604.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Account No'
+		lineageTag: 5ad5b63d-c3d5-45b1-bcc4-780cad43ae0f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Account No]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Global Dimension 1'
+		lineageTag: 2690db85-00b1-4736-9365-d7ca8bd2e073
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Global Dimension 1]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Global Dimension 2'
+		lineageTag: 3e494c68-29ce-4575-97aa-cc0b9d48c5bd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Global Dimension 2]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CommitmentDocumentTable = calculated
+		mode: import
+		source = ```
+				
+				UNION(
+				        SELECTCOLUMNS(
+				            //FILTER(purchaseLines, purchaseLines[date] >= [StartDate] && purchaseLines[date] <= [EndDate]),   
+				            FILTER(purchaseLines, NOT(ISBLANK(purchaseLines[date])) && purchaseLines[date] >= [StartDate]), 
+				            "Number", purchaseLines[DocumentNo],
+				            "Type",
+				                SWITCH(
+				                    TRUE(),
+				                    purchaseLines[DocumentType] = "Quote", "Requisition",
+				                    purchaseLines[DocumentType] = "Order", "Purchase Order",
+				                    purchaseLines[DocumentType] = "Invoice", "Purchase Invoice",
+				                    BLANK()
+				                ),
+				            "Status",
+				                SWITCH(
+				                    TRUE(),
+				                    purchaseLines[DocumentType] = "Quote", "Uncommitted",
+				                    purchaseLines[DocumentType] = "Order", "Committed",
+				                    purchaseLines[DocumentType] = "Invoice", "Committed",
+				                    BLANK()
+				                ),
+				            "Amount", purchaseLines[amountIncludingVAT],        
+				            "Vendor", purchaseLines[buyFromVendorName],
+				            "Date", purchaseLines[date],
+				            "Account No", purchaseLines[no],
+				            "Global Dimension 1", purchaseLines[shortcutDimension1Code],
+				            "Global Dimension 2", purchaseLines[shortcutDimension2Code]
+				        ),
+				        SELECTCOLUMNS(
+				            //generalLedgerEntries,
+				           //FILTER(generalLedgerEntries, generalLedgerEntries[postingDate] >= [StartDate] && generalLedgerEntries[postingDate] <= [EndDate]),
+				           FILTER(generalLedgerEntries, NOT(ISBLANK(generalLedgerEntries[postingDate])) && generalLedgerEntries[postingDate] >= [StartDate]),
+				                      
+				            "Number", generalLedgerEntries[DocumentNo],
+				            "Type",
+				                SWITCH(
+				                    TRUE(),
+				                    generalLedgerEntries[DocumentType] = "Invoice", "Invoice",
+				                    BLANK()
+				                ),
+				            "Status",
+				                SWITCH(
+				                    TRUE(),
+				                    generalLedgerEntries[DocumentType] = "Invoice", "Actual",
+				                    BLANK()
+				                ),
+				                "Amount", generalLedgerEntries[amount],
+				                "Vendor", BLANK(),
+				                "Date", generalLedgerEntries[postingDate],
+				                "Account No", generalLedgerEntries[no],
+				                "Global Dimension 1", generalLedgerEntries[globalDimension1Code],
+				                "Global Dimension 2", generalLedgerEntries[globalDimension2Code]
+				        )
+				    )   
+				
+				```
+
+	annotation PBI_Id = 17c23af30ebc4679bf549d2bea3f76ca
+

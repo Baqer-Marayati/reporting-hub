@@ -1,0 +1,170 @@
+table glBudgetUnpivoted
+	lineageTag: 0bf22b9f-cd13-4ae0-b41d-25336d63a7b6
+
+	column id
+		dataType: string
+		lineageTag: 7e4fb39e-8840-48e3-80b2-ad2b4141e5b4
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: d3c67ae9-1b16-4846-83a8-e791538b5bfe
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: aad5fa21-8dfd-4e76-b6fe-46433daffed4
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: 7ac4febc-0bae-4dda-bda5-d555c1d1fd1c
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: 7c05477d-f9b5-4294-afbc-f7040b21445c
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: aacaf1ba-39d3-45d2-aace-4c6091c51d60
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryEntryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 8fc063b5-e2ac-4adc-b7f5-489f3a8428d7
+		summarizeBy: sum
+		sourceColumn: accountSubcategoryEntryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: b6ed46df-8980-412a-9f90-96577538d760
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: e6f89077-7184-457f-b00b-a97728b51933
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetName
+		dataType: string
+		lineageTag: e020e28e-3a2b-44b9-8371-697c10117c49
+		summarizeBy: none
+		sourceColumn: budgetName
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1027f78e-632d-4c07-9daa-71343b266ce7
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: 9387b31b-87b0-4f01-9944-1602ca310c6d
+			defaultHierarchy: LocalDateTable_9122bc82-35ba-4aad-81b3-eed8feadca6d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column description
+		dataType: string
+		lineageTag: f5560779-6a29-4c38-8dbe-f7754567a81d
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: dfe33c41-78fb-41df-b964-62e8852abac6
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: cc36fc01-0dc7-4f38-8063-32ebae256ab7
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColumnName
+		dataType: string
+		lineageTag: f77e296e-e144-41a9-8c1c-c5964eacb6c2
+		summarizeBy: none
+		sourceColumn: ColumnName
+
+		annotation SummarizationSetBy = Automatic
+
+	column DimensionValue
+		dataType: string
+		lineageTag: c8068eb5-c2e9-4d40-b8bb-242b48b4947c
+		summarizeBy: none
+		sourceColumn: DimensionValue
+
+		annotation SummarizationSetBy = Automatic
+
+	partition glBudgetUnpivoted = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    glBudgetEntries_table = #"wiise/powerBI/v1.0"{[Name="glBudgetEntries",Signature="table"]}[Data],
+				    #"Unpivoted Only Selected Columns" = Table.TransformColumns(
+				    Table.Unpivot(
+				        glBudgetEntries_table,
+				        {"globalDimension1Code", "globalDimension2Code", "budgetDimension1Code", "budgetDimension2Code", "budgetDimension3Code", "budgetDimension4Code"},
+				        "Attribute",
+				        "Value"
+				    ),
+				    {{"Value", each if _ = null or _ = "" then "(NO DIMENSION)" else Text.Upper(Text.From(_)), type text}}
+				),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Only Selected Columns",{{"Attribute", "ColumnName"}, {"Value", "DimensionValue"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

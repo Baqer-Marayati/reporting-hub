@@ -1,0 +1,47 @@
+table Period
+	lineageTag: 00c57fae-40b9-4f15-b63f-7e65136e960b
+
+	measure SelectedKPI = MIN('Period'[KPI_ID])
+		formatString: 0
+		lineageTag: b8c33e94-cae9-427e-9057-fa11dfa761f7
+
+	column KPI
+		dataType: string
+		lineageTag: 7d3a5fd9-50d1-4238-852a-0593a1727f42
+		summarizeBy: none
+		sourceColumn: KPI
+		sortByColumn: KPI_ID
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column KPI_ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c95c478-176b-4fb0-8286-9d81613ac351
+		summarizeBy: count
+		sourceColumn: KPI_ID
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Period = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCg9xUdJRMlSK1YlW8gWzjcDsQDDbGMyOBLNNwOyQjMxiheTEnNS8lNQihcrUxCKglKlSbCwA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [KPI = _t, KPI_ID = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"KPI", type text}, {"KPI_ID", Int64.Type}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","WTD","This week",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","MTD","This month",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","QTD","This quarter",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","YTD","This fiscal year",Replacer.ReplaceText,{"KPI"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","This calender year","This calendar year",Replacer.ReplaceText,{"KPI"})
+				in
+				    #"Replaced Value4"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

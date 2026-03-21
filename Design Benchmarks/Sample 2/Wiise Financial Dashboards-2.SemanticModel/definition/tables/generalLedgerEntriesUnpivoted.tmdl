@@ -1,0 +1,182 @@
+table generalLedgerEntriesUnpivoted
+	lineageTag: 3c16dae0-82ef-4988-a0db-bca9c31343e6
+
+	column id
+		dataType: string
+		lineageTag: 1a07cd20-2aff-4638-85ae-cc9fc8351a60
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: 5671001f-facc-4468-b371-e08231a5364d
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 34f5fe5d-7932-445b-bd91-19d48beb0f9b
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: 3d9b7f58-bdea-48d8-a7b1-e7b6fca8cd85
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: ab2592f4-f8ec-4be9-801c-210771b58293
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: a3633d51-8790-4d98-aa6f-71efc8c7f2bd
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: ed81947c-efc9-42f5-b6c6-368f5fa1e2e7
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 56c72149-07c3-4ed2-ace5-4d7fa4eb6d37
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		variation Variation
+			isDefault
+			relationship: 1d8dc452-45c6-4a4f-816b-328c096334cb
+			defaultHierarchy: LocalDateTable_259dffc0-9ced-4579-8a1f-8f9ff4dc2926.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentType
+		dataType: string
+		lineageTag: 46e71502-b342-4650-b0a8-75d4cf73b008
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: ea89deb4-de79-4bea-80b3-23a23681f8cb
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 346e0b6f-e570-4f06-811a-24a3d3bdd901
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: 44243d2f-7367-4160-b2fb-499a7b4c4046
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column debitAmount
+		dataType: double
+		lineageTag: a1d15593-f4cf-4124-979b-06f5d655f277
+		summarizeBy: sum
+		sourceColumn: debitAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column creditAmount
+		dataType: double
+		lineageTag: 6f119ee9-ac23-4ff5-beec-2d9855ba4de6
+		summarizeBy: sum
+		sourceColumn: creditAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: ecd16f6c-141d-4ec5-91ae-8cc7e0926825
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColumnName
+		dataType: string
+		lineageTag: 55f5bf7e-d6f3-422a-a591-46a280d03ad2
+		summarizeBy: none
+		sourceColumn: ColumnName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: string
+		lineageTag: 11780e8e-22d0-4e60-9d3a-29899f8aafb5
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: 107ea98f-f717-44d1-8862-133e3b1ad497
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	partition generalLedgerEntriesUnpivoted = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    generalLedgerEntries_table = #"wiise/powerBI/v1.0"{[Name="generalLedgerEntries",Signature="table"]}[Data],
+				    #"Unpivoted Only Selected Columns" = Table.Unpivot(generalLedgerEntries_table, {"globalDimension1Code", "globalDimension2Code", "shortcutDimension3Code", "shortcutDimension4Code", "shortcutDimension5Code", "shortcutDimension6Code", "shortcutDimension7Code", "shortcutDimension8Code"}, "Attribute", "Value"),
+				    #"Filtered Rows" = Table.SelectRows(#"Unpivoted Only Selected Columns", each ([Value] <> "")),
+				    #"Renamed Columns" = Table.RenameColumns(#"Filtered Rows",{{"Attribute", "ColumnName"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

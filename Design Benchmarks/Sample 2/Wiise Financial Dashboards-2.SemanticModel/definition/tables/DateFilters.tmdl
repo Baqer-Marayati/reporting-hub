@@ -1,0 +1,194 @@
+table DateFilters
+	lineageTag: cd7f8a38-bf6f-454a-affc-6e68ecf805f9
+
+	measure StartDate = ```
+			
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			VAR Today = [TodayLocal]
+			
+			VAR StartOfWeek = Today - WEEKDAY(Today, 2) + 1
+			VAR FiscalQuarterStart = [FiscalQuarterStart]
+			VAR FiscalYearStart = [FiscalYearStart]
+			
+			VAR Result =
+			    SWITCH(
+			        SelectedPeriod,
+			        "This week", StartOfWeek,
+			        "This month", DATE(YEAR(Today), MONTH(Today), 1),
+			        "This quarter", FiscalQuarterStart,
+			        "This fiscal year", FiscalYearStart,
+			        "This calendar year", DATE(YEAR(Today), 1, 1),
+			        BLANK()
+			    )    
+			RETURN Result
+			```
+		formatString: General Date
+		lineageTag: 8c714fc3-b54c-482d-9a03-7bed87a9d249
+
+	measure EndDate =
+			
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			VAR Today = [TodayLocal]
+			
+			VAR WeekToDate = Today
+			VAR MonthToDate = Today
+			VAR FiscalQuarterEnd = Today
+			VAR FiscalYearToDate = Today
+			VAR CalendarYearToDate = Today
+			
+			VAR Result =
+			    SWITCH(
+			        SelectedPeriod,
+			        "This week", WeekToDate,
+			        "This month", MonthToDate,
+			        "This quarter", FiscalQuarterEnd,
+			        "This fiscal year", FiscalYearToDate,
+			        "This calendar year", CalendarYearToDate,
+			        BLANK()
+			    )
+			RETURN Result
+		formatString: General Date
+		lineageTag: 416eee32-f2c2-4125-8fb5-1d28d98700af
+
+	measure FiscalQuarterEnd = ```
+			
+			VAR Today = [TodayLocal]
+			
+			VAR Result = 
+			CALCULATE(
+			    MAX(DateTableCommitment[Date]),
+			    FILTER(
+			        DateTableCommitment,
+			        QUARTER(DateTableCommitment[Date]) = QUARTER([TodayLocal]) &&
+			        YEAR(DateTableCommitment[Date]) = YEAR([TodayLocal])
+			    )
+			)
+			RETURN Result
+			```
+		formatString: General Date
+		lineageTag: a4bf5789-a0f4-411b-af82-5f23b1c9cf83
+
+	measure FiscalQuarterStart = ```
+			
+			VAR Today = [TodayLocal]
+			
+			VAR Result = 
+			CALCULATE(
+			    MIN(DateTableCommitment[Date]),
+			    FILTER(
+			        DateTableCommitment,
+			        QUARTER(DateTableCommitment[Date]) = QUARTER(Today) &&
+			        YEAR(DateTableCommitment[Date]) = YEAR(Today)
+			    )
+			)
+			RETURN Result
+			```
+		formatString: General Date
+		lineageTag: 1ed4287b-9461-4c83-98cc-d10e054c65a0
+
+	measure FiscalYearEndDate = ```
+			EDATE([FiscalYearStart], 12) - 1 //Assuming fiscal year is always 12 monthsMeasure = 
+			```
+		lineageTag: 62acfbdc-a17f-471e-9a0f-200fc23206a6
+
+	measure FiscalYearStart =
+			
+			VAR Today = [TodayLocal]
+			VAR CurrentFiscalYearStart =
+			    CALCULATE(
+			        MAX(accountingPeriods[startingDate]),
+			        FILTER(
+			            accountingPeriods,
+			            accountingPeriods[newFiscalYear] = TRUE() &&
+			            accountingPeriods[closed] = FALSE() &&
+			            accountingPeriods[startingDate] <= Today
+			        )
+			    )
+			VAR NextFiscalYearStart =
+			    CALCULATE(
+			        MIN(accountingPeriods[startingDate]),
+			        FILTER(
+			            accountingPeriods,
+			            accountingPeriods[newFiscalYear] = TRUE() &&
+			            accountingPeriods[closed] = FALSE() &&
+			            accountingPeriods[startingDate] > Today
+			        )
+			    )
+			VAR Result =
+			    IF(
+			        ISBLANK(CurrentFiscalYearStart),
+			        EDATE(NextFiscalYearStart, -12),
+			        CurrentFiscalYearStart
+			    )
+			RETURN Result
+		formatString: General Date
+		lineageTag: 086f90af-1b2a-4674-9622-c6876e2d018d
+
+	measure QuarterToday = QUARTER([TodayLocal])
+		formatString: 0
+		lineageTag: bda6990b-c930-4a7a-8b17-9332b59f521b
+
+	measure YearEnd = DATE(YEAR([TodayLocal]), 12, 31)
+		formatString: General Date
+		lineageTag: 2c3b861b-30ea-4975-b1b7-91f7d199dc92
+
+	column id
+		formatString: 0
+		lineageTag: 78464906-d85f-43d7-b65c-01e2280e22f6
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [id]
+
+		annotation SummarizationSetBy = Automatic
+
+	column fiscalMonth
+		formatString: 0
+		lineageTag: a79d54fc-688f-464e-8210-e10ae98680e8
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [fiscalMonth]
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		lineageTag: e380fcff-f8af-4450-97ae-1d5231c8f3aa
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [value]
+
+		annotation SummarizationSetBy = Automatic
+
+	column label
+		lineageTag: ead0adfe-9519-4867-9ef7-1ca2ec601ba9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [label]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateFilters = calculated
+		mode: import
+		source =
+				DATATABLE(
+				    "id", INTEGER,
+				    "fiscalMonth", INTEGER,
+				    "value", STRING,
+				    "label", STRING,
+				    {
+				        {1, 1, "31/12", "Jan – Dec"},
+				        {2, 2, "31/01", "Feb – Jan"},
+				        {3, 3, "28/02", "Mar – Feb"},   // Consider leap year handling separately
+				        {4, 4, "31/03", "Apr – Mar"},
+				        {5, 5, "30/04", "May – Apr"},
+				        {6, 6, "31/05", "Jun – May"},
+				        {7, 7, "30/06", "Jul – Jun"},
+				        {8, 8, "31/07", "Aug – Jul"},
+				        {9, 9, "31/08", "Sep – Aug"},
+				        {10, 10, "30/09", "Oct – Sep"},
+				        {11, 11, "31/10", "Nov – Oct"},
+				        {12, 12, "30/11", "Dec – Nov"}
+				    }
+				)
+
+	annotation PBI_Id = 9090a04cafd2416da57df2d4c04585a2
+

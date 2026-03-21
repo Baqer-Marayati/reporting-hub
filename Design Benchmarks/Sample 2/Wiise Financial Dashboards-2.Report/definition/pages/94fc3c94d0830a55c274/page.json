@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "94fc3c94d0830a55c274",
+  "displayName": "Commitment Report",
+  "displayOption": "FitToWidth",
+  "height": 1623,
+  "width": 1280
+}

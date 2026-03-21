@@ -1,0 +1,350 @@
+table purchaseLines
+	lineageTag: bc200ce4-9ef6-4f88-a5e2-c3bd16577fbd
+
+	measure CommittedPO = ```
+			
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(purchaseLines[amountIncludingVAT]),
+			        FILTER(
+			            purchaseLines,
+			            purchaseLines[type] = "G/L Account" && (purchaseLines[documentType] = "Order" || purchaseLines[documentType] = "Invoice")
+			        ),
+			          FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: b41d6b76-183f-4292-a8ad-0d4d615066a6
+
+	measure CommittedPODynamic = ```
+			
+			//Get value of dimension code slicer
+			VAR DimSelected = SELECTEDVALUE(DimensionCodeTable[dimensionCodeNumberName]) 
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			// Get value of dimension code no  - either globalDimension1 or globalDimension2
+			VAR DimNoSelected =  
+			    FIRSTNONBLANK(
+			        CALCULATETABLE(
+			            VALUES(DimensionCodeTable[dimensionCodeNo]),
+			            DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			        ),
+			        1
+			    )
+			
+			VAR DimensionCodesToFilter = 
+			    CALCULATETABLE(
+			        VALUES(DimensionCodeTable[dimensionCode]),
+			        DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			    )
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(purchaseLines[amountIncludingVAT]),
+			        FILTER(
+			            purchaseLines,
+			            purchaseLines[type] = "G/L Account" 
+			            && (purchaseLines[documentType] = "Order" || purchaseLines[documentType] = "Invoice")
+			            && IF(
+			                DimNoSelected = "shortcutDimension1Code",
+			                purchaseLines[shortcutDimension1Code] IN DimensionCodesToFilter,
+			                IF(
+			                    DimNoSelected = "shortcutDimension2Code",
+			                    purchaseLines[shortcutDimension2Code] IN DimensionCodesToFilter,
+			                    TRUE()
+			                )
+			            )
+			        ),
+			       FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 8fbe7776-04bc-4c06-bf40-be05010e18ee
+
+	measure UnCommittedPO = ```
+			
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(purchaseLines[amountIncludingVAT]),
+			        FILTER(
+			            purchaseLines,
+			            purchaseLines[type] = "G/L Account" && (purchaseLines[documentType] = "Quote" )
+			        ),
+			         FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 92bef24e-213a-451d-8622-1b74de8438a2
+
+	measure UnCommittedPODynamic = ```
+			
+			//Get value of dimension code slicer
+			VAR DimSelected = SELECTEDVALUE(DimensionCodeTable[dimensionCodeNumberName]) 
+			VAR StartDate = [StartDate]
+			VAR EndDate = [EndDate]
+			
+			// Get value of dimension code no  - either globalDimension1 or globalDimension2
+			VAR DimNoSelected =  
+			    FIRSTNONBLANK(
+			        CALCULATETABLE(
+			            VALUES(DimensionCodeTable[dimensionCodeNo]),
+			            DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			        ),
+			        1
+			    )
+			
+			VAR DimensionCodesToFilter = 
+			    CALCULATETABLE(
+			        VALUES(DimensionCodeTable[dimensionCode]),
+			        DimensionCodeTable[dimensionCodeNumberName] = DimSelected
+			    )
+			
+			VAR Result =           
+			    CALCULATE(
+			        SUM(purchaseLines[amountIncludingVAT]),
+			        FILTER(
+			            purchaseLines,
+			            purchaseLines[type] = "G/L Account" 
+			            && purchaseLines[documentType] = "Quote"
+			            && IF(
+			                DimNoSelected = "shortcutDimension1Code",
+			                purchaseLines[shortcutDimension1Code] IN DimensionCodesToFilter,
+			                IF(
+			                    DimNoSelected = "shortcutDimension2Code",
+			                    purchaseLines[shortcutDimension2Code] IN DimensionCodesToFilter,
+			                    TRUE()
+			                )
+			            )
+			        ),
+			       FILTER(
+			            'DateTableCommitment',
+			            'DateTableCommitment'[Date] >= StartDate &&
+			            'DateTableCommitment'[Date] <= EndDate
+			        )
+			    )
+			    
+			RETURN Result
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: e683044f-6fe2-47b2-a611-25c9c748c69d
+
+	column id
+		dataType: string
+		lineageTag: 1e3732f2-3518-44bf-85b2-dea8d20e2eea
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentType
+		dataType: string
+		lineageTag: 16226f13-5493-40bc-a321-563d77281fbb
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: 75a4d4f3-91c6-4a3f-8290-e09846316126
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column type
+		dataType: string
+		lineageTag: fe7b99a8-409f-4b4e-9183-1aa5ffcb9375
+		summarizeBy: none
+		sourceColumn: type
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: deb49e44-581c-4754-bc19-4a7598844b7b
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 19d404fb-8eb5-4115-a163-58074035b759
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fbb4f476-707f-4a0c-8a7d-05dacbe0cdd3
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column quantityBase
+		dataType: double
+		lineageTag: c9fc04dc-be36-4706-8ede-3ac3b1b92731
+		summarizeBy: sum
+		sourceColumn: quantityBase
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column quantity
+		dataType: double
+		lineageTag: 9cc7d2d2-9df1-44da-9feb-647361707169
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column amountIncludingVAT
+		dataType: double
+		lineageTag: 58ede7a1-fbb1-4317-8cdc-698f95a32b13
+		summarizeBy: sum
+		sourceColumn: amountIncludingVAT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column shortcutDimension1Code
+		dataType: string
+		lineageTag: 96bef90f-dd4e-42be-8154-a77d1e700887
+		summarizeBy: none
+		sourceColumn: shortcutDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension2Code
+		dataType: string
+		lineageTag: 8365bb3e-6cf4-4f4c-b4fa-36a0a5cca9c5
+		summarizeBy: none
+		sourceColumn: shortcutDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 03f11f8c-95af-4421-8f57-ccc54cc53198
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		variation Variation
+			isDefault
+			relationship: 428746b7-767d-4c03-aa65-86f47b773c22
+			defaultHierarchy: LocalDateTable_399da361-5c29-4738-a967-62f5ee6b92dc.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e23e0928-0c72-4d4a-a0f4-943c7d68facb
+		summarizeBy: none
+		sourceColumn: documentDate
+
+		variation Variation
+			isDefault
+			relationship: 9d0f41ed-2c08-48a9-ab18-5694e8fb22e4
+			defaultHierarchy: LocalDateTable_02b18f7c-74fe-4257-b38f-375ff8eba620.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column buyFromVendorNo
+		dataType: string
+		lineageTag: 1b4c4cfd-ee38-4a90-9036-f2ed410b8323
+		summarizeBy: none
+		sourceColumn: buyFromVendorNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column buyFromVendorName
+		dataType: string
+		lineageTag: aa3fea16-d541-4f63-9a4f-5dc8769863e0
+		summarizeBy: none
+		sourceColumn: buyFromVendorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column auxiliaryIndex1
+		dataType: int64
+		formatString: 0
+		lineageTag: e984c3b1-0cc8-4c1b-8e42-b1e05fbbf147
+		summarizeBy: sum
+		sourceColumn: auxiliaryIndex1
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 80fe98af-987f-44c6-b2b0-e52bf01b1781
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition purchaseLines = m
+		mode: import
+		source = ```
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],    
+				    Advanced = #"CompanyParam"{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    purchaseLines_table = #"wiise/powerBI/v1.0"{[Name="purchaseLines",Signature="table"]}[Data],
+				    #"Added Custom" = Table.AddColumn(purchaseLines_table, "date", each if [documentType] = "Quote" then [documentDate]
+				else if [documentType] = "Invoice" or [documentType] = "Order" then [postingDate]
+				else null),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom",{{"date", type date}}),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Changed Type",{"id", "documentType", "documentNo", "type", "no", "description", "date", "quantityBase", "quantity", "amountIncludingVAT", "shortcutDimension1Code", "shortcutDimension2Code", "postingDate", "documentDate", "buyFromVendorNo", "buyFromVendorName", "auxiliaryIndex1", "ETag"}),
+				    #"Sorted Rows" = Table.Sort(#"Reordered Columns",{{"date", Order.Descending}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Sorted Rows",#date(1, 1, 1),null,Replacer.ReplaceValue,{"date"})
+				in
+				    #"Replaced Value"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,77 @@
+table DimensionCodeTable
+	lineageTag: e6fd9719-543d-42bc-92e9-166632de1795
+
+	column dimensionCodeNo
+		dataType: string
+		lineageTag: 7c2372c6-02dd-4501-b0f6-ccb496ca2589
+		summarizeBy: none
+		sourceColumn: dimensionCodeNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionCodeNumberName
+		dataType: string
+		lineageTag: eab39e51-d318-4f4a-abaa-14cbccfbc7c0
+		summarizeBy: none
+		sourceColumn: dimensionCodeNumberName
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionCodeId
+		dataType: string
+		lineageTag: 22d8572c-64b5-4364-92e9-17b043a5d3e6
+		summarizeBy: none
+		sourceColumn: dimensionCodeId
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionCode
+		dataType: string
+		lineageTag: 0c71e313-9332-404b-9e90-6210e2682872
+		summarizeBy: none
+		sourceColumn: dimensionCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionCodeDisplayName
+		dataType: string
+		lineageTag: 95be23e9-9be4-46fb-bb6e-842612b149e2
+		summarizeBy: none
+		sourceColumn: dimensionCodeDisplayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionCodeKey
+		dataType: string
+		lineageTag: 9df2a4d6-b5bf-4b68-896d-c8d8499f4a96
+		summarizeBy: none
+		sourceColumn: dimensionCodeKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimensionCodeTable = m
+		mode: import
+		source = ```
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data], 
+				    generalLedgerSetup_table = v2.0{[Name="generalLedgerSetup",Signature="table"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(generalLedgerSetup_table,{"shortcutDimension1Code", "shortcutDimension2Code"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {}, "Attribute", "Value"),
+				    #"Merged Queries" = Table.NestedJoin(#"Unpivoted Columns", {"Value"}, dimensions, {"code"}, "dimensions", JoinKind.Inner),
+				    #"Expanded dimensions" = Table.ExpandTableColumn(#"Merged Queries", "dimensions", {"id"}, {"dimensions.id"}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Expanded dimensions", {"dimensions.id"}, dimensionValues, {"dimensionId"}, "dimensionValues", JoinKind.LeftOuter),
+				    #"Expanded dimensionValues" = Table.ExpandTableColumn(#"Merged Queries1", "dimensionValues", {"id", "code", "dimensionId", "displayName", "consolidationCode", "lastModifiedDateTime", "dimension", "ETag"}, {"dimensionValues.id", "dimensionValues.code", "dimensionValues.dimensionId", "dimensionValues.displayName", "dimensionValues.consolidationCode", "dimensionValues.lastModifiedDateTime", "dimensionValues.dimension", "dimensionValues.ETag"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded dimensionValues",{"dimensionValues.id", "dimensionValues.dimensionId", "dimensionValues.consolidationCode", "dimensionValues.lastModifiedDateTime", "dimensionValues.dimension", "dimensionValues.ETag"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Attribute", "dimensionCodeNo"}, {"dimensionValues.code", "dimensionCode"}, {"dimensionValues.displayName", "dimensionCodeDisplayName"}, {"dimensions.id", "dimensionCodeId"}, {"Value", "dimensionCodeNumberName"}}),
+				    #"Added Custom" = Table.AddColumn(#"Renamed Columns", "dimensionCodeKey", each [dimensionCodeId] & "-" & [dimensionCode])
+				in
+				    #"Added Custom"
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

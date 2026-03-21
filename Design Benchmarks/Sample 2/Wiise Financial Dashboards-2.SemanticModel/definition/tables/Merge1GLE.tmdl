@@ -1,0 +1,183 @@
+table Merge1GLE
+	lineageTag: 799cce30-0657-4866-b93a-f0a165f7799b
+
+	column id
+		dataType: string
+		lineageTag: 2552c534-c5a6-462a-a486-b30d182834bd
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column no
+		dataType: string
+		lineageTag: aeb44b35-0569-463e-a0e1-5bc1abde91d9
+		summarizeBy: none
+		sourceColumn: no
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: dde705eb-db95-437a-827b-37f95043a0fb
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountCategory
+		dataType: string
+		lineageTag: 254e29f0-823c-46de-982b-169287f514fd
+		summarizeBy: none
+		sourceColumn: accountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: 8b48ea50-1fa0-40a0-882b-f8e82e236e92
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column incomeBalance
+		dataType: string
+		lineageTag: af73c3c1-28d3-44a2-8c31-ded2b5dafc02
+		summarizeBy: none
+		sourceColumn: incomeBalance
+
+		annotation SummarizationSetBy = Automatic
+
+	column entryNo
+		dataType: int64
+		formatString: 0
+		lineageTag: efe32c12-5aa8-4151-a83b-91c44b0060bc
+		summarizeBy: sum
+		sourceColumn: entryNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 83fec296-0782-4735-ad28-fc830955a584
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		variation Variation
+			isDefault
+			relationship: d109d909-8bed-40d0-b94d-12856d57b2b8
+			defaultHierarchy: LocalDateTable_de0c8d17-e261-42af-9993-6320a6d86de3.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentType
+		dataType: string
+		lineageTag: 6259d11e-ef16-43a6-90b9-3a0ccea02d02
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: 2b72e8ba-847d-4219-9f73-516b59c5969e
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 41f6cbbc-1255-46d0-8279-fe3e15f6ad10
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: 6aadb902-1de1-4886-b28c-7f6b04ef5499
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column debitAmount
+		dataType: double
+		lineageTag: 1d29d199-d6a4-4b99-9bb3-cf42c4645023
+		summarizeBy: sum
+		sourceColumn: debitAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column creditAmount
+		dataType: double
+		lineageTag: 4931709b-185d-483b-9548-880f6eca7572
+		summarizeBy: sum
+		sourceColumn: creditAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ETag
+		dataType: string
+		lineageTag: 2c4bb837-253c-4a3d-9497-159b6375051e
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColumnName
+		dataType: string
+		lineageTag: 1af31341-4410-4131-85db-39a8f56472d1
+		summarizeBy: none
+		sourceColumn: ColumnName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: string
+		lineageTag: 499d5ae7-f718-44b7-be8e-3e9d5604ec45
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'dimensionValues.dimensionId'
+		dataType: string
+		lineageTag: 234131d8-dd86-41b6-a272-3d36f45cc237
+		summarizeBy: none
+		sourceColumn: dimensionValues.dimensionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountSubcategoryDescript
+		dataType: string
+		lineageTag: 8d6871f2-9dc8-419c-91e4-44a97a7f0240
+		summarizeBy: none
+		sourceColumn: accountSubcategoryDescript
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Merge1GLE = m
+		mode: import
+		source =
+				let
+				    Source = Table.NestedJoin(generalLedgerEntriesUnpivoted, {"Value"}, dimensionValues, {"code"}, "dimensionValues", JoinKind.LeftOuter),
+				    #"Expanded dimensionValues" = Table.ExpandTableColumn(Source, "dimensionValues", {"dimensionId"}, {"dimensionValues.dimensionId"})
+				in
+				    #"Expanded dimensionValues"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

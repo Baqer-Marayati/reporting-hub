@@ -1,0 +1,80 @@
+table DummyDimension
+	lineageTag: ba50fff3-7897-457e-be36-0e6bdd73c745
+
+	column code
+		dataType: string
+		lineageTag: f04f7ab5-8bcc-4c8c-970f-e8f9c03a47fe
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column oooooooooo
+		dataType: string
+		lineageTag: 4ee9e2ee-8b8d-41ea-aeb9-ad35e0486e4e
+		summarizeBy: none
+		sourceColumn: oooooooooo
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension1Code
+		dataType: string
+		lineageTag: 8db72731-0aed-4ad4-abe6-89a6b0f6199d
+		summarizeBy: none
+		sourceColumn: globalDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension2Code
+		dataType: string
+		lineageTag: b8bd434c-b287-4a7d-be70-e7808eb6bfda
+		summarizeBy: none
+		sourceColumn: globalDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension1Code
+		dataType: string
+		lineageTag: b8ed41c8-db6e-46b5-bd46-a63d3a48e11e
+		summarizeBy: none
+		sourceColumn: budgetDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension2Code
+		dataType: string
+		lineageTag: 18e6fb3e-5c10-431c-b0c8-7f844df704e5
+		summarizeBy: none
+		sourceColumn: budgetDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension3Code
+		dataType: string
+		lineageTag: a44402ca-f286-4054-a3b1-07eff4735fb4
+		summarizeBy: none
+		sourceColumn: budgetDimension3Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension4Code
+		dataType: string
+		lineageTag: ea91a0df-b602-4645-a49a-886636331605
+		summarizeBy: none
+		sourceColumn: budgetDimension4Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DummyDimension = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WUghOzUlNLlFIycxNzSvOzM9T0lEyBOIIKEBi4mTj5ijFxgIA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [code = _t, oooooooooo = _t, globalDimension1Code = _t, globalDimension2Code = _t, shortcutDimension1Code = _t, shortcutDimension2Code = _t, shortcutDimension3Code = _t, shortcutDimension4Code = _t]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"shortcutDimension1Code", "budgetDimension1Code"}, {"shortcutDimension2Code", "budgetDimension2Code"}, {"shortcutDimension3Code", "budgetDimension3Code"}, {"shortcutDimension4Code", "budgetDimension4Code"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,178 @@
+table generalLedgerSetup
+	lineageTag: af5e6c02-7b50-473f-a866-386a0c90037d
+
+	column id
+		dataType: string
+		lineageTag: 60f43b43-335c-4a4c-8dae-67a7d3e1f8c0
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column allowPostingFrom
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8e168858-5eca-4d81-9823-c6819f2b5b83
+		summarizeBy: none
+		sourceColumn: allowPostingFrom
+
+		variation Variation
+			isDefault
+			relationship: acb7bad7-a376-45be-b0cc-433c8f08d09d
+			defaultHierarchy: LocalDateTable_76ad04c4-e15d-4641-b48d-355d0a700fd8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column allowPostingTo
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 032506cd-72fd-4ea9-8f89-692dcbf15e6e
+		summarizeBy: none
+		sourceColumn: allowPostingTo
+
+		variation Variation
+			isDefault
+			relationship: 8d5709dc-ff1c-44c0-a887-b9d30d2ee32b
+			defaultHierarchy: LocalDateTable_2fba97db-af5c-4b52-8354-6a414578f41e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column additionalReportingCurrency
+		dataType: string
+		lineageTag: 589b7695-9028-4de4-80d3-fe0feb20ca81
+		summarizeBy: none
+		sourceColumn: additionalReportingCurrency
+
+		annotation SummarizationSetBy = Automatic
+
+	column localCurrencyCode
+		dataType: string
+		lineageTag: 680e0485-139d-41b6-b082-d167944aca15
+		summarizeBy: none
+		sourceColumn: localCurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column localCurrencySymbol
+		dataType: string
+		lineageTag: 757e5364-7fba-4d95-8efc-fbede4c18171
+		summarizeBy: none
+		sourceColumn: localCurrencySymbol
+
+		annotation SummarizationSetBy = Automatic
+
+	column lastModifiedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2c2147bb-c494-4062-80e4-d3df2803b582
+		summarizeBy: none
+		sourceColumn: lastModifiedDateTime
+
+		variation Variation
+			isDefault
+			relationship: d88d0bb2-8d5a-43a3-ac53-255d89174d7b
+			defaultHierarchy: LocalDateTable_ef41af85-4dfc-4226-8326-e9aa98d3f7d0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column allowQueryFromConsolidation
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ab806526-e3a1-4bc1-be71-f849fb74ef30
+		summarizeBy: none
+		sourceColumn: allowQueryFromConsolidation
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension1Code
+		dataType: string
+		lineageTag: 9b0c8485-9d1c-469a-ae4a-b43ebde8d59a
+		summarizeBy: none
+		sourceColumn: shortcutDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension2Code
+		dataType: string
+		lineageTag: bd9baff2-678f-4af7-a0b9-e68e53a45134
+		summarizeBy: none
+		sourceColumn: shortcutDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension3Code
+		dataType: string
+		lineageTag: e6ae86ba-05fc-4a86-86df-caac27147190
+		summarizeBy: none
+		sourceColumn: shortcutDimension3Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension4Code
+		dataType: string
+		lineageTag: 3a33f758-87a8-49ef-ba90-80ae3a5420bb
+		summarizeBy: none
+		sourceColumn: shortcutDimension4Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension5Code
+		dataType: string
+		lineageTag: 21db9827-fa01-4da5-aaf9-42e04b45a71e
+		summarizeBy: none
+		sourceColumn: shortcutDimension5Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension6Code
+		dataType: string
+		lineageTag: ed4e6912-fb70-4194-996c-e5295b46be29
+		summarizeBy: none
+		sourceColumn: shortcutDimension6Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension7Code
+		dataType: string
+		lineageTag: e5444b2a-e32f-4b34-8ee7-9184dda12e95
+		summarizeBy: none
+		sourceColumn: shortcutDimension7Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column shortcutDimension8Code
+		dataType: string
+		lineageTag: 2e3e5bc3-a06c-4735-aa82-357c2b3c41e0
+		summarizeBy: none
+		sourceColumn: shortcutDimension8Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 9ec6f7b0-12af-4158-8c72-14e2721d8e37
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition generalLedgerSetup = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data],
+				    generalLedgerSetup_table = v2.0{[Name="generalLedgerSetup",Signature="table"]}[Data]
+				in
+				    generalLedgerSetup_table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

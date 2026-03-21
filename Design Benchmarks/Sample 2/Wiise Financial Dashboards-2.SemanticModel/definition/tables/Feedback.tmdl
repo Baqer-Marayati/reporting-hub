@@ -1,0 +1,37 @@
+table Feedback
+	lineageTag: 8c67b649-f6e6-44c2-af07-7e309e3c50ed
+
+	measure 'Feedback Form URL' = ```
+			
+			VAR BaseUrl = "https://share.hsforms.com/14iAsAkFDQbqWkErY0wT7Ywc8l6a"
+			VAR RawEmail = USERPRINCIPALNAME()
+			VAR EncodedEmail = 
+			    SUBSTITUTE(
+			        SUBSTITUTE(
+			            SUBSTITUTE(RawEmail, "@", "%40"),
+			            "+", "%2B"
+			        ),
+			        " ", "%20"
+			    )
+			RETURN
+			    BaseUrl & "?email=" & EncodedEmail
+			```
+		lineageTag: 51828b9b-e45f-46b1-87dd-e58bb75c867f
+
+	column Column
+		formatString: 0
+		lineageTag: 63589f43-2ccf-48f3-a414-00e99bb83655
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Feedback = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 1b929c496e8d450282dcae5ff8c0d38c
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

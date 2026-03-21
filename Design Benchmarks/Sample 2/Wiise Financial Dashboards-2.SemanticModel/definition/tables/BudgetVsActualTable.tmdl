@@ -1,0 +1,2059 @@
+table BudgetVsActualTable
+	lineageTag: a3aeea92-335a-4435-94b2-a04790491143
+
+	measure CurrentMTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsCurrentMonth] = TRUE 
+			
+			) 
+			```
+		lineageTag: c979a5db-19dd-4dac-ba9b-eeb6032b1fd5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CurrentWTDRevenue = ```
+			
+			
+			VAR CurrentWeekStart = 
+			
+			    CALCULATE( 
+			
+			        MAX(BudgetVsActualTable[WeekStartDate]), 
+			
+			        BudgetVsActualTable[Date] = TODAY() 
+			
+			    ) 
+			
+			RETURN 
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[WeekStartDate] = CurrentWeekStart 
+			
+			) 
+			```
+		lineageTag: 5a59aabc-6d4d-4289-ab60-818bb544bd4a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CurrentQTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsCurrentQuarter] = TRUE 
+			
+			) 
+			```
+		lineageTag: 3552f1aa-6171-481b-959c-c701335e5ffc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ExpenseVariance 1' = ```
+			
+			
+			 [NewDynamicExpense] -[NewDynamicBudgetExpense]
+			
+			  
+			```
+		lineageTag: 2776e845-213a-41de-8638-0e20b53c86e8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CurrentYTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsCurrentYear] = TRUE 
+			
+			) 
+			```
+		lineageTag: 75bc058c-a698-4305-a7fb-337b0786a4ed
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure GLActual1 = ```
+			
+			VAR Period = SELECTEDVALUE(PeriodTable[Period], BLANK())
+			VAR FiscalEndText = SELECTEDVALUE(FiscalYearSelection[value], BLANK())
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			 
+			-- If nothing is selected, return total
+			VAR ReturnAll = ISBLANK(Period) && ISBLANK(FiscalEndText)
+			 
+			-- Default to fiscal end 30/06 if not selected
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			 
+			-- Fiscal Year Start (e.g., July 1)
+			VAR FiscalYearStart =
+			    IF(
+			        TodayDate <= FiscalYearEnd,
+			        DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1),
+			        DATE(YEAR(TodayDate), FiscalMonth + 1, 1)
+			    )
+			 
+			-- Week start (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			 
+			-- Result based on selection
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			        ReturnAll,
+			            CALCULATE(
+			                SUM(GeneralLedgerEntries[amount])
+			            ),
+			 
+			        Period = "Week to date",
+			            CALCULATE(
+			                SUM(GeneralLedgerEntries[amount]),
+			                DATESBETWEEN(GeneralLedgerEntries[PostingDate], StartOfWeek, TodayDate)
+			            ),
+			 
+			        Period = "Month to date",
+			            CALCULATE(
+			                SUM(GeneralLedgerEntries[amount]),
+			                DATESMTD(GeneralLedgerEntries[PostingDate])
+			            ),
+			 
+			        Period = "Quarter to date",
+			            CALCULATE(
+			                SUM(GeneralLedgerEntries[amount]),
+			                DATESQTD(GeneralLedgerEntries[PostingDate])
+			            ),
+			 
+			        Period = "Year to date",
+			            CALCULATE(
+			                SUM(GeneralLedgerEntries[amount]),
+			                DATESBETWEEN(GeneralLedgerEntries[PostingDate], FiscalYearStart, TodayDate)
+			            )
+			    )
+			 
+			RETURN
+			    IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: 1371bc1b-36c3-46d7-a494-d234e59fe24a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure IncomeVariane = [NewDynamicIncome]-[NewDynamicBudget]
+		lineageTag: 0041520e-d1ac-46e1-8b37-a741dcd3a5ef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewDynamicBudget = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			-- Fiscal year start logic
+			
+			 
+			-- Start of the week (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 
+			-- Final result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			 
+			        
+			 
+			        -- Week to date
+			        Period = "This week",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Income",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisMonth, TodayDate)
+			            ),
+			 
+			        -- Month to date
+			        Period = "This month",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Income",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisMonth, TodayDate)
+			            ),
+			 
+			        -- Quarter to date
+			        Period = "This quarter",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Income",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisQuarter, TodayDate)
+			            ),
+			 
+			        --Fiscal year selection 
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Income",
+			                DATESBETWEEN(glBudgetEntries[date], FiscalYearStart, TodayDate)
+			            ),
+			        --Calendar year to date
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Income",
+			                DATESBETWEEN(glBudgetEntries[date], YearStartDate, TodayDate)
+			            )
+			 
+			       
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: 019e0b1e-d1fa-484c-9857-fc242d2cae03
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewDynamicBudgetExpense = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			-- Fiscal year start logic
+			
+			 
+			-- Start of the week (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 
+			-- Final result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			 
+			        
+			 
+			        -- Week to date
+			        Period = "This week",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisMonth, TodayDate)
+			            ),
+			 
+			        -- Month to date
+			        Period = "This month",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisMonth, TodayDate)
+			            ),
+			 
+			        -- Quarter to date
+			        Period = "This quarter",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(glBudgetEntries[date], StartOfThisQuarter, TodayDate)
+			            ),
+			 
+			        --Fiscal year selection 
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(glBudgetEntries[date], FiscalYearStart, TodayDate)
+			            ),
+			        --Calendar year to date
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(glBudgetEntries[Amount]),
+			                glBudgetEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(glBudgetEntries[date], YearStartDate, TodayDate)
+			            )
+			 
+			       
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: d8f2622a-464b-4cc6-b2fb-0c10262549d1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewDynamicExpense = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			-- Fiscal year start logic
+			
+			 
+			-- Start of the week (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 
+			-- Final result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			 
+			        
+			 
+			        -- Week to date
+			        Period = "This week",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount]),
+			                generalLedgerEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(generalLedgerEntries[postingDate], StartOfWeek, TodayDate)
+			            ),
+			 
+			        -- Month to date
+			        Period = "This month",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount]),
+			                generalLedgerEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(generalLedgerEntries[postingDate], StartOfThisMonth, TodayDate)
+			            ),
+			 
+			        -- Quarter to date
+			        Period = "This quarter",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount]),
+			                generalLedgerEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(generalLedgerEntries[postingDate], StartOfThisQuarter, TodayDate)
+			            ),
+			 
+			        --Fiscal year selection 
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount]),
+			                generalLedgerEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(generalLedgerEntries[postingDate], FiscalYearStart, TodayDate)
+			            ),
+			        --Calendar year to date
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount]),
+			                generalLedgerEntries[accountCategory] = "Expense",
+			                DATESBETWEEN(generalLedgerEntries[postingDate], YearStartDate, TodayDate)
+			            )
+			 
+			       
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: c842bebc-df6c-4ec7-8d98-d800044f1aaa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewDynamicIncome = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			
+			
+			VAR StartOfThisMonth=Date(YEAR(TodayDate), Month(TodayDate),1)
+			 
+			
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			 
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			        
+			        Period = "This week",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount])*-1,
+			                generalLedgerEntries[accountCategory] = "Income",
+			                DATESBETWEEN(generalLedgerEntries[PostingDate], StartOfWeek, TodayDate)
+			            ),
+			        Period = "This month",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount])*-1,
+			                generalLedgerEntries[accountCategory] = "Income",
+			                DATESBETWEEN(generalLedgerEntries[PostingDate], StartOfThisMonth, TodayDate)
+			            ),
+			        Period = "This quarter",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount])*-1,
+			                generalLedgerEntries[accountCategory] = "Income",
+			                DATESBETWEEN(generalLedgerEntries[PostingDate], StartOfThisQuarter, TodayDate)
+			            ),
+			        Period = "This fiscal year",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount])*-1,
+			                generalLedgerEntries[accountCategory] = "Income",
+			                DATESBETWEEN(generalLedgerEntries[PostingDate], FiscalYearStart, TodayDate)
+			            ),
+			        Period = "This calendar year",
+			            CALCULATE(
+			                SUM(generalLedgerEntries[Amount])*-1,
+			                generalLedgerEntries[accountCategory] = "Income",
+			                DATESBETWEEN(generalLedgerEntries[PostingDate], YearStartDate, TodayDate)
+			            )
+			        
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, Result)
+			```
+		lineageTag: c0738070-a0fa-4f33-947e-aef54ff484df
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewKPIExpense = ```
+			
+			VAR ActualValue = [NewDynamicExpense]
+			VAR BudgetValue = [NewDynamicBudgetExpense]
+			 
+			-- Format values
+			VAR Actual = FORMAT(ActualValue, "$#,##0")
+			VAR Budget = FORMAT(BudgetValue, "$#,##0")
+			 
+			-- Calculate percentage variance
+			VAR ChangePct = DIVIDE(ActualValue - BudgetValue, BudgetValue, 0)
+			 
+			-- Arrow indicator
+			VAR Arrow = IF(ChangePct >= 0, "▲", "▼")
+			 
+			-- Format % without sign, add manually
+			VAR ChangePctFormatted = FORMAT(ABS(ChangePct), "0.00%")
+			 
+			-- Final display
+			RETURN
+			    Actual
+			```
+		lineageTag: 36960a26-a5e2-4e57-b687-b841494191b3
+
+	measure NewKPIIncome = ```
+			
+			
+			VAR ActualValue = [NewDynamicIncome] 
+			
+			VAR BudgetValue = [NewDynamicBudget] 
+			
+			  
+			
+			-- Format actual and budget 
+			
+			VAR Actual = FORMAT(ActualValue, "$#,##0") 
+			
+			VAR Budget = FORMAT(BudgetValue, "$#,##0") 
+			
+			  
+			
+			-- Calculate % change (variance) 
+			
+			VAR ChangePct = DIVIDE(ActualValue - BudgetValue, BudgetValue, 0) 
+			
+			  
+			
+			-- Arrow based on direction 
+			
+			VAR Arrow = IF(ChangePct >= 0, "▲", "▼") 
+			
+			  
+			
+			-- Format percentage without sign (add manually) 
+			
+			VAR ChangePctFormatted = FORMAT(ABS(ChangePct), "0.00%") 
+			
+			  
+			
+			-- Final string: Actual + Arrow + % change 
+			
+			RETURN 
+			
+			    Actual
+			```
+		lineageTag: 72a0bf7a-f0bb-4089-9b3b-44b0941aa18b
+
+	measure PreviousMTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsPreviousMonth] = TRUE 
+			
+			) 
+			```
+		lineageTag: e68d5023-1e25-4ee0-9919-3a96115c9ae5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PreviousQTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsPreviousQuarter] = TRUE 
+			
+			) 
+			```
+		lineageTag: e5108e5e-a2f7-40d5-99a0-e26e07de97bb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PreviousWTDRevenue = ```
+			
+			
+			VAR CurrentWeekStart = 
+			
+			    CALCULATE( 
+			
+			        MAX(BudgetVsActualTable[WeekStartDate]), 
+			
+			        BudgetVsActualTable[Date] = TODAY() 
+			
+			    ) 
+			
+			RETURN 
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[WeekStartDate] = CurrentWeekStart - 7 
+			
+			) 
+			```
+		lineageTag: 80ea308f-745b-4e31-8e15-fe8fe4754ff9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PreviousYTDRevenue = ```
+			
+			
+			CALCULATE( 
+			
+			    [TotalRevenue], 
+			
+			    BudgetVsActualTable[IsPreviousYear] = TRUE 
+			
+			) 
+			```
+		lineageTag: 208d4fce-80c1-474f-9fcf-9778fcee4b2f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RevenueCurrent = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			 
+			-- Last 12 months window
+			VAR Last12MonthsStartRaw = EDATE(TodayDate, -12) + 1
+			VAR Last12MonthsStart = IF(Last12MonthsStartRaw < FiscalYearStart, FiscalYearStart, Last12MonthsStartRaw)
+			 
+			RETURN
+			CALCULATE(
+			    SUMX(
+			    FILTER(
+			        generalLedgerEntries,
+			        generalLedgerEntries[accountType] = "Posting" &&
+			        generalLedgerEntries[incomeBalance] = "Income Statement" &&
+			        generalLedgerEntries[postingDate]>=Last12MonthsStartRaw &&
+			        generalLedgerEntries[postingDate]<=TodayDate
+			    ),
+			    IF(generalLedgerEntries[accountCategory]="Income", 
+			    generalLedgerEntries[amount]*-1, generalLedgerEntries[amount]
+			    
+			)))
+			```
+		lineageTag: e1c23053-12a2-4e79-9c1e-b475d416f385
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RevenuePrevious = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			 
+			-- Last 12 months window
+			VAR CurrentPeriodStartRaw = EDATE(TodayDate, -12) + 1
+			VAR CurrentPeriodStart = IF(CurrentPeriodStartRaw < FiscalYearStart, FiscalYearStart, CurrentPeriodStartRaw)
+			VAR CurrentPeriodEnd = TodayDate
+			 
+			-- Previous 12 months window
+			VAR PrevPeriodStartRaw = EDATE(CurrentPeriodStartRaw, -12)
+			VAR PrevPeriodEnd = EDATE(CurrentPeriodEnd, -12)
+			VAR PrevPeriodStart = IF(PrevPeriodStartRaw < FiscalYearStart, FiscalYearStart, PrevPeriodStartRaw)
+			 
+			RETURN
+			CALCULATE(
+			    SUMX(
+			    FILTER(
+			        generalLedgerEntries,
+			        generalLedgerEntries[accountType] = "Posting" &&
+			        generalLedgerEntries[incomeBalance] = "Income Statement" &&
+			        generalLedgerEntries[postingDate]>=PrevPeriodStartRaw &&
+			        generalLedgerEntries[postingDate]<=PrevPeriodEnd
+			    ),
+			    IF(generalLedgerEntries[accountCategory]="Income", 
+			    generalLedgerEntries[amount]*-1, generalLedgerEntries[amount]
+			    
+			)))
+			```
+		lineageTag: df86f856-315f-4317-baf6-57a39761e6f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RevenueCC = ```
+			
+			
+			CALCULATE( 
+			
+			    ABS(SUM(generalLedgerEntries[Amount])), 
+			
+			    generalLedgerEntries[accountCategory] = "Income" 
+			
+			) 
+			```
+		lineageTag: b98ba100-ff3b-43cb-a4e2-be11252fe725
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'TotalRevenue 1' = CALCULATE(ABS(SUM(generalLedgerEntries[amount])), generalLedgerEntries[accountCategory]="Income")
+		lineageTag: 0f4a5f15-2934-47b2-8ce0-35cee4c3d15c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TestFilteredRevenue = ```
+			
+			
+			CALCULATE(
+			
+			    SUM(generalLedgerEntries[Amount]) * -1,
+			
+			    generalLedgerEntries[accountType] = "Posting",
+			
+			    generalLedgerEntries[incomeBalance] = "Income Statement"
+			
+			)
+			
+			 
+			```
+		lineageTag: 2c5d202b-bb81-4363-a761-1fe50e641d8f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure GLTableActual =
+			
+			CALCULATE(
+			    SUM('generalLedgerEntries'[amount]),
+			    'generalLedgerEntries'[accountCategory] IN {"Income", "Expense","Cost of Goods Sold"}
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: d94f1731-3e8e-40ee-af7b-40964dd6e54d
+
+	measure GLTableBudget =
+			
+			CALCULATE(
+			    SUM('glBudgetEntries'[amount]),
+			    'glBudgetEntries'[accountCategory] IN {"Income", "Expense", "Cost of Goods Sold"}
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 190659d6-aa40-4292-841f-da609d1b05e2
+
+	measure GLTableVariance = [GLTableBudget] - [GLTableActual]
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 9eb4dc57-013f-4ecd-94d1-9d0e9f38514f
+
+	measure GLTableVariancePct =
+			
+			DIVIDE([GLTableVariance], [GLTableBudget], 0)
+		formatString: 0%;-0%;0%
+		lineageTag: 9921cb34-3d8b-489a-9f2a-ca9db652eaac
+
+	measure ShowOnXAxis = ```
+			
+			VAR SelectedPeriod = SELECTEDVALUE(PeriodTable[Period], "YTD")
+			VAR CurrentDate = TODAY()
+			VAR TargetDate = MAX(BudgetVsActualTable[Date])
+			 
+			-- Define logic ranges
+			VAR Last4Weeks = CurrentDate - 28
+			VAR Last12Months = EOMONTH(CurrentDate, -12) + 1
+			VAR Last6Quarters = EOMONTH(CurrentDate, -18) + 1
+			VAR Last3FiscalYears = DATE(YEAR(CurrentDate) - 2, 7, 1)
+			 
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        SelectedPeriod = "WTD" && TargetDate >= Last4Weeks, 1,
+			        SelectedPeriod = "MTD" && TargetDate >= Last12Months, 1,
+			        SelectedPeriod = "QTD" && TargetDate >= Last6Quarters, 1,
+			        SelectedPeriod = "YTD" && TargetDate >= Last3FiscalYears, 1,
+			        ISBLANK(SelectedPeriod) && TargetDate >= Last3FiscalYears, 1,
+			        0
+			    )
+			```
+		formatString: 0
+		lineageTag: 93f916e9-e310-41bf-8bb6-71b4c825e56a
+
+	measure NewKPIIncome_ChangePct = ```
+			
+			
+			
+			
+			VAR ChangePct = IF([NewDynamicIncomePrevious]=0,1,DIVIDE([NewDynamicIncome] - [NewDynamicIncomePrevious], [NewDynamicIncomePrevious]))
+			
+			
+			
+			VAR ChangePctFormatted = FORMAT(Abs(ChangePct), "0%") 
+			VAR ARROW = IF(ChangePct>0, UNICHAR(11014), UNICHAR(11015))
+			RETURN 
+			ARROW & " " & ChangePctFormatted  
+			```
+		lineageTag: 62018d49-d1ec-469c-ad86-a465eb2e69be
+
+	measure NewKPIExpense_ChangePct = ```
+			
+			
+			  
+			
+			
+			  
+			
+			VAR ChangePct = IF([NewDynamicExpensePrevious]=0,1,DIVIDE([NewDynamicExpense] - [NewDynamicExpensePrevious], [NewDynamicExpensePrevious])) 
+			
+			  
+			
+			
+			
+			  
+			
+			VAR ChangePctFormatted = FORMAT(Abs(ChangePct), "0%")   
+			
+			  
+			VAR ARROW = IF(ChangePct>0, UNICHAR(11014), UNICHAR(11015))
+			
+			RETURN   
+			
+			  
+			ARROW & " " & ChangePctFormatted   
+			```
+		lineageTag: 6aa7452e-bdd0-48ea-b3ec-a1d5ec606831
+
+	measure HideFiscal = IF(SELECTEDVALUE(Period[KPI])="Year to date", 1, 0)
+		formatString: 0
+		lineageTag: 9d4fe3c9-4dd7-4fb9-bdff-ad30b5410019
+
+	measure TestSlicerSelection =
+			
+			"Period: " & SELECTEDVALUE(Period[KPI], "None") &
+			" | Fiscal End: " & SELECTEDVALUE(FiscalYearSelection[value], "None")
+		lineageTag: b434ba5d-3cc8-47e2-958b-c7f33581d865
+
+	measure TestFiscalDateRange = ```
+			
+			VAR TodayDate = TODAY()
+			VAR FiscalEndText = SELECTEDVALUE(FiscalYearSelection[value], "30/06")
+			VAR FiscalDay = VALUE(LEFT(FiscalEndText, 2))
+			VAR FiscalMonth = VALUE(RIGHT(FiscalEndText, 2))
+			VAR FiscalYearEndThisYear = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			 
+			VAR StartFiscalYear =
+			    IF(
+			        TodayDate <= FiscalYearEndThisYear,
+			        DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1),
+			        DATE(YEAR(TodayDate), FiscalMonth + 1, 1)
+			    )
+			VAR EndFiscalYear = EOMONTH(StartFiscalYear, 11)
+			 
+			RETURN
+			    "Start: " & FORMAT(StartFiscalYear, "DD/MM/YYYY") &
+			    " | End: " & FORMAT(EndFiscalYear, "DD/MM/YYYY")
+			```
+		lineageTag: f734305c-0270-4935-9814-cfcffcf7fa3d
+
+	measure XAxisSelection = ```
+			
+			VAR SelectedPeriod = SELECTEDVALUE(PeriodTable[Period], "Year to date")
+			VAR CurrentDate = TODAY()
+			VAR FiscalEndText = SELECTEDVALUE(FiscalYearSelection[value], "30/06")
+			VAR FiscalDay = VALUE(LEFT(FiscalEndText, 2))
+			VAR FiscalMonth = VALUE(RIGHT(FiscalEndText, 2))
+			 
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    -- Week to date shows daily data
+			    SelectedPeriod = "Week to date", 
+			        FORMAT(SELECTEDVALUE('DateTable'[Date]), "ddd dd"),
+			    -- Month to date shows daily data
+			    SelectedPeriod = "Month to date", 
+			        FORMAT(SELECTEDVALUE('DateTable'[Date]), "dd MMM"),
+			    -- Quarter to date shows weekly data
+			    SelectedPeriod = "Quarter to date", 
+			        "Week " & SELECTEDVALUE('DateTable'[WeekNum]) & " (" & 
+			        FORMAT(MIN('DateTable'[Date]), "dd MMM") & ")",
+			    -- Year to date shows monthly data
+			    SelectedPeriod = "Year to date", 
+			        FORMAT(SELECTEDVALUE('DateTable'[Date]), "MMM yyyy"),
+			    -- Default fallback (monthly)
+			    FORMAT(SELECTEDVALUE('DateTable'[Date]), "MMM yyyy")
+			)
+			```
+		lineageTag: 6eeaf225-2d98-4354-8722-4dc791e9f6f0
+
+	measure BackGroundColor = IF(SELECTEDVALUE(Period[KPI])="Year to date", "Black", "#F2F3F4")
+		lineageTag: e7d2ac03-eff3-448d-b82a-e3bea45a6cec
+
+	measure BackGroundColor1 = IF(SELECTEDVALUE(Period[KPI])="Year to date", "White", "#F2F3F400")
+		lineageTag: f36273d9-e1ca-45e2-96ce-51f48fc60d65
+
+	measure BackGroundColor2 = IF(SELECTEDVALUE(Period[KPI])="Year to date", "#FFFFFF00", "#F2F3F4")
+		lineageTag: 83f980cd-6cd1-4e3c-a3a3-894410534765
+
+	measure BackGroundBorderColor = IF(SELECTEDVALUE(Period[KPI])="Year to date", "#F4F7F9", "#F2F3F4")
+		lineageTag: 1e50c9a7-f062-419a-bc27-1fe500a67bf6
+
+	measure NewDynamicIncomePrevious = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			
+			 
+			
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			
+			VAR DaysSinceFiscalStart = TodayDate-FiscalYearStart
+			VAR PrevFiscalStart=EDATE(FiscalYearStart, -12)
+			VAR PrevFiscalEndSameDay = PrevFiscalStart + DaysSinceFiscalStart
+			
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR LastYear = YEAR(TodayDate)-1
+			VAR StartOfLastCalendarYear=DATE(LastYear,1, 1)
+			VAR EndOfLastCalendarYTD=DATE(LastYear, MONTH(TodayDate), DAY(TodayDate))
+			
+			
+			
+			
+			 
+			--WTD
+			
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfLastWeek = StartOfWeek-7
+			VAR EndOfPrevWeekSameDay=TodayDate-7
+			 
+			
+			 
+			
+			 
+			-- MTD - Previous Month up to Same Day
+			
+			VAR StartOfCurrentMonth = DATE(YEAR(TodayDate), MONTH(TodayDate), 1)
+			VAR StartOfPrevMonth=EDATE(StartOfCurrentMonth, -1)
+			VAR DayofMonth=DAY(TodayDate)
+			VAR LastDayOfPrevMonth=EOMONTH(StartOfPrevMonth, 0)
+			VAR EndOfPrevMTD = If(DayofMonth >Day(LastDayOfPrevMonth),LastDayOfPrevMonth, StartOfPrevMonth+DayofMonth-1)
+			
+			 
+			-- QTD
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			VAR EndOfPrevQuarter = EOMONTH(StartOfPrevQuarter, 2)
+			VAR EndOFPrevQTD =EDATE([TodayLocal], -3)
+			
+			
+			 
+			-- Calendar year
+			
+			
+			
+			
+			
+			 
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    Period = "This week",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount])*-1,
+			            generalLedgerEntries[accountCategory] = "Income",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfLastWeek, EndOfPrevWeekSameDay)
+			        ),
+			    Period = "This month",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount])*-1,
+			            generalLedgerEntries[accountCategory] = "Income",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfPrevMonth, EndOfPrevMTD)
+			        ),
+			    Period = "This quarter",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount])*-1,
+			            generalLedgerEntries[accountCategory] = "Income",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfPrevQuarter, EndOFPrevQTD)
+			        ),
+			    Period = "This fiscal year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount])*-1,
+			            generalLedgerEntries[accountCategory] = "Income",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], PrevFiscalStart, PrevFiscalEndSameDay)
+			        ),
+			    Period = "This calendar year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount])*-1,
+			            generalLedgerEntries[accountCategory] = "Income",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfLastCalendarYear, EndOfLastCalendarYTD)
+			        )
+			    
+			)
+			```
+		lineageTag: bbb96a3b-ef8a-4e42-8510-494a42f53d70
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewDynamicExpensePrevious = ```
+			
+			VAR Period = SELECTEDVALUE(Period[KPI], BLANK())
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			VAR DaysSinceFiscalStart = TodayDate-FiscalYearStart
+			VAR PrevFiscalStart=EDATE(FiscalYearStart, -12)
+			VAR PrevFiscalEndSameDay = PrevFiscalStart + DaysSinceFiscalStart
+			
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			VAR LastYear = YEAR(TodayDate)-1
+			VAR StartOfLastCalendarYear=DATE(LastYear,1, 1)
+			VAR EndOfLastCalendarYTD=DATE(LastYear, MONTH(TodayDate), DAY(TodayDate))
+			
+			
+			
+			
+			 
+			--WTD
+			
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfLastWeek = StartOfWeek-7
+			VAR EndOfPrevWeekSameDay=TodayDate-7
+			 
+			
+			 
+			
+			 
+			-- MTD - Previous Month up to Same Day
+			
+			VAR StartOfCurrentMonth = DATE(YEAR(TodayDate), MONTH(TodayDate), 1)
+			VAR StartOfPrevMonth=EDATE(StartOfCurrentMonth, -1)
+			VAR DayofMonth=DAY(TodayDate)
+			VAR LastDayOfPrevMonth=EOMONTH(StartOfPrevMonth, 0)
+			VAR EndOfPrevMTD = If(DayofMonth >Day(LastDayOfPrevMonth),LastDayOfPrevMonth, StartOfPrevMonth+DayofMonth-1)
+			
+			 
+			-- QTD
+			VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			VAR StartOfPrevQuarter = EDATE(StartOfThisQuarter, -3)
+			VAR EndOfPrevQuarter = EOMONTH(StartOfPrevQuarter, 2)
+			VAR EndOfPrevQTD=EDATE([TodayLocal], -3)
+			
+			
+			 
+			-- Calendar year
+			
+			
+			
+			
+			
+			 
+			
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    Period = "This week",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]),
+			            generalLedgerEntries[accountCategory] = "Expense",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfLastWeek, EndOfPrevWeekSameDay)
+			        ),
+			    Period = "This month",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]),
+			            generalLedgerEntries[accountCategory] = "Expense",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfPrevMonth, EndOfPrevMTD)
+			        ),
+			    Period = "This quarter",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]),
+			            generalLedgerEntries[accountCategory] = "Expense",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfPrevQuarter, EndOFPrevQTD)
+			        ),
+			    Period = "This fiscal year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]),
+			            generalLedgerEntries[accountCategory] = "Expense",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], PrevFiscalStart, PrevFiscalEndSameDay)
+			        ),
+			    Period = "This calendar year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]),
+			            generalLedgerEntries[accountCategory] = "Expense",
+			            DATESBETWEEN(generalLedgerEntries[postingDate], StartOfLastCalendarYear, EndOfLastCalendarYTD)
+			        )
+			    
+			)
+			```
+		lineageTag: 528a7c08-d4fd-486e-9656-a9a66b6032ae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DEBUG = ```
+			
+			 Var tomorrow = [TodayLocal] + 1
+			 Var eOfMonth = EOMONTH(tomorrow,0)
+			 RETURN
+			eOfMonth
+			
+			```
+		formatString: General Date
+		lineageTag: b3bc881f-d98f-48a1-9fa9-c3dd8b134512
+
+	measure BackgroundColorForIncomePct = ```
+			
+			
+			
+			
+			VAR ChangePct = IF([NewDynamicIncomePrevious]=0,1,DIVIDE([NewDynamicIncome] - [NewDynamicIncomePrevious], [NewDynamicIncomePrevious]))
+			
+			
+			VAR Percentage = ChangePct*100
+			VAR Col = 
+			
+			    SWITCH(
+			
+			        TRUE(),
+			
+			       Percentage = 0, "Grey",
+			
+			        Percentage > 1, "Green",
+			
+			        Percentage < 0, "Red",
+			
+			        "Grey"  -- fallback
+			    )
+			 
+			
+			RETURN Col
+			```
+		lineageTag: 5941ac9a-1cae-4ad6-9936-3034f1e62de9
+
+	measure BackgroundColorForExpensePct = ```
+			
+			
+			
+			
+			VAR ChangePct = IF([NewDynamicExpensePrevious]=0,1,DIVIDE([NewDynamicExpense] - [NewDynamicExpensePrevious], [NewDynamicExpensePrevious]))
+			
+			 
+			VAR Percentage = ChangePct*100
+			VAR Col = 
+			
+			    SWITCH(
+			
+			        TRUE(),
+			
+			        Percentage = 0, "Grey",
+			
+			        Percentage > 1, "Green",
+			
+			        Percentage < 0, "Red",
+			
+			        "Grey"  -- fallback
+			
+			    )
+			 
+			
+			RETURN Col
+			
+			```
+		lineageTag: 8ba90f7d-78bf-4ca2-ba74-1eee34a6b597
+
+	measure ActualAmountDynamic = ```
+			
+			VAR SelectedDimName = SELECTEDVALUE('dimensions'[Code])         -- e.g., "Department"
+			VAR SelectedDimValue = SELECTEDVALUE('dimensionValues'[Code])   -- e.g., "DEPT01"
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			
+			VAR SelectedAcctCategory = SELECTEDVALUE(AccountCategoryTable[Category])  -- "Income" or "Expense"
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			-- Fiscal year start logic
+			VAR Multiplier=IF(SelectedAcctCategory="Income", -1, 1)
+			 
+			-- Start of the week (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 
+			-- Find the dynamic column from ColumnMapActual
+			VAR TargetColumn =
+			    CALCULATE(
+			        SELECTEDVALUE(ColumnMapGLE[ColumnName]),
+			        ColumnMapGLE[dimensions.code] = SelectedDimName
+			    )
+			 
+			-- Final Result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			 
+			        SelectedPeriod = "This week",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]) * Multiplier,
+			            FILTER(
+			                ALL(generalLedgerEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "globalDimension1Code", generalLedgerEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", generalLedgerEntries[globalDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension3Code", generalLedgerEntries[shortcutDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension4Code", generalLedgerEntries[shortcutDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension5Code", generalLedgerEntries[shortcutDimension5Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension6Code", generalLedgerEntries[shortcutDimension6Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension7Code", generalLedgerEntries[shortcutDimension7Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension8Code", generalLedgerEntries[shortcutDimension8Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                generalLedgerEntries[accountCategory] = SelectedAcctCategory &&
+			                generalLedgerEntries[PostingDate] >= StartOfWeek &&
+			                generalLedgerEntries[PostingDate] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This month",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]) * Multiplier,
+			            FILTER(
+			                ALL(generalLedgerEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "globalDimension1Code", generalLedgerEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", generalLedgerEntries[globalDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension3Code", generalLedgerEntries[shortcutDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension4Code", generalLedgerEntries[shortcutDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension5Code", generalLedgerEntries[shortcutDimension5Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension6Code", generalLedgerEntries[shortcutDimension6Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension7Code", generalLedgerEntries[shortcutDimension7Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension8Code", generalLedgerEntries[shortcutDimension8Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                generalLedgerEntries[accountCategory] = SelectedAcctCategory &&
+			                generalLedgerEntries[PostingDate] >= StartOfThisMonth &&
+			                generalLedgerEntries[PostingDate] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This quarter",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]) * Multiplier,
+			            FILTER(
+			                ALL(generalLedgerEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "globalDimension1Code", generalLedgerEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", generalLedgerEntries[globalDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension3Code", generalLedgerEntries[shortcutDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension4Code", generalLedgerEntries[shortcutDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension5Code", generalLedgerEntries[shortcutDimension5Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension6Code", generalLedgerEntries[shortcutDimension6Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension7Code", generalLedgerEntries[shortcutDimension7Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension8Code", generalLedgerEntries[shortcutDimension8Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                generalLedgerEntries[accountCategory] = SelectedAcctCategory&&
+			                generalLedgerEntries[PostingDate] >= StartOfThisQuarter &&
+			                generalLedgerEntries[PostingDate] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This fiscal year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]) * Multiplier,
+			            FILTER(
+			                ALL(generalLedgerEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "globalDimension1Code", generalLedgerEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", generalLedgerEntries[globalDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension3Code", generalLedgerEntries[shortcutDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension4Code", generalLedgerEntries[shortcutDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension5Code", generalLedgerEntries[shortcutDimension5Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension6Code", generalLedgerEntries[shortcutDimension6Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension7Code", generalLedgerEntries[shortcutDimension7Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension8Code", generalLedgerEntries[shortcutDimension8Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                generalLedgerEntries[accountCategory] = SelectedAcctCategory &&
+			                generalLedgerEntries[PostingDate] >= FiscalYearStart &&
+			                generalLedgerEntries[PostingDate] <= TodayDate
+			            )
+			        ),
+			
+			        SelectedPeriod = "This calendar year",
+			        CALCULATE(
+			            SUM(generalLedgerEntries[Amount]) * Multiplier,
+			            FILTER(
+			                ALL(generalLedgerEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "globalDimension1Code", generalLedgerEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", generalLedgerEntries[globalDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension3Code", generalLedgerEntries[shortcutDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension4Code", generalLedgerEntries[shortcutDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension5Code", generalLedgerEntries[shortcutDimension5Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension6Code", generalLedgerEntries[shortcutDimension6Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension7Code", generalLedgerEntries[shortcutDimension7Code] = SelectedDimValue,
+			                    TargetColumn = "shortcutDimension8Code", generalLedgerEntries[shortcutDimension8Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                generalLedgerEntries[accountCategory] = SelectedAcctCategory &&
+			                generalLedgerEntries[PostingDate] >= YearStartDate &&
+			                generalLedgerEntries[PostingDate] <= TodayDate
+			            )
+			        )
+			 
+			       
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, ABS(Result))
+			```
+		lineageTag: 059ddf82-4195-495d-a61c-0b392f881e62
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure BudgetAmountDynamic = ```
+			
+			VAR SelectedDimName = SELECTEDVALUE('dimensions'[Code])          -- e.g., "Department"
+			VAR SelectedDimValue = SELECTEDVALUE('dimensionValues'[Code])    -- e.g., "DEPT01"
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			
+			VAR SelectedBudgetName = SELECTEDVALUE(glBudgetEntries[budgetName])
+			
+			 
+			VAR SelectedAcctCategory = SELECTEDVALUE(AccountCategoryTable[Category])  -- "Income" or "Expense"
+			
+			 
+			 
+			
+			VAR YearStartDate =DATE(Year(TodayDate), 1,1)
+			
+			 VAR CurrQuarter = QUARTER(TodayDate)
+			VAR StartOfThisQuarter = DATE(YEAR(TodayDate), (CurrQuarter - 1) * 3 + 1, 1)
+			-- Fiscal year start logic
+			VAR Multiplier=IF(SelectedAcctCategory="Income", -1, 1)
+			 
+			-- Start of the week (Monday)
+			VAR StartOfWeek = TodayDate - WEEKDAY(TodayDate, 2) + 1
+			VAR StartOfThisMonth= Date(YEAR(TodayDate), MONTH(TodayDate), 1)
+			 
+			-- Find correct column from ColumnMap
+			VAR TargetColumn =
+			    CALCULATE(
+			        MAX(ColumnMapGL[ColumnName]),
+			        FILTER(
+			            ColumnMapGL,
+			            ColumnMapGL[dimensions.code] = SelectedDimName
+			        )
+			    )
+			 
+			-- Final Result
+			VAR Result =
+			    SWITCH(
+			        TRUE(),
+			 
+			        SelectedPeriod = "This week",
+			        CALCULATE(
+			            SUM(glBudgetEntries[Amount]),
+			            FILTER(
+			                ALL(glBudgetEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "budgetDimension1Code", glBudgetEntries[budgetDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension2Code", glBudgetEntries[budgetDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension3Code", glBudgetEntries[budgetDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension4Code", glBudgetEntries[budgetDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension1Code", glBudgetEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", glBudgetEntries[globalDimension2Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                glBudgetEntries[accountCategory] = SelectedAcctCategory &&
+			                // glBudgetEntries[budgetName]=SelectedBudgetName &&
+			                glBudgetEntries[date] >= StartOfThisMonth &&
+			                glBudgetEntries[date] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This month",
+			        CALCULATE(
+			            SUM(glBudgetEntries[Amount]),
+			            FILTER(
+			                ALL(glBudgetEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "budgetDimension1Code", glBudgetEntries[budgetDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension2Code", glBudgetEntries[budgetDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension3Code", glBudgetEntries[budgetDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension4Code", glBudgetEntries[budgetDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension1Code", glBudgetEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", glBudgetEntries[globalDimension2Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                glBudgetEntries[accountCategory] = SelectedAcctCategory &&
+			                // glBudgetEntries[budgetName]=SelectedBudgetName &&
+			                glBudgetEntries[date] >= StartOfThisMonth &&
+			                glBudgetEntries[date] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This quarter",
+			        CALCULATE(
+			            SUM(glBudgetEntries[Amount]),
+			            FILTER(
+			                ALL(glBudgetEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "budgetDimension1Code", glBudgetEntries[budgetDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension2Code", glBudgetEntries[budgetDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension3Code", glBudgetEntries[budgetDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension4Code", glBudgetEntries[budgetDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension1Code", glBudgetEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", glBudgetEntries[globalDimension2Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                glBudgetEntries[accountCategory] = SelectedAcctCategory &&
+			                glBudgetEntries[budgetName]=SelectedBudgetName &&
+			                glBudgetEntries[date]>=StartOfThisQuarter &&
+			                glBudgetEntries[date]<=TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This fiscal year",
+			        CALCULATE(
+			            SUM(glBudgetEntries[Amount]),
+			            FILTER(
+			                ALL(glBudgetEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "budgetDimension1Code", glBudgetEntries[budgetDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension2Code", glBudgetEntries[budgetDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension3Code", glBudgetEntries[budgetDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension4Code", glBudgetEntries[budgetDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension1Code", glBudgetEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", glBudgetEntries[globalDimension2Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                glBudgetEntries[accountCategory] = SelectedAcctCategory &&
+			                glBudgetEntries[budgetName]=SelectedBudgetName &&
+			                glBudgetEntries[date] >= FiscalYearStart &&
+			                glBudgetEntries[date] <= TodayDate
+			            )
+			        ),
+			 
+			        SelectedPeriod = "This calendar year",
+			        CALCULATE(
+			            SUM(glBudgetEntries[Amount]),
+			            FILTER(
+			                ALL(glBudgetEntries),
+			                SWITCH (
+			                    TRUE(),
+			                    TargetColumn = "budgetDimension1Code", glBudgetEntries[budgetDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension2Code", glBudgetEntries[budgetDimension2Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension3Code", glBudgetEntries[budgetDimension3Code] = SelectedDimValue,
+			                    TargetColumn = "budgetDimension4Code", glBudgetEntries[budgetDimension4Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension1Code", glBudgetEntries[globalDimension1Code] = SelectedDimValue,
+			                    TargetColumn = "globalDimension2Code", glBudgetEntries[globalDimension2Code] = SelectedDimValue,
+			                    FALSE
+			                ) &&
+			                glBudgetEntries[accountCategory] = SelectedAcctCategory &&
+			                glBudgetEntries[budgetName]=SelectedBudgetName &&
+			                glBudgetEntries[date] >= YearStartDate &&
+			                glBudgetEntries[date] <= TodayDate
+			            )
+			        )
+			        
+			    )
+			 
+			RETURN IF(ISBLANK(Result), 0, ABS(Result))
+			```
+		lineageTag: 91a147ea-2a2f-4963-b7cc-845dfbcb414e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ShowThisBar =
+			
+			VAR SelectedDimID = SELECTEDVALUE('dimensions'[ID])
+			VAR CurrentDimValueID = MAX('dimensionValues'[DimensionID])
+			RETURN
+			IF(
+			    NOT ISBLANK(SelectedDimID) && SelectedDimID = CurrentDimValueID,
+			    "ABC",
+			    "DEF"
+			)
+		lineageTag: 0eec5d55-3d74-4bcc-bfb8-8f742b2b214f
+
+	measure IncomeRevenueBackground = ```
+			
+			VAR ValueNum = [NewKPIIncome_ChangePct_numeric]
+			RETURN 
+			       SWITCH(
+			        TRUE(),
+			        ValueNum < 0, "#B61335",     -- Red
+			        ValueNum = 0, "#818285",     -- Black
+			        ValueNum > 0, "#056D4D"      -- Green
+			    )
+			```
+		lineageTag: 886470a5-119b-497a-b4a1-a93363ac873d
+
+	measure IncomeExpenseBackground = ```
+			
+			VAR ValueNum = [NewKPIExpense_ChangePct_Numeric]
+			RETURN 
+			       SWITCH(
+			        TRUE(),
+			        ValueNum < 0, "#056D4D",  -- Red
+			        ValueNum = 0, "#818285",     -- Black
+			        ValueNum > 0, "#B61335"      -- Green
+			    )
+			```
+		lineageTag: ac472b54-df5c-4a0a-8935-5d77407c2057
+
+	measure NewKPIExpense_ChangePct_Numeric = ```
+			
+			
+			VAR ChangePct = IF([NewDynamicExpensePrevious]=0,1,DIVIDE([NewDynamicExpense] - [NewDynamicExpensePrevious], [NewDynamicExpensePrevious])) 
+			  
+			VAR ARROW = IF(ChangePct>0, UNICHAR(9650), UNICHAR(9660))
+			
+			RETURN   
+			ChangePct   
+			```
+		lineageTag: 857f620b-c16f-4cd1-903d-e1e12a38f10a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure NewKPIIncome_ChangePct_numeric = ```
+			
+			VAR ChangePct = IF([NewDynamicIncomePrevious]=0,1,DIVIDE([NewDynamicIncome] - [NewDynamicIncomePrevious], [NewDynamicIncomePrevious]))
+			RETURN 
+			ChangePct 
+			```
+		lineageTag: eaaec002-36ca-4030-acaa-c6c9fd809d21
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RevenueCurrentLinear = ```
+			
+			// VAR TodayDate = TODAY()
+			VAR TodayDate=[TodayLocal]
+			VAR FiscalEndText=accountingPeriods[FiscalYearEnd]
+			-- Default to 30/06 fiscal year end
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			 
+			-- Fiscal year start for current date
+			VAR FiscalYearEnd = DATE(YEAR(TodayDate), FiscalMonth, FiscalDay)
+			VAR FiscalYearStart = IF(TodayDate <= FiscalYearEnd, DATE(YEAR(TodayDate) - 1, FiscalMonth + 1, 1), DATE(YEAR(TodayDate), FiscalMonth + 1, 1))
+			 
+			-- Last 12 months window
+			VAR Last12MonthsStartRaw = EDATE(TodayDate, -12) + 1
+			VAR Last12MonthsStart = IF(Last12MonthsStartRaw < FiscalYearStart, FiscalYearStart, Last12MonthsStartRaw)
+			 
+			RETURN
+			CALCULATE(
+			    SUMX(
+			    FILTER(
+			        generalLedgerEntries,
+			        generalLedgerEntries[accountType] = "Posting" &&
+			        generalLedgerEntries[incomeBalance] = "Income Statement" &&
+			        generalLedgerEntries[postingDate]>=Last12MonthsStartRaw &&
+			        generalLedgerEntries[postingDate]<=TodayDate
+			    ),
+			    IF(generalLedgerEntries[accountCategory]="Income", 
+			    generalLedgerEntries[amount]*-1, generalLedgerEntries[amount]
+			    
+			)))
+			```
+		lineageTag: 9aae43e0-4542-4d52-b442-7c0f726c283b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ShowBudgetFilter =
+			VAR SelectedBudget = SELECTEDVALUE('BudgetNamesTable'[BudgetName])
+			RETURN
+			IF (
+			    SelectedBudget = "Select Budget",
+			    "ABC",
+			    "DEF"
+			)
+		lineageTag: 3b780e0f-a682-4a89-84ba-3aaab7d05b7f
+
+	measure SelectedDimName = SELECTEDVALUE('dimensions'[code])
+		lineageTag: f9a9af17-9bfa-4ffa-b263-a6887da7a736
+
+	measure SelectedAccountCategory = SELECTEDVALUE(AccountCategoryTable[Category])
+		lineageTag: e32716aa-f12c-4238-9be9-00a2ca123459
+
+	measure DimensionGraphTitle =
+			
+			
+			VAR A= [SelectedDimName]
+			VAR B=[SelectedAccountCategory]
+			VAR C=IF(A=" Select dimension", A, A&" "&B)
+			RETURN C
+		lineageTag: 3313947a-5fb7-4421-b8c3-a771ef64424e
+
+	measure TodayLocal = ```
+			
+			VAR timeZone = CALCULATE(SELECTEDVALUE(userpersonalizations[timeZoneDisplayName]))
+			 
+			// If timezone is blank → fallback to UTC
+			VAR isBlankTZ = ISBLANK(timeZone)
+			 
+			// Find position of "+" and "-"
+			VAR posPlus = FIND("+", timeZone, 1, 0)
+			VAR posMinus = FIND("-", timeZone, 1, 0)
+			 
+			// Determine sign
+			VAR sign =
+			    IF(posPlus > 0, 1,
+			        IF(posMinus > 0, -1,
+			            0 // fallback if neither found (plain UTC)
+			        )
+			    )
+			 
+			VAR posSign = IF(sign = 1, posPlus, posMinus)
+			 
+			// Extract number after sign until ":"
+			VAR offsetText =
+			    IF(
+			        isBlankTZ || sign = 0,
+			        "0",   // default to UTC if blank or no offset
+			        MID(
+			            timeZone,
+			            posSign + 1,
+			            FIND(":", timeZone, posSign, LEN(timeZone)) - posSign - 1
+			        )
+			    )
+			 
+			VAR offsetHours = sign * VALUE(offsetText)
+			 
+			// Calculate local time
+			VAR localTime = UTCNOW() + (offsetHours / 24)
+			VAR localDate = DATE(YEAR(localTime), MONTH(localTime), DAY(localTime))
+			 
+			RETURN
+			    COALESCE(localDate, TODAY())
+			```
+		formatString: General Date
+		lineageTag: bc3a5b15-80d3-4e92-a14a-35474938cf23
+
+	column Date
+		formatString: General Date
+		lineageTag: b9dbcaed-0aad-4116-80cb-081bbe1bbef8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: a1496a22-0ea0-48b2-b5ae-ddcb511eb630
+			defaultHierarchy: LocalDateTable_b4d2cf0e-a1fb-4333-95a4-acddee3fe09e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 7cf13cb9-fdb8-46c3-bcb0-948594659707
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: 28797428-5f9f-4d34-adb3-b6e71ed480b8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: 17f6ca8f-6539-4628-bc57-213dd3d20066
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: c3628702-adec-44f1-a31b-9035bf2625ed
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekday
+		lineageTag: 1f4f5759-3f26-4346-9c2a-5b4ae212b337
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Weekday]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsPreviousYear = ```
+			
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(TODAY()) - 1 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 837c1f29-0b23-47a9-adee-43aab65dd9be
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsPreviousQuarter = ```
+			
+			
+			QUARTER(BudgetVsActualTable[Date]) = QUARTER(EDATE(TODAY(), -3)) && 
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(EDATE(TODAY(), -3)) 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6df05526-4f90-47b6-8141-1ba1af2637a3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsPreviousMonth = ```
+			
+			
+			MONTH(BudgetVsActualTable[Date]) = MONTH(EDATE(TODAY(), -1)) && 
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(EDATE(TODAY(), -1)) 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1bef5998-439e-4466-a230-f84bad968974
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCurrentYear = ```
+			
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(TODAY()) 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2a2d6ecd-e8e3-4d68-956f-dfd0eada7ace
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCurrentWeek =
+			
+			WEEKNUM(BudgetVsActualTable[Date], 2) = WEEKNUM(TODAY(), 2) &&
+			YEAR(BudgetVsActualTable[Date]) = YEAR(TODAY())
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 90f4a503-36a4-4ed6-b97f-491bd6aeee83
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCurrentQuarter = ```
+			
+			
+			QUARTER(BudgetVsActualTable[Date]) = QUARTER(TODAY()) && 
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(TODAY()) 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ded1d51a-fc75-411f-b8fc-91b13d31cd93
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCurrentMonth = ```
+			
+			
+			MONTH(BudgetVsActualTable[Date]) = MONTH(TODAY()) && 
+			
+			YEAR(BudgetVsActualTable[Date]) = YEAR(TODAY()) 
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 50d53030-7740-4aaf-bfdc-5cecf203247d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfMonth = Day(BudgetVsActualTable[Date])
+		formatString: 0
+		lineageTag: 5a764bdb-13ee-4f7d-9657-64c64ed6ecb2
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName = ```
+			FORMAT(BudgetVsActualTable[Date], "MMMM") 
+			```
+		lineageTag: ac469ab4-1035-4c42-b31d-85dbe252eac3
+		summarizeBy: none
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekOfQuarter = ```
+			WEEKNUM(BudgetVsActualTable[Date]) - WEEKNUM(DATE(YEAR(BudgetVsActualTable[Date]), MONTH(BudgetVsActualTable[Date]) - MOD(MONTH(BudgetVsActualTable[Date]) - 1, 3), 1)) + 1 
+			```
+		formatString: 0
+		lineageTag: 3006fc3e-0462-4b16-950f-6efed42358e9
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekStartDate = ```
+			BudgetVsActualTable[Date] - WEEKDAY(BudgetVsActualTable[Date], 2) + 1 
+			```
+		formatString: General Date
+		lineageTag: 8b4d6c0e-46ea-44f0-8999-b292c4d9144e
+		summarizeBy: none
+
+		variation Variation
+			isDefault
+			relationship: 756cb5f9-9d0b-40fb-9eb5-41edf576ebfe
+			defaultHierarchy: LocalDateTable_e5288d25-58bf-4220-a263-d10b2360fc96.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column DynamicXAxis = ```
+			
+			VAR SelectedDate = SELECTEDVALUE(BudgetVsActualTable[Date])
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			VAR FiscalEndText = SELECTEDVALUE(FiscalYearSelection[value])
+			VAR TodayDate = TODAY()
+			 
+			// Fiscal year calculations
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			VAR FiscalYear = IF(MONTH(SelectedDate) > FiscalMonth, YEAR(SelectedDate) + 1, YEAR(SelectedDate))
+			 
+			// Week calculations
+			VAR WeekStartDate = SelectedDate - WEEKDAY(SelectedDate, 2) + 1  // Monday
+			VAR WeekEndDate = WeekStartDate + 6  // Sunday
+			 
+			// Default view - last 3 years comparison
+			VAR DefaultView = 
+			    IF(
+			        DATEDIFF(DATE(YEAR(TodayDate)-3, 1, 1), SelectedDate, DAY) >= 0,
+			        "FY" & (YEAR(SelectedDate) + IF(MONTH(SelectedDate) > FiscalMonth, 1, 0)) & " " & LEFT([Month], 3)
+			    )
+			 
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    // --- When no period is selected (default view) ---
+			    ISBLANK(SelectedPeriod) && ISBLANK(FiscalEndText),
+			        DefaultView,
+			    // --- Week-to-date view ---
+			    SelectedPeriod = "Week to date",
+			        UPPER(LEFT(FORMAT(SelectedDate, "dddd"), 3)) & " " & DAY(SelectedDate),
+			    // --- Month-to-date view ---
+			    SelectedPeriod = "Month to date",
+			        FORMAT(DAY(SelectedDate), "00") & " " & LEFT([Month], 3),
+			    // --- Quarter-to-date view ---
+			    SelectedPeriod = "Quarter to date",
+			        "W" & [WeekNum] & ": " & 
+			        FORMAT(WeekStartDate, "dd") & "-" & 
+			        FORMAT(WeekEndDate, "dd ") & 
+			        LEFT(FORMAT(WeekStartDate, "MMMM"), 3),
+			    // --- Year-to-date view ---
+			    SelectedPeriod = "Year to date" && ISBLANK(FiscalEndText),
+			        LEFT([Month], 3) & " " & [Year],
+			    // --- Year-to-date view with fiscal year selected ---
+			    SelectedPeriod = "Year to date" && NOT ISBLANK(FiscalEndText),
+			        LEFT([Month], 3) & " FY" & RIGHT(FORMAT(FiscalYear, "0000"), 2),
+			    // --- Fiscal year selected (without specific period) ---
+			    NOT ISBLANK(FiscalEndText) && ISBLANK(SelectedPeriod),
+			        "FY" & FiscalYear & " " & [Quarter],
+			    // --- Fallback default ---
+			    DefaultView
+			)
+			```
+		lineageTag: 1d9da261-51bd-43ce-b4b1-b12ebc604161
+		summarizeBy: none
+		sortByColumn: XAxisSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column XAxisSort = ```
+			
+			VAR Dt = BudgetVsActualTable[Date]
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI])
+			VAR FiscalEndText = SELECTEDVALUE(FiscalYearSelection[value])
+			VAR Year = YEAR(Dt)
+			VAR Month = MONTH(Dt)
+			VAR Day = DAY(Dt)
+			VAR WeekNum = WEEKNUM(Dt, 2)
+			 
+			-- Fiscal Year calculation
+			VAR FiscalDay = IF(ISBLANK(FiscalEndText), 30, VALUE(LEFT(FiscalEndText, 2)))
+			VAR FiscalMonth = IF(ISBLANK(FiscalEndText), 6, VALUE(RIGHT(FiscalEndText, 2)))
+			VAR FiscalYear = IF(Month > FiscalMonth, Year + 1, Year)
+			 
+			RETURN
+			SWITCH(
+			    TRUE(),
+			 
+			    // Week to date: sort by full date
+			    SelectedPeriod = "Week to date", Dt,
+			 
+			    // Month to date: sort by full date
+			    SelectedPeriod = "Month to date", Dt,
+			 
+			    // Quarter to date: sort by fiscal year * 100 + week number
+			    SelectedPeriod = "Quarter to date", FiscalYear * 100 + WeekNum,
+			 
+			    // Year to date: sort by fiscal year * 100 + month number
+			    SelectedPeriod = "Year to date", FiscalYear * 100 + Month,
+			 
+			    // Fallback: sort by fiscal year * 100 + month number
+			    FiscalYear * 100 + Month
+			)
+			```
+		lineageTag: 3a9f6355-098f-4b5a-8c77-d24afa6cb8eb
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column XAxisLabel = ```
+			
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI], "Year to date") 
+			VAR Dt = BudgetVsActualTable[Date]
+			 
+			-- Fiscal Year end month (default = June = 6)
+			VAR FiscalMonthEnd = SELECTEDVALUE(FiscalYearSelection[fiscalMonth], 6)
+			 
+			-- Compute Fiscal Year based on fiscal end month
+			VAR FiscalYear = 
+			    YEAR(Dt) + IF(MONTH(Dt) <= FiscalMonthEnd, 0, 1)
+			 
+			-- Label when WTD is selected
+			VAR Label_WTD = FORMAT(Dt, "dd MMM") & " FY" & FiscalYear
+			 
+			-- Fallback label (for now)
+			VAR DefaultLabel = FORMAT(Dt, "MMM yyyy")
+			 
+			RETURN 
+			    SWITCH( 
+			        TRUE(), 
+			        SelectedPeriod = "Week to date", Label_WTD,
+			        DefaultLabel
+			    )
+			```
+		lineageTag: 9f73a23b-ca87-44b6-b2da-737517b8556b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weeknum = WEEKNUM(BudgetVsActualTable[Date], 2)
+		formatString: 0
+		lineageTag: 844a554a-278c-4519-87c2-0cffddf1cb8c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsVisibleOnXAxis = ```
+			
+			VAR SelectedPeriod = SELECTEDVALUE(Period[KPI_ID], "4")
+			VAR CurrentDate = TODAY()
+			VAR TargetDate = BudgetVsActualTable[Date]
+			 
+			VAR StartOfLast2Years = DATE(YEAR(CurrentDate) - 1, 7, 1) -- Start of last fiscal year
+			-- Adjust "7" to "1" if your fiscal year starts in January
+			 
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        SelectedPeriod = "1" && TargetDate >= CurrentDate - 28, TRUE(),
+			        SelectedPeriod = "2" && TargetDate >= EOMONTH(CurrentDate, -12) + 1, TRUE(),
+			        SelectedPeriod = "3" && TargetDate >= EOMONTH(CurrentDate, -18) + 1, TRUE(),
+			        (SelectedPeriod = "4" || ISBLANK(SelectedPeriod)) && TargetDate >= StartOfLast2Years, TRUE(),
+			        FALSE
+			    )
+			```
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5665a7c9-43c8-4a17-ab39-7eb92dff3063
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column
+		type: calculated
+		lineageTag: 1055a9d3-7e75-4980-9bbb-2f5d69f93189
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	column XAxisLabel_WTD =
+			
+			VAR Dt = BudgetVsActualTable[Date]
+			VAR FiscalMonthEnd = SELECTEDVALUE(FiscalYearSelection[fiscalMonth], 6)  -- default: June
+			VAR FiscalYear = YEAR(Dt) + IF(MONTH(Dt) <= FiscalMonthEnd, 0, 1)
+			RETURN FORMAT(Dt, "dd MMM") & " FY" & FiscalYear
+		lineageTag: 27cd6d97-142d-44c9-a2be-0ca3f34ef5b3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition BudgetVsActualTable = calculated
+		mode: import
+		source =
+				
+				ADDCOLUMNS(
+				    CALENDAR(DATE(2023, 1, 1), DATE(2026, 12, 31)),
+				    "Year", YEAR([Date]),
+				    "Month", FORMAT([Date], "MMMM"),
+				    "Month Number", MONTH([Date]),
+				    "Quarter", "Q" & FORMAT([Date], "Q"),
+				    "Weekday", FORMAT([Date], "dddd")
+				)
+
+	annotation PBI_Id = 204ff07cb0824e82a3f41f5e7b129ce4
+

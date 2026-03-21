@@ -1,0 +1,91 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["generalLedgerEntries","Period","glBudgetEntries","Environment","Company","dimensions","dimensionValues","generalLedgerSetup","glBudgetUnpivoted","Merge1GL","ColumnMapGL","accountingPeriods","KPI","generalLedgerEntriesUnpivoted","Merge1GLE","ColumnMapGLE","Dummy Budget","DummyDimension","userpersonalizations","vendorLedgerEntries","bankAccounts","customerLedgerEntries","Last Refresh Date","DummyVLE","DummyCLE","bankAccountLedgerEntries","purchaseLines","accounts","DimensionCodeTable","DimensionCode1Slicer","DimensionCode2Slicer","CompanyInfo"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation __TEdtr = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table generalLedgerEntries
+ref table Period
+ref table DateTable
+ref table glBudgetEntries
+ref table DateTableTemplate_11d9a827-73ca-4776-a485-717a89941480
+ref table FiscalYearSelection
+ref table BudgetVsActualTable
+ref table LocalDateTable_b4d2cf0e-a1fb-4333-95a4-acddee3fe09e
+ref table PeriodTable
+ref table LocalDateTable_e5288d25-58bf-4220-a263-d10b2360fc96
+ref table dimensions
+ref table LocalDateTable_e30edc15-5264-4900-a8f6-55fb5a8d802b
+ref table dimensionValues
+ref table LocalDateTable_b585c176-8ea3-4725-86df-173c2e3fbe93
+ref table generalLedgerSetup
+ref table LocalDateTable_76ad04c4-e15d-4641-b48d-355d0a700fd8
+ref table LocalDateTable_2fba97db-af5c-4b52-8354-6a414578f41e
+ref table LocalDateTable_ef41af85-4dfc-4226-8326-e9aa98d3f7d0
+ref table glBudgetUnpivoted
+ref table LocalDateTable_9122bc82-35ba-4aad-81b3-eed8feadca6d
+ref table Merge1GL
+ref table LocalDateTable_0e7dc2a0-6ea5-491d-b125-bf39ee50228e
+ref table ColumnMapGL
+ref table AccountCategoryTable
+ref table accountingPeriods
+ref table LocalDateTable_cd8c8ff5-74ad-4904-a91d-f66da3d1a740
+ref table LocalDateTable_796275e7-8998-45fd-b31e-890be43f4c0c
+ref table KPI
+ref table generalLedgerEntriesUnpivoted
+ref table LocalDateTable_259dffc0-9ced-4579-8a1f-8f9ff4dc2926
+ref table Merge1GLE
+ref table LocalDateTable_de0c8d17-e261-42af-9993-6320a6d86de3
+ref table ColumnMapGLE
+ref table BudgetNamesTable
+ref table 'Dummy Budget'
+ref table DummyDimension
+ref table userpersonalizations
+ref table vendorLedgerEntries
+ref table bankAccounts
+ref table customerLedgerEntries
+ref table LocalDateTable_ff74419d-29f1-4598-9448-5124aaf7ac50
+ref table DateTableAccountPayables
+ref table DueCategorySortTable
+ref table DueCategorySortTable_AR
+ref table DateTableAccountReceivables
+ref table 'Last Refresh Date'
+ref table LocalDateTable_c6901a6f-dd32-4ecd-9ff9-95c96c9db09a
+ref table DummyVLE
+ref table LocalDateTable_0f3b0be9-32fc-466b-adec-73a09d57d9e5
+ref table LocalDateTable_1c10f897-e263-4e0a-bd2e-1c5e9db213bc
+ref table DummyCLE
+ref table LocalDateTable_6f52d2cf-2c74-4892-a763-ae1342d3e129
+ref table LocalDateTable_50e4f8b4-f59e-4e6f-babd-5000f9540320
+ref table Feedback
+ref table bankAccountLedgerEntries
+ref table DateTablePreviousCashflow
+ref table DateTableProjectedCashflow
+ref table DateTableCashflowAPAR
+ref table CashflowPeriod
+ref table purchaseLines
+ref table LocalDateTable_399da361-5c29-4738-a967-62f5ee6b92dc
+ref table LocalDateTable_02b18f7c-74fe-4257-b38f-375ff8eba620
+ref table accounts
+ref table LocalDateTable_646bbeba-a785-4fc1-b6db-e4bfa3249f51
+ref table DimensionCodeTable
+ref table DimensionCode1Slicer
+ref table DimensionCode2Slicer
+ref table DateTableCommitment
+ref table CommitmentDocumentTable
+ref table DateFilters
+ref table CompanyInfo
+ref table LocalDateTable_4490e0f7-b8fd-46e1-822c-202982b41604
+
+ref cultureInfo en-US
+

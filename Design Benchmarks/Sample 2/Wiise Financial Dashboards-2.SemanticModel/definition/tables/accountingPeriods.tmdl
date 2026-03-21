@@ -1,0 +1,144 @@
+table accountingPeriods
+	lineageTag: f49a5117-de26-4078-bc37-97fd58794437
+
+	measure FiscalYearStartDate =
+			
+			CALCULATE(
+			    MINX(
+			        FILTER(
+			            accountingPeriods,
+			            accountingPeriods[newFiscalYear] = TRUE() &&
+			            YEAR(accountingPeriods[startingDate]) = YEAR([TodayLocal])
+			        ),
+			        accountingPeriods[startingDate]
+			    )
+			)
+		formatString: General Date
+		lineageTag: b795ad4d-4b8b-48fb-aa21-141026414138
+
+	measure FiscalYearEnd = FORMAT(EOMONTH(accountingPeriods[FiscalYearStartDate], -1), "dd/MM")
+		lineageTag: 303bccd5-824c-4c36-9329-ee7cf53cf734
+
+	measure FiscalYearDetails = ```
+			
+			Var FiscalEnd = EOMONTH(accountingPeriods[FiscalYearStartDate], -1)
+			RETURN
+			FORMAT([FiscalYearStartDate], "MMM") & "–" & FORMAT(FiscalEnd, "MMM")
+			
+			```
+		lineageTag: 2852a853-aded-4086-9bad-0a0c862b2ce2
+
+	measure FiscalQuarterStartDate =
+			
+			
+			VAR localToday = [TodayLocal]
+			VAR newFS= accountingPeriods[FiscalYearEnd]
+			VAR fyEndMonth =VALUE(RIGHT(newFS, 2))
+			
+			
+			VAR shiftedMonth = MOD ( MONTH ( localToday ) - fyEndMonth - 1, 12 ) + 1
+			VAR quarterNumber = INT ( ( shiftedMonth - 1 ) / 3 ) + 1
+			VAR quarterStartMonth = ( quarterNumber - 1 ) * 3 + 1 + fyEndMonth
+			VAR correctedMonth = IF ( quarterStartMonth > 12, quarterStartMonth - 12, quarterStartMonth )
+			VAR correctedYear = YEAR ( localToday ) - IF ( quarterStartMonth > 12, 1, 0 )
+			RETURN DATE ( correctedYear, correctedMonth, 1 )
+		formatString: General Date
+		lineageTag: 9a8e625b-6a93-4f1f-a1d0-b666796a9146
+
+	column id
+		dataType: string
+		lineageTag: 1f79e720-5332-486c-80e8-17a64d42e096
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column startingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 63f25a1b-91de-40a1-98dd-753cd4e80fa5
+		summarizeBy: none
+		sourceColumn: startingDate
+
+		variation Variation
+			isDefault
+			relationship: f025a123-95bb-4dcb-88b7-7b4d0b8a48a3
+			defaultHierarchy: LocalDateTable_cd8c8ff5-74ad-4904-a91d-f66da3d1a740.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column name
+		dataType: string
+		lineageTag: 37cbe2fe-f5c0-431c-a004-0f4cddf8d54c
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column newFiscalYear
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 10c04986-7092-43ee-a267-51479129f2e0
+		summarizeBy: none
+		sourceColumn: newFiscalYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9986c3e4-fe58-4ae0-98fe-eaebf660ca86
+		summarizeBy: none
+		sourceColumn: closed
+
+		annotation SummarizationSetBy = Automatic
+
+	column dateLocked
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 5b15ea26-4fcf-48a6-97ab-10765f63363b
+		summarizeBy: none
+		sourceColumn: dateLocked
+
+		annotation SummarizationSetBy = Automatic
+
+	column lastModifiedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5d3147d5-5fce-4071-94d6-20649869195f
+		summarizeBy: none
+		sourceColumn: lastModifiedDateTime
+
+		variation Variation
+			isDefault
+			relationship: 9d7a5db3-0a88-4128-873d-5be42ca761f7
+			defaultHierarchy: LocalDateTable_796275e7-8998-45fd-b31e-890be43f4c0c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: ad22bf8a-e935-4750-b27d-a94cd303c4a8
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition accountingPeriods = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data],
+				    accountingPeriods_table = v2.0{[Name="accountingPeriods",Signature="table"]}[Data]
+				in
+				    accountingPeriods_table
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

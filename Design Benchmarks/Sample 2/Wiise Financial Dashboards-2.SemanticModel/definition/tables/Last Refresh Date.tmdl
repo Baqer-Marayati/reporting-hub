@@ -1,0 +1,130 @@
+table 'Last Refresh Date'
+	lineageTag: 1e70ea84-c2a5-432a-9274-51e439a353f1
+
+	measure LastRefreshFormatted =
+			
+			VAR refreshTime = [TodayLocal]
+			VAR tzFullName = CALCULATE(SELECTEDVALUE(userpersonalizations[timeZone]))
+			VAR tzAbbr =
+			    SWITCH (
+			        TRUE(),
+			        CONTAINSSTRING(tzFullName, "Eastern Standard Time"), "AEST",
+			        CONTAINSSTRING(tzFullName, "Eastern Daylight Time"), "AEDT",
+			        CONTAINSSTRING(tzFullName, "India Standard Time"), "IST",
+			        CONTAINSSTRING(tzFullName, "Pacific Standard Time"), "PST",
+			        CONTAINSSTRING(tzFullName, "Eastern Standard Time"), "EST",
+			        tzFullName
+			    )
+			RETURN
+			    "Last Refreshed: " & FORMAT(refreshTime, "dd-MMM-yyyy hh:mm:ss AM/PM") & " " & tzAbbr
+		lineageTag: 378ab60e-8ceb-404f-89d3-7b80c1b8e46f
+
+	measure LastRefreshLocalTime = ```
+			
+			VAR tzName = SELECTEDVALUE(userpersonalizations[timeZoneDisplayName])
+			VAR hasTZ = NOT ISBLANK(tzName)
+			 
+			// Parse offset if available
+			VAR posPlus   = IF(hasTZ, FIND("+", tzName, 1, 0), 0)
+			VAR posMinus  = IF(hasTZ, FIND("-", tzName, 1, 0), 0)
+			VAR sign =
+			    IF(posPlus > 0, 1,
+			        IF(posMinus > 0, -1, 0)
+			    )
+			VAR posSign = IF(sign = 1, posPlus, posMinus)
+			 
+			// Hours
+			VAR offsetHours =
+			    IF(
+			        hasTZ && sign <> 0,
+			        sign *
+			        VALUE(
+			            MID(
+			                tzName,
+			                posSign + 1,
+			                FIND(":", tzName, posSign, LEN(tzName)) - posSign - 1
+			            )
+			        ),
+			        0
+			    )
+			 
+			// Minutes
+			VAR offsetMinutes =
+			    IF(
+			        hasTZ && sign <> 0,
+			        sign *
+			        VALUE(
+			            MID(
+			                tzName,
+			                FIND(":", tzName, posSign, LEN(tzName)) + 1,
+			                2
+			            )
+			        ),
+			        0
+			    )
+			 
+			// Compute local refresh time (UTC fallback if blank or no sign)
+			VAR localTime =
+			    UTCNOW() +
+			    (offsetHours / 24) +
+			    (offsetMinutes / 1440)
+			 
+			// Format pieces
+			VAR formattedTime = FORMAT(localTime, "h:mm am/pm")
+			VAR formattedDate = FORMAT(localTime, "dd MMM yyyy")
+			 
+			// Get timezone full name safely
+			VAR tzFullName = CALCULATE(SELECTEDVALUE(userpersonalizations[timeZone]))
+			 
+			// Abbreviation mapping
+			VAR tzAbbrev =
+			    SWITCH (
+			        TRUE(),
+			        tzFullName= "AUS Eastern Standard Time", "AEST",
+			        tzFullName ="E. Australia Standard Time", "AEST",
+			        tzFullName="W. Australia Standard Time", "AWST",
+			        tzFullName ="Cen. Australia Standard Time","ACST", 
+			        tzFullName="AUS Central Standard Time", "ACST",
+			        tzFullName= "AUS Eastern Daylight Time", "AEDT",
+			        tzFullName = "New Zealand Standard Time", "NZST",
+			        tzFullName = "New Zealand Daylight Time", "NZDT",
+			        tzFullName // fallback
+			    )
+			 
+			RETURN
+			"Company: " & CompanyInfo[Current Company] & UNICHAR(160) & UNICHAR(160) & UNICHAR(160) & "Last refreshed: " & formattedTime & ", " & formattedDate & ", " & tzAbbrev
+			```
+		lineageTag: b826f631-3172-448d-9c58-a5a77692a149
+
+	column 'Refresh Date'
+		dataType: dateTime
+		formatString: dd/mm/yyyy h:nn:ss AM/PM
+		lineageTag: e41ddd2c-74e9-40cc-ab54-124b927797ff
+		summarizeBy: none
+		sourceColumn: Refresh Date
+
+		variation Variation
+			isDefault
+			relationship: a43acb39-944d-4541-9bea-8007955f69fc
+			defaultHierarchy: LocalDateTable_c6901a6f-dd32-4ecd-9ff9-95c96c9db09a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition 'Last Refresh Date' = m
+		mode: import
+		source =
+				let
+				    Source = DateTime.LocalNow(),
+				    #"Converted to Table" = #table(1, {{Source}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type datetime}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Refresh Date"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns",{{"Refresh Date", type datetime}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

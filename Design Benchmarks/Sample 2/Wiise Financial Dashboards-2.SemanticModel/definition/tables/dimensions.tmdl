@@ -1,0 +1,134 @@
+table dimensions
+	lineageTag: 24a43889-e58d-4b36-86c8-9bf4cce70df7
+
+	column id
+		dataType: string
+		lineageTag: 7dee1609-d046-44c5-b852-3fff74180bd0
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		lineageTag: 23f4982c-7ce1-4813-95e3-217cb8fa6641
+		summarizeBy: none
+		sourceColumn: code
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column displayName
+		dataType: string
+		lineageTag: f23996fb-c300-44d1-844c-15c753330501
+		summarizeBy: none
+		sourceColumn: displayName
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column consolidationCode
+		dataType: string
+		lineageTag: 011b5fd9-e9d1-4f0e-b4bb-edf8de32ae39
+		summarizeBy: none
+		sourceColumn: consolidationCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column lastModifiedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6644057d-265a-4ffa-b0e1-cdd2c0744567
+		summarizeBy: none
+		sourceColumn: lastModifiedDateTime
+
+		variation Variation
+			isDefault
+			relationship: 45d92ec5-0d4e-47b4-8a3c-335acb9a4e27
+			defaultHierarchy: LocalDateTable_e30edc15-5264-4900-a8f6-55fb5a8d802b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 39117a58-a0a5-48be-b203-39ec3fde61ab
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column oooooooooo
+		dataType: string
+		lineageTag: 51bc0c7f-b5df-41b4-9267-cef2edd2300f
+		summarizeBy: none
+		sourceColumn: oooooooooo
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension1Code
+		dataType: string
+		lineageTag: 7d327432-b673-41f5-a347-e8939a121ca6
+		summarizeBy: none
+		sourceColumn: globalDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column globalDimension2Code
+		dataType: string
+		lineageTag: 621617f6-94dd-4709-bede-e733af77e07d
+		summarizeBy: none
+		sourceColumn: globalDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension1Code
+		dataType: string
+		lineageTag: a91ff23f-cb7b-48ec-bc1b-8abf67a59ae8
+		summarizeBy: none
+		sourceColumn: budgetDimension1Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension2Code
+		dataType: string
+		lineageTag: f500537b-a147-4027-88f3-cba57ffa0f53
+		summarizeBy: none
+		sourceColumn: budgetDimension2Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension3Code
+		dataType: string
+		lineageTag: 3922773e-2ceb-467e-afee-951868f593a8
+		summarizeBy: none
+		sourceColumn: budgetDimension3Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column budgetDimension4Code
+		dataType: string
+		lineageTag: 6cfe321e-63bf-4b78-a5a2-834b7559e6df
+		summarizeBy: none
+		sourceColumn: budgetDimension4Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimensions = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data],
+				    dimensions_table = v2.0{[Name="dimensions",Signature="table"]}[Data],
+				    #"Appended Query" = Table.Combine({dimensions_table, DummyDimension})
+				in
+				    #"Appended Query"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

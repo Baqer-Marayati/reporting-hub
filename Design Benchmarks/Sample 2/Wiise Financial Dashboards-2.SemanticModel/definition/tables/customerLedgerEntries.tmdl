@@ -1,0 +1,485 @@
+table customerLedgerEntries
+	lineageTag: 764081c2-7450-4a87-905f-e891d4347886
+
+	measure TotalOverdue_AR = ```
+			
+			 Var beginningOfTime = Min(customerLedgerEntries[dueDate])
+			 Var currentDate = [TodayLocal]
+			 RETURN
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    DATESBETWEEN(customerLedgerEntries[dueDate], beginningOfTime,currentDate)
+			)
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 18096c79-e7f1-4077-929e-d5546cb8d481
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalOutstanding_AR = ```
+			
+			 Var beginningOfTime = Min(customerLedgerEntries[postingDate])
+			 Var currentDate = [TodayLocal]
+			 RETURN
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true,
+			    DATESBETWEEN(customerLedgerEntries[postingDate], beginningOfTime,currentDate)
+			)
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 60cd568a-628a-4d29-9440-b1732eaa8f61
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PercentageOverdue = ```
+			
+			IF (
+			    [TotalOutstanding_AR] = 0,
+			    "--",
+			    FORMAT ( DIVIDE ( [TotalOverdue_AR], [TotalOutstanding_AR] ), "0%" )
+			)
+			
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 198973ee-b0a0-4b26-883f-bbaa05e25647
+
+	measure TotalCreditSales =
+			
+			Var TodayDate = [TodayLocal]
+			Var today365 = [TodayLocal] - 365
+			RETURN
+			CALCULATE(Sum(customerLedgerEntries[amount]),
+			customerLedgerEntries[paymentMethodCode] <> "CASH",
+			DATESBETWEEN(customerLedgerEntries[postingDate], today365, TodayDate)
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 27887df7-c7ad-4f3e-a235-d9e5b4e21d2a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AccountReceivable_DSO =
+			
+			Var TodayDate = [TodayLocal]
+			RETURN
+			CALCULATE(Sum(customerLedgerEntries[remainingAmount]),
+			customerLedgerEntries[open]=true,
+			DATESBETWEEN(customerLedgerEntries[postingDate], TodayDate -365, TodayDate)
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: b3b2748a-9b0d-4cc0-9cf1-73d0be0aa151
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DSO = ```
+			
+			 Var Days = 365
+			 RETURN
+			 If([TotalCreditSales] = 0, "--", FORMAT(Divide([AccountReceivable_DSO],[TotalCreditSales])*Days,0))
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 642cea63-8b83-4e3a-b497-4d930d816d48
+
+	measure AccountReceivables_ageingReport_new = ```
+			
+			VAR TodayDate = [TodayLocal]
+			VAR SelectedBucket = SELECTEDVALUE(DueCategorySortTable_AR[DueCategory])
+			RETURN
+			SWITCH(
+			    SelectedBucket,
+			    "Overdue >90 days",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] < TodayDate - 90),
+			    "Overdue 61-90 days",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] >= TodayDate - 90 && customerLedgerEntries[dueDate] < TodayDate - 60),
+			    "Overdue 31-60 days",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] >= TodayDate - 60 && customerLedgerEntries[dueDate] < TodayDate - 30),
+			    "Overdue 1-30 days",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] >= TodayDate - 30 && customerLedgerEntries[dueDate] < TodayDate),
+			    "Due next 30 days",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] >= TodayDate && customerLedgerEntries[dueDate] < TodayDate + 30),
+			    "Still on time",
+			        CALCULATE(SUM(customerLedgerEntries[remainingAmount]), customerLedgerEntries[open] = TRUE(), customerLedgerEntries[dueDate] >= TodayDate + 30),
+			    0
+			)
+			
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: f0ba1e9e-3058-4143-a27c-11d55ed6db89
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AccountReceivable_outstanding =
+			
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    customerLedgerEntries[open] = true
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 5ea2b4af-e0e0-44d8-af84-2598bb003c2c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AR_CountOfInvoices = ```
+			
+			CALCULATE(
+			    DISTINCTCOUNT(customerLedgerEntries[documentNo]),
+			    FILTER(
+			        customerLedgerEntries,
+			        customerLedgerEntries[open] = TRUE &&
+			        customerLedgerEntries[documentType] = "Invoice"
+			    )
+			) 
+			```
+		formatString: 0
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 4eacff7f-e297-411d-b2dc-e69fab4d9222
+
+	measure AR_InvoiceStatusPercent_Open = ```
+			
+			 Var tomorrow = [TodayLocal] + 1
+			 Var eOfMonth = EOMONTH(tomorrow,0)
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('customerLedgerEntries'[documentNo]),
+			    customerLedgerEntries[open] = true,
+			    customerLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(customerLedgerEntries[dueDate], tomorrow,eOfMonth)
+			)
+			```
+		formatString: 0
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 5b834ac0-862a-4ed0-8048-69bb99c60b99
+
+	measure AR_InvoiceStatusPercent_Overdue = ```
+			
+			 Var startOfCurrentMonth = DATE(YEAR([TodayLocal]), MONTH([TodayLocal]), 1)
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('customerLedgerEntries'[documentNo]),
+			    customerLedgerEntries[open] = true,
+			    customerLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(customerLedgerEntries[dueDate], startOfCurrentMonth,[TodayLocal])
+			)
+			```
+		formatString: 0
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 4ecafa74-bbaf-45d3-bea0-38ca9a4dd6c8
+
+	measure AR_InvoiceStatusPercent_Paid = ```
+			
+			 Var startOfCurrentMonth = DATE(YEAR([TodayLocal]), MONTH([TodayLocal]), 1)
+			  Var eOfMonth = EOMONTH([TodayLocal],0)
+			
+			 RETURN
+			CALCULATE(
+			    DISTINCTCOUNT('customerLedgerEntries'[documentNo]),
+			    customerLedgerEntries[open] = false,
+			    customerLedgerEntries[documentType] = "Invoice",
+			    DATESBETWEEN(customerLedgerEntries[dueDate], startOfCurrentMonth,eOfMonth)
+			)
+			```
+		formatString: 0
+		displayFolder: AccountReceivable_Measures
+		lineageTag: beb2ac86-ac90-4f3e-8dc3-10b63b81e49b
+
+	measure AR_totalReceivable_funnel =
+			
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    vendorLedgerEntries[open] = true
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 6e433554-a1b8-4a4f-8588-9d5cdff21fdc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AR_overdue_funnel =
+			
+			Var Today = [TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    customerLedgerEntries[open] = true,
+			    customerLedgerEntries[dueDate] <= Today
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: cb3fc349-bf88-48be-978c-eab43ba2640a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure AR_notYetDue_funnel =
+			
+			Var Today = [TodayLocal]
+			RETURN
+			CALCULATE(
+			    SUM('customerLedgerEntries'[remainingAmount]),
+			    customerLedgerEntries[open] = true,
+			    customerLedgerEntries[dueDate] > Today
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 9e3cf5dc-96af-4c80-ba01-7399eabe6512
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RTO = ```
+			
+			VAR sOfMonth = MINX(STARTOFMONTH(DateTableAccountReceivables[Date]),DateTableAccountReceivables[Date])
+			VAR EOfMonth = MINX(ENDOFMONTH(DateTableAccountReceivables[Date]),DateTableAccountReceivables[Date])
+			Var OpeningAR = CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			        customerLedgerEntries[open] = true &&
+			        customerLedgerEntries[postingDate] < sOfMonth
+			)
+			
+			Var ClosingAR = 
+			CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			     customerLedgerEntries[open] = true &&
+			    customerLedgerEntries[postingDate] <= EOfMonth
+			)
+			
+			Var AverageAR = Divide((OpeningAR + ClosingAR),2)
+			Var TotalCreditSales = 
+			CALCULATE(Sum(customerLedgerEntries[amount]),
+			customerLedgerEntries[paymentMethodCode]<>"CASH",
+			DATESBETWEEN(customerLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+			
+			Var RTO = If(AverageAR = 0, "--", Divide(TotalCreditSales, AverageAR))
+			RETURN 
+			RTO
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 8266ef77-32fe-4be5-b538-5e2edc1a0e27
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure RTO_value = ```
+			
+			VAR sOfMonth = Date(Year([TodayLocal]), Month([TodayLocal]),1)
+			var EOfMonth = EOMONTH([TodayLocal], 0)
+			Var OpeningAR = CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			        customerLedgerEntries[open] = true &&
+			        customerLedgerEntries[postingDate] < sOfMonth
+			)
+			
+			Var ClosingAR = 
+			CALCULATE(
+			    SUM(customerLedgerEntries[remainingAmount]),
+			     customerLedgerEntries[open] = true &&
+			    customerLedgerEntries[postingDate] <= EOfMonth
+			)
+			
+			Var AverageAR = Divide((OpeningAR + ClosingAR),2)
+			Var TotalCreditSales = 
+			CALCULATE(Sum(customerLedgerEntries[amount]),
+			customerLedgerEntries[paymentMethodCode]<>"CASH",
+			DATESBETWEEN(customerLedgerEntries[postingDate], sOfMonth, EOfMonth)
+			)
+			
+			Var RTO = If(AverageAR = 0, "--", Divide(TotalCreditSales, AverageAR))
+			RETURN 
+			"Receivable turnover ratio " & Format(RTO,"0.00")
+			```
+		displayFolder: AccountReceivable_Measures
+		lineageTag: cee8d85a-8ab4-4454-830f-1c2a7f7f022d
+
+	column id
+		dataType: string
+		lineageTag: 05cd7a81-e764-4942-ad15-3ff8411eb773
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1729cd48-59ea-402d-8308-f9567623c8a8
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a9ab9b62-6d34-4d8c-a40f-38fd0dcc7826
+		summarizeBy: none
+		sourceColumn: documentDate
+
+		variation Variation
+			isDefault
+			relationship: 2fcde00f-c36c-4185-9d3f-79b8350dabee
+			defaultHierarchy: LocalDateTable_ff74419d-29f1-4598-9448-5124aaf7ac50.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 707f307f-6ef5-4098-a2b1-b089a03bdba8
+		summarizeBy: none
+		sourceColumn: dueDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column documentType
+		dataType: string
+		lineageTag: 7088a5ed-924a-48e1-b7bc-621ac36b7349
+		summarizeBy: none
+		sourceColumn: documentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column documentNo
+		dataType: string
+		lineageTag: a5496c48-099a-441e-8420-2cf79bbdeb9d
+		summarizeBy: none
+		sourceColumn: documentNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column customerNo
+		dataType: string
+		lineageTag: aa89ba56-a61b-4bd0-a1cc-595eb82c3948
+		summarizeBy: none
+		sourceColumn: customerNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column customerName
+		dataType: string
+		lineageTag: b79631e2-cab8-46f6-b093-aa3958cc7ad7
+		summarizeBy: none
+		sourceColumn: customerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column open
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c774ec1d-a207-4181-aa39-2a421b6d087c
+		summarizeBy: none
+		sourceColumn: open
+
+		annotation SummarizationSetBy = Automatic
+
+	column appliesToDocNo
+		dataType: string
+		lineageTag: 16d1e16d-7446-4691-bb35-60e418839236
+		summarizeBy: none
+		sourceColumn: appliesToDocNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column appliesToDocType
+		dataType: string
+		lineageTag: ef50f816-9dda-4acc-ad72-dd7e3fc486f7
+		summarizeBy: none
+		sourceColumn: appliesToDocType
+
+		annotation SummarizationSetBy = Automatic
+
+	column paymentMethodCode
+		dataType: string
+		lineageTag: 4400f46c-ffe1-4103-879b-6559e7417706
+		summarizeBy: none
+		sourceColumn: paymentMethodCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		lineageTag: f930f512-b59a-4d6d-8d96-066c3f7e6d29
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column remainingAmount
+		dataType: double
+		lineageTag: ec0df7b2-2f58-46c7-8fb5-8b60847a4430
+		summarizeBy: sum
+		sourceColumn: remainingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column auxiliaryIndex1
+		dataType: int64
+		formatString: 0
+		lineageTag: 6eb15912-b53f-4631-8c25-fb49e1309346
+		summarizeBy: sum
+		sourceColumn: auxiliaryIndex1
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: b83153da-3eb8-4eb7-aae7-2242cbf3c66d
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueCategory_AR =
+			
+			Var TodayDate = [TodayLocal]
+			VAR DueDate = customerLedgerEntries[dueDate]
+			Return
+			SWITCH(
+			    TRUE(),
+			    ISBLANK(DueDate), "No Due Date",
+			    DueDate < TodayDate - 90 , "Overdue >90 days",
+			    DueDate >= TodayDate - 90 && DueDate < TodayDate - 60, "Overdue 61-90 days",
+			    DueDate >= TodayDate - 60 && DueDate < TodayDate - 30, "Overdue 31-60 days",
+			   DueDate >= TodayDate - 30 && DueDate < TodayDate, "Overdue 1-30 days",
+			    DueDate >= TodayDate && DueDate < TodayDate + 30, "Due next 30 days",
+			    DueDate >= TodayDate + 30,"Still on time"
+			)
+		displayFolder: AccountReceivable_Measures
+		lineageTag: 8fe1446c-961b-4bf1-bb3c-bd632918f4f4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column remainingAmtLCY
+		dataType: double
+		lineageTag: 9aba8c7b-8a75-4271-9af4-9b4963864699
+		summarizeBy: sum
+		sourceColumn: remainingAmtLCY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition customerLedgerEntries = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    Advanced = CompanyParam{[Name="Advanced"]}[Data],
+				    #"wiise/powerBI/v1.0" = Advanced{[Name="wiise/powerBI/v1.0"]}[Data],
+				    customerLedgerEntries_table = #"wiise/powerBI/v1.0"{[Name="customerLedgerEntries",Signature="table"]}[Data],
+				    #"Appended Query" = Table.Combine({customerLedgerEntries_table, DummyCLE})
+				in
+				    #"Appended Query"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

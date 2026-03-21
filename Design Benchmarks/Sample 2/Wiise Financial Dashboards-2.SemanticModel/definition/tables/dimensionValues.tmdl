@@ -1,0 +1,81 @@
+table dimensionValues
+	lineageTag: f66816d3-a48d-41b0-8c2a-0bae949b3c1e
+
+	column id
+		dataType: string
+		lineageTag: 31b59172-22fe-44fa-9362-b4ab3416f969
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column code
+		dataType: string
+		lineageTag: 081f44b3-b7b0-4b7c-b71c-3bb5ace5b0d3
+		summarizeBy: none
+		sourceColumn: code
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimensionId
+		dataType: string
+		lineageTag: 9c389b3e-c441-447d-bc43-7c1a0cac3d42
+		summarizeBy: none
+		sourceColumn: dimensionId
+
+		annotation SummarizationSetBy = Automatic
+
+	column displayName
+		dataType: string
+		lineageTag: ac56d567-1420-4a59-b2f8-2cc4c3e04c2a
+		summarizeBy: none
+		sourceColumn: displayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column consolidationCode
+		dataType: string
+		lineageTag: 530f47f4-69e5-4481-9c8f-974e067ab304
+		summarizeBy: none
+		sourceColumn: consolidationCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column lastModifiedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ee605ed4-e836-4dcc-8958-060733ede072
+		summarizeBy: none
+		sourceColumn: lastModifiedDateTime
+
+		variation Variation
+			isDefault
+			relationship: 393e991e-e091-48ea-8680-8eeefdda33c1
+			defaultHierarchy: LocalDateTable_b585c176-8ea3-4725-86df-173c2e3fbe93.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: 9b66a31f-e9f7-4ef2-9e3d-74d65fa1b247
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dimensionValues = m
+		mode: import
+		source =
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data],
+				    dimensionValues_table = v2.0{[Name="dimensionValues",Signature="table"]}[Data]
+				in
+				    dimensionValues_table
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

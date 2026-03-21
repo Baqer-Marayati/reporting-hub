@@ -1,0 +1,59 @@
+table DummyCLE
+	lineageTag: 8af338f5-490a-4a24-9e2f-8d9c51da82ea
+
+	column postingDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 96eaa449-1bc3-4225-b1ac-4d0bb126766b
+		summarizeBy: none
+		sourceColumn: postingDate
+
+		variation Variation
+			isDefault
+			relationship: 954bac70-659f-4750-aa97-0cf372475c6c
+			defaultHierarchy: LocalDateTable_6f52d2cf-2c74-4892-a763-ae1342d3e129.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dueDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3da3f719-5172-4265-9fd9-9fdc3317e135
+		summarizeBy: none
+		sourceColumn: dueDate
+
+		variation Variation
+			isDefault
+			relationship: ca779d41-5979-4e3c-a49e-8ab9e36a9da1
+			defaultHierarchy: LocalDateTable_50e4f8b4-f59e-4e6f-babd-5000f9540320.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column remainingAmount
+		dataType: int64
+		formatString: 0
+		lineageTag: 9db910b1-4086-48f7-8ed4-c97bd42a30da
+		summarizeBy: none
+		sourceColumn: remainingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DummyCLE = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMtQ31DcyMDBQ0kFmgrBbYk5xqlJsLAA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [postingDate = _t, dueDate = _t, RemainingAmount = _t, open = _t]),
+				    #"Removed Columns" = Table.RemoveColumns(Source,{"open"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"postingDate", type date}, {"dueDate", type date}, {"RemainingAmount", Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"RemainingAmount", "remainingAmount"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

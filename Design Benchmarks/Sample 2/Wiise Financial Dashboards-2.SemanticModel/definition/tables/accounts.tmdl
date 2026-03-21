@@ -1,0 +1,163 @@
+table accounts
+	lineageTag: 6de261f6-4b83-4bc2-9b8f-5a83e41df91a
+
+	measure GLAccountIsRowVisible =
+			
+			IF(
+			    (ISBLANK([TotalBudget]) || [TotalBudget] = 0)
+			    && (ISBLANK([ActualSpend]) || [ActualSpend] = 0)
+			    && (ISBLANK([CommittedPO]) || [CommittedPO] = 0)
+			    && (ISBLANK([UnCommittedPODynamic]) || [UnCommittedPODynamic] = 0),
+			    0,
+			    1
+			)
+		lineageTag: 8e4e50c2-07bf-4808-a52e-b92b9f161850
+
+	column id
+		dataType: string
+		lineageTag: f4c8c472-d2cd-40a8-84c5-9f98711a7d47
+		summarizeBy: none
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column number
+		dataType: string
+		lineageTag: 150eca83-376f-4308-b980-a9b7cd1d4281
+		summarizeBy: none
+		sourceColumn: number
+
+		annotation SummarizationSetBy = Automatic
+
+	column displayName
+		dataType: string
+		lineageTag: b93b2dd6-747f-4e30-a8fd-f498aa9c7154
+		summarizeBy: none
+		sourceColumn: displayName
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 18c60873-9e9b-49a1-ba17-66b3d69ff5c7
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column subCategory
+		dataType: string
+		lineageTag: 18b98bc1-212b-40c2-b341-01a02a0a6ad7
+		summarizeBy: none
+		sourceColumn: subCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column blocked
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7b7a7b38-675c-4887-9e29-f0e1226a719c
+		summarizeBy: none
+		sourceColumn: blocked
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountType
+		dataType: string
+		lineageTag: 0d742238-5f79-46fe-8123-22fecae937d5
+		summarizeBy: none
+		sourceColumn: accountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column directPosting
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e31798a5-4d1f-4e42-81dd-de20a97f121e
+		summarizeBy: none
+		sourceColumn: directPosting
+
+		annotation SummarizationSetBy = Automatic
+
+	column netChange
+		dataType: double
+		lineageTag: 4f5c924a-bf03-4145-ac99-2f8c11d726f2
+		summarizeBy: sum
+		sourceColumn: netChange
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column consolidationTranslationMethod
+		dataType: string
+		lineageTag: f2926da9-b9fe-43c4-ab1c-ddc345054251
+		summarizeBy: none
+		sourceColumn: consolidationTranslationMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column consolidationDebitAccount
+		dataType: string
+		lineageTag: 5367736a-6e23-4181-8195-b722c91bccd2
+		summarizeBy: none
+		sourceColumn: consolidationDebitAccount
+
+		annotation SummarizationSetBy = Automatic
+
+	column consolidationCreditAccount
+		dataType: string
+		lineageTag: 6185a3da-77c0-4d80-9d3c-e235e5999092
+		summarizeBy: none
+		sourceColumn: consolidationCreditAccount
+
+		annotation SummarizationSetBy = Automatic
+
+	column excludeFromConsolidation
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 36908aa3-b131-49e0-ae0f-3b1cfd22681e
+		summarizeBy: none
+		sourceColumn: excludeFromConsolidation
+
+		annotation SummarizationSetBy = Automatic
+
+	column lastModifiedDateTime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d5304686-f8d9-4a5c-8552-9992ce6349d6
+		summarizeBy: none
+		sourceColumn: lastModifiedDateTime
+
+		variation Variation
+			isDefault
+			relationship: 835a2c29-b59e-4bbc-9aea-d0e9694e7370
+			defaultHierarchy: LocalDateTable_646bbeba-a785-4fc1-b6db-e4bfa3249f51.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETag
+		dataType: string
+		lineageTag: cdaa33da-3a6f-41b5-bccf-da59cffb3018
+		summarizeBy: none
+		sourceColumn: ETag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition accounts = m
+		mode: import
+		source = ```
+				let
+				    Source = Dynamics365BusinessCentral.ApiContentsWithOptions(null, null, null, null),
+				    EnvironmentParam = Table.SelectRows(Source, each Text.Upper([Name]) = Text.Upper(Text.From(Environment))){0}[Data],
+				    CompanyParam = Table.SelectRows(EnvironmentParam, each Text.Upper([Name]) = Text.Upper(Text.From(Company))){0}[Data],
+				    v2.0 = CompanyParam{[Name="v2.0"]}[Data], 
+				    accounts_table = v2.0{[Name="accounts",Signature="table"]}[Data]
+				in
+				    accounts_table
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "dcd0abba227492610a00",
+  "position": {
+    "x": 47,
+    "y": 88,
+    "z": 0,
+    "height": 447,
+    "width": 607,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "customerLedgerEntries"
+                    }
+                  },
+                  "Property": "customerName"
+                }
+              },
+              "queryRef": "customerLedgerEntries.customerName",
+              "nativeQueryRef": "Customer",
+              "displayName": "Customer"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "customerLedgerEntries"
+                    }
+                  },
+                  "Property": "AccountReceivable_outstanding"
+                }
+              },
+              "queryRef": "customerLedgerEntries.AccountReceivable_outstanding",
+              "nativeQueryRef": "Outstanding",
+              "displayName": "Outstanding",
+              "format": "\\$#,0.###############;(\\$#,0.###############);\\$#,0.###############"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "customerLedgerEntries"
+                    }
+                  },
+                  "Property": "documentNo"
+                }
+              },
+              "queryRef": "customerLedgerEntries.documentNo",
+              "nativeQueryRef": "Invoice",
+              "displayName": "Invoice"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DueCategorySortTable_AR"
+                    }
+                  },
+                  "Property": "DueCategory"
+                }
+              },
+              "queryRef": "DueCategorySortTable_AR.DueCategory",
+              "nativeQueryRef": "Days overdue",
+              "displayName": "Days overdue"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "customerLedgerEntries"
+                  }
+                },
+                "Property": "documentNo"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "143.14438502673795D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "customerLedgerEntries.documentNo"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "133D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "customerLedgerEntries.AccountReceivable_outstanding"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "174.70053475935828D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DueCategorySortTable_AR.DueCategory"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
