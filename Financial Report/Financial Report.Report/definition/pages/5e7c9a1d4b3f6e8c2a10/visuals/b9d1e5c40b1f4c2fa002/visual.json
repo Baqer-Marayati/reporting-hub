@@ -124,17 +124,6 @@
                   "Value": "9D"
                 }
               }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6B7772'"
-                    }
-                  }
-                }
-              }
             }
           }
         }
