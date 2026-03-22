@@ -1,0 +1,16 @@
+{
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": false,
+  "search.exclude": {
+    "**/.pbi": true,
+    "**/*.abf": true,
+    "Exports/Server Packages/*.zip": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.pbi/**": true,
+    "**/*.abf": true,
+    "Exports/Server Packages/**": true
+  }
+}

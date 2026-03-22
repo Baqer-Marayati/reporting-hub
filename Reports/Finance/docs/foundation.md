@@ -84,10 +84,27 @@ Top-level meaning inside this module:
 
 - Git remote:
   - `git@github.com:Baqer-Marayati/reporting-hub.git`
+- **Git vs `gh`:** `git push` / `git pull` use your SSH key and can work even when the GitHub **CLI** token is stale. `gh issue`, `gh pr`, and some API features need a valid `gh` login.
 - GitHub CLI binary is installed at:
   - `/opt/homebrew/bin/gh`
-- Current local `gh` authentication status:
-  - installed, but the saved token is currently invalid and needs re-authentication before GitHub issue operations can be trusted
+- **If `gh auth status` reports an invalid keyring token**, re-authenticate once on this Mac (interactive — run in Terminal.app, not inside a non-interactive agent):
+
+```bash
+gh auth login -h github.com
+```
+
+Follow the prompts (browser login is typical). Then verify:
+
+```bash
+gh auth status
+```
+
+To discard the broken stored account first (only if login keeps failing):
+
+```bash
+gh auth logout -h github.com -u Baqer-Marayati
+gh auth login -h github.com
+```
 
 ### Local Helper Tools
 
@@ -120,6 +137,13 @@ They live in the user skill directory and are part of the operating environment.
 
 Currently referenced skill location:
 - `~/.codex/skills`
+
+Folders present on this Mac (Cursor does not auto-load these; use repo rules + `Project Memory`, or open `SKILL.md` when you need the full workflow text):
+- `~/.codex/skills/powerbi-financial-report`
+- `~/.codex/skills/powerbi-visual-repair`
+- `~/.codex/skills/project-memory-updater`
+- `~/.codex/skills/kpi-visual-consistency-agent`
+- `~/.codex/skills/model-cleanup-stale-object-agent`
 
 Project-relevant skills currently documented in `Project Memory/REFERENCE.md`:
 - `powerbi-financial-report`

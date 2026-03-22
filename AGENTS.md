@@ -38,3 +38,9 @@ As of March 22, 2026, the only fully active report module is:
 - `Reports/Finance`
 
 Do not assume future modules already exist just because the portfolio structure allows them.
+
+## Cursor / VS Code workspace
+
+- Agent rules: `.cursor/rules/` (`reporting-hub-portfolio.mdc` always applies; Finance rules apply under `Reports/Finance/` and `**/*.tmdl`).
+- Tasks: **Terminal → Run Task** (or **Tasks: Run Task**) — e.g. **Finance: Package report (ready.zip)**, **Portfolio: Scaffold new report module**.
+- Shared editor defaults: `.vscode/settings.json`, `.editorconfig`.

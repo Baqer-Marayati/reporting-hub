@@ -62,3 +62,5 @@ git add .
 git commit -m "Describe the change"
 git push
 ```
+
+`git` over SSH can work while the GitHub **CLI** token is expired. If you use `gh` for Issues or PRs, confirm `gh auth status` is healthy; if not, follow **Git And GitHub** in `docs/foundation.md`.

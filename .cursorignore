@@ -1,0 +1,6 @@
+# Local / generated noise (keep PBIP definition and TMDL searchable)
+**/.DS_Store
+**/.pbi/**
+**/*.abf
+Exports/Server Packages/*.zip
+
