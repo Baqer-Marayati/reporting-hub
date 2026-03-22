@@ -31,6 +31,23 @@ Reports/<Department>/
 └── Archive/
 ```
 
+## Starter Kit
+
+Use the shared starter kit when creating a new module:
+
+- template folder:
+  - `Shared/Templates/report-module-starter`
+- scaffolding script:
+  - `scripts/create-report-module.sh`
+
+Example:
+
+```bash
+./scripts/create-report-module.sh HR "HR Reporting"
+```
+
+That creates `Reports/HR` with the standard docs, memory, records, exports, and archive scaffolding already in place.
+
 ## Why This Works
 
 - It keeps active report work isolated.
