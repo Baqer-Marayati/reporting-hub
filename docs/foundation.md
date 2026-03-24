@@ -9,6 +9,7 @@ Use it to understand:
 - where shared assets belong
 - where report-specific work belongs
 - how to navigate without confusing active work and archived history
+- how multi-domain, multi-company reporting is expected to scale
 
 ## Top-Level Meaning
 
@@ -33,10 +34,11 @@ The repository should answer two different questions cleanly:
 The root answers question 1.
 Each report module answers question 2.
 
-## Current Active Module
+## Module State Snapshot
 
-Current live module:
-- `Reports/Finance`
+- Active production module: `Reports/Finance`
+- Active exchange module: `Reports/DataExchange`
+- Scaffolded modules: `Reports/HR`, `Reports/Sales`, `Reports/Service`, `Reports/Marketing`
 
 Current active editable PBIP:
 - `Reports/Finance/Financial Report/Financial Report.pbip`
@@ -48,6 +50,12 @@ Current active editable PBIP:
 - Put portfolio-wide decisions in `Portfolio Memory/`.
 - Put old or superseded material in clearly labeled archive folders.
 - Avoid mixed folders like `old`, `misc`, `backup2`, or `final final`.
+- Follow the module contract in `Shared/Standards/report-module-contract.md`.
+
+## First Encounter
+
+For first-time navigation, use:
+- `docs/first-encounter.md`
 
 ## Archive Rule
 

@@ -36,3 +36,24 @@
 - Shared standards and reusable assets should be added under `Shared/`.
 - Cross-report planning and architecture should be recorded in `Portfolio Memory/`.
 - Portfolio-level exported data snapshots for assistant analysis remain under `Shared/Data Drops/` (cross-report scope, not Finance-only).
+
+## New Portfolio Onboarding Layer
+
+- Added first-encounter onboarding doc for agents and new contributors:
+  - `docs/first-encounter.md`
+- Added deterministic agent operating playbook:
+  - `docs/agent-operating-playbook.md`
+- Added AI retrieval index for generic model uploads:
+  - `docs/ai-index.md`
+- Added portfolio contribution guide:
+  - `CONTRIBUTING.md`
+- Added GitHub CI guardrail for structure enforcement:
+  - `.github/workflows/validate-structure.yml`
+- Added GitHub CI guardrail for markdown link health:
+  - `.github/workflows/validate-doc-links.yml`
+- Updated root navigation docs to reflect current multi-domain reality and contract-first workflow:
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/foundation.md`
+  - `docs/portfolio-architecture.md`
+  - `docs/structure.md`

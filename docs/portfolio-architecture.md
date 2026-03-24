@@ -9,7 +9,12 @@ Reporting Hub/
 ├── docs/
 ├── Shared/
 ├── Reports/
-│   └── Finance/
+│   ├── Finance/
+│   ├── HR/
+│   ├── Sales/
+│   ├── Service/
+│   ├── Marketing/
+│   └── DataExchange/
 ├── Portfolio Memory/
 └── Archive/
 ```
@@ -24,12 +29,16 @@ Reports/<Department>/
 ├── README.md
 ├── docs/
 ├── Project Memory/
-├── Financial Report or equivalent PBIP folder
-├── Design Benchmarks/
+├── Core/
+├── Companies/
+├── scripts/
 ├── Exports/
 ├── Records/
 └── Archive/
 ```
+
+Detailed contract:
+- `Shared/Standards/report-module-contract.md`
 
 ## Starter Kit
 
@@ -46,7 +55,7 @@ Example:
 ./scripts/create-report-module.sh HR "HR Reporting"
 ```
 
-That creates `Reports/HR` with the standard docs, memory, records, exports, and archive scaffolding already in place.
+That creates `Reports/HR` with standard docs/memory plus contract folders (`Core`, `Companies`, `scripts`, `Exports`, `Records`, `Archive`).
 
 ## Why This Works
 

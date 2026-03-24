@@ -9,9 +9,13 @@ Start here:
 2. `docs/foundation.md`
 3. `docs/portfolio-architecture.md`
 4. `docs/structure.md`
-5. `Portfolio Memory/REPORT_CATALOG.md`
-6. `Portfolio Memory/CURRENT_STATUS.md`
-7. `Portfolio Memory/DECISIONS.md`
+5. `docs/first-encounter.md`
+6. `docs/agent-operating-playbook.md`
+7. `docs/ai-index.md`
+8. `Shared/Standards/report-module-contract.md`
+9. `Portfolio Memory/REPORT_CATALOG.md`
+10. `Portfolio Memory/CURRENT_STATUS.md`
+11. `Portfolio Memory/DECISIONS.md`
 
 Then choose the report module you are actually working on.
 
@@ -32,12 +36,21 @@ For the current finance report:
 - Treat `Portfolio Memory/` as cross-report truth.
 - Treat archive folders as history, not as active work surfaces.
 
-## Active Module
+## Module Reality
 
-As of March 22, 2026, the only fully active report module is:
+Active production module:
 - `Reports/Finance`
 
-Do not assume future modules already exist just because the portfolio structure allows them.
+Active exchange module:
+- `Reports/DataExchange`
+
+Scaffolded (not yet fully active) modules:
+- `Reports/HR`
+- `Reports/Sales`
+- `Reports/Service`
+- `Reports/Marketing`
+
+Do not assume a scaffolded module is active until `Portfolio Memory/REPORT_CATALOG.md` marks it Active.
 
 ## Cursor / VS Code workspace
 

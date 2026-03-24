@@ -10,8 +10,13 @@ The repository root is now the portfolio layer, not a single-report project fold
 
 Contains one folder per report module.
 
-Current module:
-- `Finance`
+Current modules:
+- `Finance` (active)
+- `DataExchange` (active exchange workspace)
+- `HR` (scaffolded)
+- `Sales` (scaffolded)
+- `Service` (scaffolded)
+- `Marketing` (scaffolded)
 
 ### `Shared`
 
@@ -33,3 +38,8 @@ Contains retired or historical portfolio-level material.
 
 If the task is about one report, go into that report module.
 If the task is about standards, shared assets, or multi-report planning, stay at the portfolio layer.
+
+## Contract Rule
+
+All report modules should align to:
+- `Shared/Standards/report-module-contract.md`

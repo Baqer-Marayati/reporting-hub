@@ -34,3 +34,22 @@
 - Use local Git excludes on server for runtime secret files:
   - `Shared/SAP Export Pipeline/config.json`
   - `Shared/SAP Export Pipeline/set_credentials.sh`
+
+## Onboarding and Agent Navigation Decision
+
+- Portfolio root onboarding is now explicit and mandatory for first encounter:
+  - `docs/first-encounter.md`
+  - `docs/agent-operating-playbook.md`
+- Generic AI upload routing is standardized through:
+  - `docs/ai-index.md`
+- Portfolio contribution behavior is standardized through:
+  - `CONTRIBUTING.md`
+- Agents should identify scope first (portfolio vs specific domain) before edits.
+- Module contract in `Shared/Standards/report-module-contract.md` is the baseline for all new or upgraded domain modules.
+
+## Automation Guardrail Decision
+
+- Repository structure validation must run in CI on push and pull request via:
+  - `.github/workflows/validate-structure.yml`
+- Markdown link validation must run in CI on push and pull request via:
+  - `.github/workflows/validate-doc-links.yml`

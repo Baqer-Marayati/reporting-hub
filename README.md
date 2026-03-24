@@ -1,51 +1,60 @@
 # Reporting Hub
 
-This repository is the portfolio home for the reporting system.
+Reporting Hub is a **domain-first reporting portfolio** designed for multi-company, multi-report development.
 
-It is designed to scale across multiple department-specific report projects while keeping shared standards, shared assets, and portfolio-level context in one place.
+The repository is optimized for:
+- repeatable report module onboarding (`Finance`, `HR`, `Sales`, `Service`, `Marketing`)
+- consistent agent/model navigation on first encounter
+- clear separation between source-of-truth PBIP work, shared assets, and review artifacts
 
-## Portfolio Layout
+## Quick Orientation
 
-- `Reports/`
-  - self-contained report modules such as Finance, HR, Sales, Service, Inventory, and Logistics
-- `Shared/`
-  - reusable design, data, SQL, DAX, template, and benchmark assets
-  - includes portfolio-level snapshot exchange lane at `Shared/Data Drops/`
-- `Portfolio Memory/`
-  - cross-report decisions, status, standards, and report catalog
-- `docs/`
-  - portfolio-level onboarding and architecture docs
-- `Archive/`
-  - retired reports, old benchmarks, and legacy experiments
+- Portfolio root = orchestration, standards, and cross-report context.
+- `Reports/<Domain>/` = domain module where report work happens.
+- `Shared/` = reusable assets and templates used by multiple domains.
+- `Portfolio Memory/` = cross-report decisions, catalog, and active status.
 
-## Current Active Report
+## Domain Modules
 
-The current live report module is:
-- `Reports/Finance`
+Current module state:
+- `Reports/Finance` - Active production module
+- `Reports/DataExchange` - Active exchange workspace
+- `Reports/HR` - Scaffolded
+- `Reports/Sales` - Scaffolded
+- `Reports/Service` - Scaffolded
+- `Reports/Marketing` - Scaffolded
 
-Its active editable PBIP remains:
-- `Reports/Finance/Financial Report/Financial Report.pbip`
+## Start Here (First Encounter)
 
-## Start Here
+Read in this order:
+1. [`AGENTS.md`](AGENTS.md)
+2. [`docs/foundation.md`](docs/foundation.md)
+3. [`docs/portfolio-architecture.md`](docs/portfolio-architecture.md)
+4. [`docs/structure.md`](docs/structure.md)
+5. [`docs/first-encounter.md`](docs/first-encounter.md)
+6. [`docs/agent-operating-playbook.md`](docs/agent-operating-playbook.md)
+7. [`docs/ai-index.md`](docs/ai-index.md)
+8. [`Portfolio Memory/REPORT_CATALOG.md`](Portfolio%20Memory/REPORT_CATALOG.md)
+9. [`Portfolio Memory/CURRENT_STATUS.md`](Portfolio%20Memory/CURRENT_STATUS.md)
 
-If you are entering this repository for the first time, read these in order:
-- [`AGENTS.md`](AGENTS.md)
-- [`docs/foundation.md`](docs/foundation.md)
-- [`docs/portfolio-architecture.md`](docs/portfolio-architecture.md)
-- [`docs/structure.md`](docs/structure.md)
-- [`Portfolio Memory/REPORT_CATALOG.md`](Portfolio%20Memory/REPORT_CATALOG.md)
-- [`Portfolio Memory/CURRENT_STATUS.md`](Portfolio%20Memory/CURRENT_STATUS.md)
-- [`Reports/Finance/README.md`](Reports/Finance/README.md)
-- [`Reports/Finance/AGENTS.md`](Reports/Finance/AGENTS.md)
+Then open the target domain module (for example `Reports/Finance`).
 
-## Working Model
+## Working Rules
 
-- Each report should live in its own folder under `Reports/`.
-- Shared logic and standards should not be duplicated across reports when a shared layer is more appropriate.
-- Live report truth should stay inside each report's own memory/docs layer.
-- Portfolio-wide truth should stay in `Portfolio Memory/`.
-- Historical material should be archived explicitly, not left mixed into active working folders.
+- Keep source-of-truth edits in PBIP folders inside the relevant domain module.
+- Keep shared standards/templates in `Shared/` (no live status logs there).
+- Keep domain status/decisions in each module's `Project Memory/`.
+- Keep portfolio-wide truth in `Portfolio Memory/`.
+- Rebuild packaged review artifacts after meaningful report edits.
 
-## Current Direction
+## Module Contract
 
-This repository has been restructured from a single-report root into a portfolio-style reporting hub so future report modules can be added cleanly without confusing active work, history, and shared assets.
+All domain modules follow the standard contract in:
+- [`Shared/Standards/report-module-contract.md`](Shared/Standards/report-module-contract.md)
+
+This contract defines required folders, archive style, company layering, and automation expectations.
+
+## Contribution Guide
+
+Use the portfolio-level process in:
+- [`CONTRIBUTING.md`](CONTRIBUTING.md)
