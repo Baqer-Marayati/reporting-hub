@@ -5,6 +5,9 @@ on:
     branches: ["**"]
   pull_request:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   validate-doc-links:
     runs-on: ubuntu-latest
@@ -18,7 +21,6 @@ jobs:
           args: >-
             --offline
             --no-progress
-            --exclude-mail
             "./**/*.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
