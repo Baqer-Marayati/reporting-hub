@@ -14,11 +14,32 @@
 - Status: Active
 - Notes: Isolated PBIP workspace for export operations; keeps Finance source untouched
 
+### HR
+
+- Module path: `Reports/HR`
+- Status: Scaffolded
+- Notes: Domain module created with baseline docs/memory and company-template layout
+
+### Sales
+
+- Module path: `Reports/Sales`
+- Status: Scaffolded
+- Notes: Domain module created with baseline docs/memory and company-template layout
+
+### Service
+
+- Module path: `Reports/Service`
+- Status: Scaffolded
+- Notes: Domain module created with baseline docs/memory and company-template layout
+
+### Marketing
+
+- Module path: `Reports/Marketing`
+- Status: Scaffolded
+- Notes: Domain module created with baseline docs/memory and company-template layout
+
 ## Planned Reports
 
-- HR
-- Sales
-- Service
 - Inventory
 - Logistics
 

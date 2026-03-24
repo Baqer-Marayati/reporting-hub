@@ -14,6 +14,9 @@ Use this module for:
 
 - `docs/`
 - `Project Memory/`
+- `Core/`
+- `Companies/`
+- `scripts/`
 - `Exports/`
 - `Records/`
 - `Archive/`

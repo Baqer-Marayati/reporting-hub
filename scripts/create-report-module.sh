@@ -33,6 +33,7 @@ find "$TARGET_DIR" -type f -name '*.md' -print0 | xargs -0 perl -0pi -e \
 
 echo "Created report module: $TARGET_DIR"
 echo "Next steps:"
-echo "1. Add the actual PBIP project folder under $TARGET_DIR."
-echo "2. Update $TARGET_DIR/README.md with the real business scope."
-echo "3. Update Portfolio Memory/REPORT_CATALOG.md."
+echo "1. Add baseline PBIP assets under $TARGET_DIR/Core."
+echo "2. Create first company folder from $TARGET_DIR/Companies/_template."
+echo "3. Update $TARGET_DIR/README.md with the real business scope."
+echo "4. Update Portfolio Memory/REPORT_CATALOG.md."

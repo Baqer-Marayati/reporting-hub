@@ -25,6 +25,11 @@ The active benchmark is:
 
 ## Working Areas
 
+- `Core`
+  - Shared domain baseline for cross-company Finance reporting assets.
+  - Transitional note: active PBIP currently remains under `Financial Report` until migration is complete.
+- `Companies`
+  - Company-specific config and optional overlays.
 - `Financial Report`
   - Active PBIP source of truth for report and semantic model work.
 - `Design Benchmarks`
@@ -33,6 +38,8 @@ The active benchmark is:
   - High-signal working memory for current status, decisions, risks, and next steps.
 - `docs`
   - Repo-facing documentation for setup, structure, data context, and page intent.
+- `scripts`
+  - Packaging, capture, retention, and validation automation for this module.
 - `.github`
   - Templates for structured pull requests and issue tracking.
 

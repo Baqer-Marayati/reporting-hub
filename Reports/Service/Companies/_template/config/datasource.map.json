@@ -1,0 +1,6 @@
+{
+  "logicalSource": "SAP_B1",
+  "environment": "template",
+  "datasetKey": "replace-me",
+  "domain": "Service"
+}
