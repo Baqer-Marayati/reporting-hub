@@ -31,7 +31,7 @@
               "active": true
             }
           ],
-          "showAll": true
+          "showAll": false
         },
         "Y": {
           "projections": [
@@ -43,11 +43,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue"
+                  "Property": "Net Revenue 2026+"
                 }
               },
-              "queryRef": "_Measures.Net Revenue",
-              "nativeQueryRef": "Net Revenue",
+              "queryRef": "_Measures.Net Revenue 2026+",
+              "nativeQueryRef": "Net Revenue 2026+",
               "displayName": "Net Revenue"
             },
             {
@@ -58,11 +58,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Gross Profit"
+                  "Property": "Gross Profit 2026+"
                 }
               },
-              "queryRef": "_Measures.Gross Profit",
-              "nativeQueryRef": "Gross Profit",
+              "queryRef": "_Measures.Gross Profit 2026+",
+              "nativeQueryRef": "Gross Profit 2026+",
               "displayName": "Gross Profit"
             }
           ]
@@ -319,3 +319,4 @@
     "drillFilterOtherVisuals": true
   }
 }
+

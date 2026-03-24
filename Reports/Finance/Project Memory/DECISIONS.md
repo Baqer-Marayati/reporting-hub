@@ -1,12 +1,25 @@
 # Decisions
 
 ## Active Project
-- Active working project: `/Users/baqer/Dropbox/Work/PowerBI/Reporting Hub/Reports/Finance/Financial Report`
+- Active working project: `C:\Work\reporting-hub\Reports\Finance\Financial Report`
 - Do not create parallel experiment folders unless explicitly needed.
+
+## Domain Contract Alignment
+- Finance now follows the portfolio domain-first contract with dedicated `Core/`, `Companies/`, and `scripts/` areas.
+- Transitional rule: until full migration, `Financial Report/` remains the active PBIP source path for edits.
 
 ## Source Of Truth
 - The financial PBIP project is the source of truth.
 - The older sales-report experiments are not part of the active workflow.
+
+## Server Safety Rule
+- This server hosts the production SAP database. Treat every action as production-critical.
+- Never modify Windows services, registry, scheduled tasks, firewall rules, execution policies, or system-level configuration.
+- Never touch files, folders, ports, or processes outside `C:\Work\reporting-hub`.
+- Never install, update, or remove software without explicit user approval in the current conversation.
+- Never kill processes that were not launched by the automation scripts in this repo.
+- All automation scripts must be read-only and passive (open apps, take screenshots, save files inside the repo).
+- When in doubt, ask before acting.
 
 ## Delivery Format Rule
 - `PBIP` remains the only working source of truth for this project.
@@ -17,6 +30,8 @@
 - User review should happen from the packaged export artifact, not from the raw `PBIP` folder.
 - After any meaningful report edit that the user is expected to inspect, rebuild `Exports/Server Packages/Financial Report - ready.zip` before asking the user to review.
 - Do not rely on the user to manually zip, copy, or package the report after edits. Packaging is part of done-ness.
+- Keep zip packaging available every time (`Financial Report - ready.zip`) because it is still needed periodically.
+- Also treat `Reports/Finance/Financial Report` as the default local preview working path when validating recent edits between packaging runs.
 
 ## Review And Sync Rule
 - Treat the user-reviewed Desktop result as the strongest evidence of what Power BI really renders.

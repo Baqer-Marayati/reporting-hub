@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Margin %"
+                  "Property": "Net Margin % 2026+"
                 }
               },
-              "queryRef": "_Measures.Net Margin %",
-              "nativeQueryRef": "Net Margin %"
+              "queryRef": "_Measures.Net Margin % 2026+",
+              "nativeQueryRef": "Net Margin % 2026+"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Net Margin %"
+                "Property": "Net Margin % 2026+"
               }
             },
             "direction": "Descending"
@@ -108,7 +108,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Net Margin %"
+            "metadata": "_Measures.Net Margin % 2026+"
           }
         }
       ]
@@ -262,3 +262,4 @@
     "drillFilterOtherVisuals": true
   }
 }
+

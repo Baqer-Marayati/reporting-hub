@@ -31,7 +31,7 @@
               "active": true
             }
           ],
-          "showAll": true
+          "showAll": false
         },
         "Y": {
           "projections": [
@@ -43,11 +43,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Operating Profit"
+                  "Property": "Operating Profit 2026+"
                 }
               },
-              "queryRef": "_Measures.Operating Profit",
-              "nativeQueryRef": "Operating Profit",
+              "queryRef": "_Measures.Operating Profit 2026+",
+              "nativeQueryRef": "Operating Profit 2026+",
               "displayName": "Operating Profit"
             },
             {
@@ -58,11 +58,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Profit"
+                  "Property": "Net Profit 2026+"
                 }
               },
-              "queryRef": "_Measures.Net Profit",
-              "nativeQueryRef": "Net Profit",
+              "queryRef": "_Measures.Net Profit 2026+",
+              "nativeQueryRef": "Net Profit 2026+",
               "displayName": "Net Profit"
             }
           ]
@@ -77,11 +77,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Margin %"
+                  "Property": "Net Margin % 2026+"
                 }
               },
-              "queryRef": "_Measures.Net Margin %",
-              "nativeQueryRef": "Net Margin %",
+              "queryRef": "_Measures.Net Margin % 2026+",
+              "nativeQueryRef": "Net Margin % 2026+",
               "displayName": "Net Margin %"
             }
           ]
@@ -383,3 +383,4 @@
     "drillFilterOtherVisuals": true
   }
 }
+

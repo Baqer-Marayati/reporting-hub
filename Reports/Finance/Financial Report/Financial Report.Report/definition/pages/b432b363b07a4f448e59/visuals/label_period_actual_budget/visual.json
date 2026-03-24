@@ -3,10 +3,10 @@
   "name": "label_period_actual_budget",
   "position": {
     "x": 647,
-    "y": 410,
+    "y": 405,
     "z": 10000,
     "height": 18,
-    "width": 164,
+    "width": 190,
     "tabOrder": 1000
   },
   "visual": {
@@ -117,3 +117,4 @@
     "drillFilterOtherVisuals": true
   }
 }
+

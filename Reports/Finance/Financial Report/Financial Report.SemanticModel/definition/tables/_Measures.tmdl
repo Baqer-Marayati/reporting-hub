@@ -283,10 +283,27 @@ table _Measures
 
 	measure 'Selected Period Label' =
 			
-			VAR MinDate = MIN ( 'Dim_Date'[Date] )
-			VAR MaxDate = MAX ( 'Dim_Date'[Date] )
+			VAR StartDate = DATE ( 2026, 1, 1 )
+			VAR MinVisibleDate = MIN ( 'Dim_Date'[Date] )
+			VAR MaxVisibleDate = MAX ( 'Dim_Date'[Date] )
+			VAR MinDate =
+			    IF (
+			        ISBLANK ( MinVisibleDate ),
+			        BLANK (),
+			        IF ( MinVisibleDate < StartDate, StartDate, MinVisibleDate )
+			    )
+			VAR MaxDate =
+			    IF (
+			        ISBLANK ( MaxVisibleDate ),
+			        BLANK (),
+			        IF ( MaxVisibleDate < MinDate, MinDate, MaxVisibleDate )
+			    )
 			RETURN
-			    FORMAT ( MinDate, "MMM YYYY" ) & " - " & FORMAT ( MaxDate, "MMM YYYY" )
+			    IF (
+			        ISBLANK ( MinDate ) || ISBLANK ( MaxDate ),
+			        BLANK (),
+			        FORMAT ( MinDate, "MMM YYYY" ) & " - " & FORMAT ( MaxDate, "MMM YYYY" )
+			    )
 		lineageTag: 91f014e9-5d09-4ddf-9def-fb5358edee1a
 
 	measure 'Chart Row Actual' =
@@ -641,24 +658,6 @@ table _Measures
 		formatString: 0.00"M د.ع.‏";-0.00"M د.ع.‏";0.00"M د.ع.‏"
 		lineageTag: af6ae29e-a33e-4db4-9d32-301db9134541
 
-	measure 'Gross Profit Safe Card Display' =
-			
-			COALESCE ( [Gross Profit], 0 )
-		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
-		lineageTag: 9b8fd953-7088-479f-a196-0e4c55a307d1
-
-	measure 'Operating Profit Safe Card Display' =
-			
-			COALESCE ( [Operating Profit], 0 )
-		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
-		lineageTag: 0efa97ff-ba58-4840-9f4f-bac1e3d833ec
-
-	measure 'Net Profit Safe Card Display' =
-			
-			COALESCE ( [Net Profit], 0 )
-		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
-		lineageTag: c2f1c20e-f28d-4dec-95cc-6d9e0c59bf08
-
 	measure 'Net Revenue YTD Card Display' =
 			
 			DIVIDE ( [Net Revenue YTD], 1000000000 )
@@ -725,6 +724,62 @@ table _Measures
 		formatString: #,0.0;-#,0.0;#,0.0
 		lineageTag: 6333ea6e-f172-4ca1-af26-d6ab7f75a143
 
+	measure 'Gross Profit Safe Card Display' =
+			
+			COALESCE ( [Gross Profit], 0 )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: 9b8fd953-7088-479f-a196-0e4c55a307d1
+
+	measure 'Operating Profit Safe Card Display' =
+			
+			COALESCE ( [Operating Profit], 0 )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: 0efa97ff-ba58-4840-9f4f-bac1e3d833ec
+
+	measure 'Net Profit Safe Card Display' =
+			
+			COALESCE ( [Net Profit], 0 )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: c2f1c20e-f28d-4dec-95cc-6d9e0c59bf08
+
+	measure 'Net Revenue 2026+' =
+			
+			CALCULATE ( [Net Revenue], KEEPFILTERS ( 'Dim_Date'[Date] >= DATE ( 2026, 1, 1 ) ) )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: 1d3db8bf-2b89-4fd5-a31f-0b6f35a72e11
+
+		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
+
+	measure 'Gross Profit 2026+' =
+			
+			CALCULATE ( [Gross Profit], KEEPFILTERS ( 'Dim_Date'[Date] >= DATE ( 2026, 1, 1 ) ) )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: 93f7a2b4-c1f9-4f39-a753-b3f3f7bc6fd2
+
+		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
+
+	measure 'Operating Profit 2026+' =
+			
+			CALCULATE ( [Operating Profit], KEEPFILTERS ( 'Dim_Date'[Date] >= DATE ( 2026, 1, 1 ) ) )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: ef0f2a2f-7f8a-4bb8-b9ca-7d77eaa10399
+
+		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
+
+	measure 'Net Profit 2026+' =
+			
+			CALCULATE ( [Net Profit], KEEPFILTERS ( 'Dim_Date'[Date] >= DATE ( 2026, 1, 1 ) ) )
+		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
+		lineageTag: e8f0262e-b4ce-4954-91b7-f57f2ec8ca6b
+
+		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
+
+	measure 'Net Margin % 2026+' =
+			
+			DIVIDE ( [Net Profit 2026+], [Net Revenue 2026+], 0 )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 1af0270a-8e0f-405a-8e1e-430b972d6b34
+
 	column Value
 		formatString: 0
 		lineageTag: 634559c7-20e9-4a32-9138-f0a2aeb87aa3
@@ -739,4 +794,5 @@ table _Measures
 		source = { 1 }
 
 	annotation PBI_Id = a66de47ec24d4b69b6d0b9890071e46f
+
 

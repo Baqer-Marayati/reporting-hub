@@ -3,7 +3,7 @@
   "name": "e73aa3326995860b93f6",
   "position": {
     "x": 647,
-    "y": 430,
+    "y": 425,
     "z": 9000,
     "height": 32,
     "width": 190,
@@ -57,47 +57,6 @@
                   "Value": "true"
                 }
               }
-            },
-            "filter": {
-              "filter": {
-                "Version": 2,
-                "From": [
-                  {
-                    "Name": "d",
-                    "Entity": "DueCategorySortTable",
-                    "Type": 0
-                  }
-                ],
-                "Where": [
-                  {
-                    "Condition": {
-                      "In": {
-                        "Expressions": [
-                          {
-                            "Column": {
-                              "Expression": {
-                                "SourceRef": {
-                                  "Source": "d"
-                                }
-                              },
-                              "Property": "DueCategory"
-                            }
-                          }
-                        ],
-                        "Values": [
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'Due next >90 days'"
-                              }
-                            }
-                          ]
-                        ]
-                      }
-                    }
-                  }
-                ]
-              }
             }
           }
         }
@@ -108,7 +67,7 @@
             "strictSingleSelect": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -246,3 +205,4 @@
     "drillFilterOtherVisuals": true
   }
 }
+
