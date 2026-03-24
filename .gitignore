@@ -2,3 +2,5 @@
 **/.DS_Store
 Exports/Server Packages/*.zip
 !Exports/Server Packages/.gitkeep
+Reports/*/Records/screenshots/*.png
+Reports/*/Records/Screenshots/*.png
