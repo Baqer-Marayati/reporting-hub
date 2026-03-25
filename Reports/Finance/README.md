@@ -61,6 +61,8 @@ If you are continuing work on this project, read these in order:
 - Treat `Financial Report` as the only active editable report.
 - Treat `PBIP` as the source of truth; use `PBIX` only as a temporary review copy if needed.
 - Use `Design Benchmarks/Sample 2` as the active visual benchmark unless memory says otherwise.
+- For packaging/review, use `Reports/Finance/scripts/package-report.ps1` and review `Exports/Server Packages/latest/Financial Report - ready.zip`.
+- Run `Reports/Finance/scripts/validate-artifact-state.ps1` when behavior looks inconsistent to confirm you are editing/reviewing the intended artifact paths.
 - Update `Project Memory` after meaningful technical or design changes.
 - Keep Git commits small and descriptive.
 - Treat repeated UI patterns like KPI rows and slicer rails as shared systems; fix them consistently across pages instead of one card or one screenshot at a time.

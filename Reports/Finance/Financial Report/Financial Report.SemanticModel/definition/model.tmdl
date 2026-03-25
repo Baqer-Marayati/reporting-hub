@@ -46,6 +46,9 @@ ref table Dim_BSAccount
 ref table Dim_ChartRows
 ref table Dim_StatementSummaryRows
 ref table _Measures
+ref table Dim_ReportRows
+ref table Dim_KPIRows
+ref table Dim_ItemSegmentMap
 
 ref cultureInfo en-US
 

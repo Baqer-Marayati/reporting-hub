@@ -29,3 +29,13 @@ Short, **durable** notes the assistant adds after reviewing captures in `images/
 - `[finance]` When two measures have **identical DAX**, keep one implementation and alias the other (e.g. **`Opex by Account`** = `[Opex by Department]`) so behavior stays the same for bound visuals.
 - `[finance]` After bulk measure/table removal, **open the PBIP in Desktop** and confirm load + pages; **`en-US`** culture metadata may show stale names until Desktop reconciles.
 - `[repo]` Record semantic cleanups in **`Project Memory/MODEL_NOTES.md`** so the next agent does not reintroduce “missing” objects.
+
+### 2026-03-25 — Finance slicer + open-state rules
+
+- `[finance]` The date slicer contract is pinned: `Year` must start at **2026** (no years before 2026 in the slicer).
+- `[finance]` On the left slicer rail, **Sales Type must be above Department** (swapped from the previous order).
+- `[finance]` The report should open with **no values until refresh**; avoid shipping/keeping semantic-model cache when this behavior is expected.
+
+### 2026-03-26 — Revenue grouping source lock
+
+- `[finance]` Revenue grouping on `Revenue Insights` must use SAP item-master UDF **`OITM.U_BusinessType`** (`Fact_SalesDetail['Item Business Type']`) instead of `ItemGroupName`.

@@ -21,16 +21,32 @@ table Dim_Branch
 		mode: import
 		source =
 				
-				FILTER(
-				    DISTINCT(
-				        SELECTCOLUMNS(
-				            'Fact_PNL',
-				            "BranchCode", 'Fact_PNL'[BranchCode],
-				            "BranchName", 'Fact_PNL'[BranchName]
-				        )
-				    ),
-				    NOT ISBLANK([BranchCode])
-				)
+				VAR AllRows =
+				    UNION (
+				        SELECTCOLUMNS ( 'Fact_PNL', "Code", 'Fact_PNL'[BranchCode], "Name", 'Fact_PNL'[BranchName] ),
+				        SELECTCOLUMNS ( 'Fact_BalanceSheet', "Code", 'Fact_BalanceSheet'[BranchCode], "Name", 'Fact_BalanceSheet'[BranchName] ),
+				        SELECTCOLUMNS ( 'Fact_SalesDetail', "Code", 'Fact_SalesDetail'[LocationCode], "Name", 'Fact_SalesDetail'[LocationName] )
+				    )
+				VAR CleanRows =
+				    FILTER ( AllRows, NOT ISBLANK ( [Code] ) && [Code] <> "" )
+				RETURN
+				    SELECTCOLUMNS (
+				        ADDCOLUMNS (
+				            SUMMARIZE ( CleanRows, [Code] ),
+				            "ResolvedName",
+				                VAR k = [Code]
+				                VAR n =
+				                    CALCULATE (
+				                        MINX (
+				                            FILTER ( CleanRows, [Code] = k && NOT ISBLANK ( [Name] ) && [Name] <> "" ),
+				                            [Name]
+				                        )
+				                    )
+				                RETURN COALESCE ( n, k )
+				        ),
+				        "BranchCode", [Code],
+				        "BranchName", [ResolvedName]
+				    )
 
 	annotation PBI_Id = a724b8f0866c4f548322fdc3f8449e5c
 

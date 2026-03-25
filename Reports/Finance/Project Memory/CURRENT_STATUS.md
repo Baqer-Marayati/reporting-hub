@@ -169,6 +169,26 @@ These pages were physically removed from the report definition during cleanup so
 - Validation discipline updated: every targeted page fix now requires a full 7-page screenshot run, then focused review of the target pages from that set before packaging.
 - `Income Statement` management block upgraded from a static `pivotTable` to a more visual combo chart (`lineClusteredColumnComboChart`) so the area now shows a clearer management-performance story: columns for `Current Period`, `YTD`, and `YTD LY` by statement row, plus a `Variance %` trend line.
 - `Revenue Insights` revenue-by-segment bar chart now groups by **`Fact_SalesDetail[Item Business Type]`** from SAP **`OITM.U_BusinessType`** (item master UDF), with **`Sales Revenue`** on the axis; prior calculated map / PQ product-tree logic and `Dim_ItemSegmentMap` were removed as redundant to SAP master data.
+- Stabilized sidebar slicer behavior across the five main pages by restoring the intended order `Year -> Quarter -> Month -> Location -> Department -> Sales Type` with non-overlapping label/slicer positions.
+- Hardening pass on semantic-model conformed dimensions and fact keys:
+- normalized source extract keys in `Fact_PNL`, `Fact_BalanceSheet`, and `Fact_SalesDetail` using `UPPER(TRIM(...))` for branch/location, sales type, and department codes to reduce refresh-time key drift from casing/whitespace differences.
+- rebuilt `Dim_Branch`, `Dim_Department`, and `Dim_SalesType` to produce one row per code with deterministic nonblank display names across all three facts, reducing duplicate-key and ambiguous-name behavior after refresh.
+- Root-cause pass on blank YTD cards/charts after refresh:
+- YTD measures were previously evaluating against the far-future tail of `Dim_Date` (`2000..2040`) when slicers were at `All`, which can push `DATESYTD` to a year with no fact data and return blanks.
+- updated core YTD measures (`Net/Gross/Operating/Net Profit YTD`, `Sales Revenue YTD`, `Sales Gross Profit YTD`) to clamp to the latest available fact date in current non-date filter context.
+- updated `Selected Period Label` to clamp to real fact-data min/max dates (across PNL, balance sheet, and sales) instead of raw `Dim_Date` bounds.
+- Repaired Quarter slicer source by restoring `Dim_Date[QuarterNo]` + `Dim_Date[Quarter]` in the semantic model, then re-bound explicit slicer-to-visual `DataFilter` interactions across all 7 live pages.
+- Updated `Dim_Date` calendar lower bound to `2026-01-01` so the `Year` slicer no longer exposes pre-2026 years.
+- Swapped main rail positions so `Sales Type` now sits above `Department` on the five core pages.
+- Packaging/open-state behavior is now set to blank-on-open by default: Finance package scripts strip semantic-model cache unless explicitly told to keep it.
+- User-approved return point captured after validation pass: `Reports/Finance/Exports/Server Packages/archive/20260325_2339__GLOBAL__Financial Report__1a73ec1.zip`.
+- User-approved return point captured after latest regeneration: `Reports/Finance/Exports/Server Packages/archive/20260325_2356__GLOBAL__Financial Report__1a73ec1.zip`.
+- User-approved return point captured after item-business-type UDF switch: `Reports/Finance/Exports/Server Packages/archive/20260326_0007__GLOBAL__Financial Report__1a73ec1.zip`.
+- Slicer root-cause hardening pass completed:
+- normalized branch/location, sales-type, and department keys in all three fact extracts (`Fact_PNL`, `Fact_BalanceSheet`, `Fact_SalesDetail`) using `UPPER(TRIM(...))` with name fallbacks to code when labels are blank.
+- rebuilt `Dim_Branch`, `Dim_SalesType`, and `Dim_Department` from a union of all three facts so slicers use conformed dimensions instead of single-fact subsets.
+- rebuilt page interaction maps to clean `slicer -> data visual` links only (removed noisy filter mappings to labels/shapes/textboxes) across all 7 live pages.
+- `Revenue Insights` grouping source switched from `Fact_SalesDetail[ItemGroupName]` to SAP item-master UDF `OITM.U_BusinessType` exposed as `Fact_SalesDetail['Item Business Type']` (blank UDF values mapped to `Unassigned`).
 
 ## Retained Lessons
 - Ask "which artifact is the user actually opening?" before debugging visual differences.

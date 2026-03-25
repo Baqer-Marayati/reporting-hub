@@ -75,19 +75,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row Var"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Variance": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_measures.chart_row_var_": {
 			      "Definition": {
@@ -417,19 +405,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "customerName"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Customer": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.duedate": {
 			      "Definition": {
@@ -438,19 +414,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "dueDate"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Due Date": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.documentno": {
 			      "Definition": {
@@ -459,19 +423,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "documentNo"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Document No": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.remainingamount": {
 			      "Definition": {
@@ -480,19 +432,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "remainingAmount"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Remaining Amount": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.open": {
 			      "Definition": {
@@ -501,19 +441,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "open"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Open": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.paymentmethodcode": {
 			      "Definition": {
@@ -522,19 +450,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "paymentMethodCode"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Payment Method": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_measures.operating_profit_2026": {
 			      "Definition": {

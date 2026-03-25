@@ -3,7 +3,7 @@
   "name": "a3d4f0b62ce84b8091ac",
   "position": {
     "x": 24,
-    "y": 276,
+    "y": 344,
     "z": 10000,
     "height": 32,
     "width": 136,
@@ -79,6 +79,13 @@
         {
           "properties": {
             "singleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "selectAllCheckboxEnabled": {
               "expr": {
                 "Literal": {
                   "Value": "false"

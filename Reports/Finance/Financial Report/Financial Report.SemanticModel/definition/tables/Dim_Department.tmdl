@@ -21,16 +21,32 @@ table Dim_Department
 		mode: import
 		source =
 				
-				FILTER(
-				    DISTINCT(
-				        SELECTCOLUMNS(
-				            'Fact_PNL',
-				            "DepartmentCode", 'Fact_PNL'[DepartmentCode],
-				            "DepartmentName", 'Fact_PNL'[DepartmentName]
-				        )
-				    ),
-				    NOT ISBLANK([DepartmentCode])
-				)
+				VAR AllRows =
+				    UNION (
+				        SELECTCOLUMNS ( 'Fact_PNL', "Code", 'Fact_PNL'[DepartmentCode], "Name", 'Fact_PNL'[DepartmentName] ),
+				        SELECTCOLUMNS ( 'Fact_BalanceSheet', "Code", 'Fact_BalanceSheet'[DepartmentCode], "Name", 'Fact_BalanceSheet'[DepartmentName] ),
+				        SELECTCOLUMNS ( 'Fact_SalesDetail', "Code", 'Fact_SalesDetail'[DepartmentCode], "Name", 'Fact_SalesDetail'[DepartmentName] )
+				    )
+				VAR CleanRows =
+				    FILTER ( AllRows, NOT ISBLANK ( [Code] ) && [Code] <> "" )
+				RETURN
+				    SELECTCOLUMNS (
+				        ADDCOLUMNS (
+				            SUMMARIZE ( CleanRows, [Code] ),
+				            "ResolvedName",
+				                VAR k = [Code]
+				                VAR n =
+				                    CALCULATE (
+				                        MINX (
+				                            FILTER ( CleanRows, [Code] = k && NOT ISBLANK ( [Name] ) && [Name] <> "" ),
+				                            [Name]
+				                        )
+				                    )
+				                RETURN COALESCE ( n, k )
+				        ),
+				        "DepartmentCode", [Code],
+				        "DepartmentName", [ResolvedName]
+				    )
 
 	annotation PBI_Id = fca4c6fdc8f04085a7c9ae11e08c12f5
 

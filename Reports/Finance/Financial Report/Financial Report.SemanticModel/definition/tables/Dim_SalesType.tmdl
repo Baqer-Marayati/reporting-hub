@@ -21,16 +21,32 @@ table Dim_SalesType
 		mode: import
 		source =
 				
-				FILTER(
-				    DISTINCT(
-				        SELECTCOLUMNS(
-				            'Fact_PNL',
-				            "SalesTypeCode", 'Fact_PNL'[SalesTypeCode],
-				            "SalesTypeName", 'Fact_PNL'[SalesTypeName]
-				        )
-				    ),
-				    NOT ISBLANK([SalesTypeCode])
-				)
+				VAR AllRows =
+				    UNION (
+				        SELECTCOLUMNS ( 'Fact_PNL', "Code", 'Fact_PNL'[SalesTypeCode], "Name", 'Fact_PNL'[SalesTypeName] ),
+				        SELECTCOLUMNS ( 'Fact_BalanceSheet', "Code", 'Fact_BalanceSheet'[SalesTypeCode], "Name", 'Fact_BalanceSheet'[SalesTypeName] ),
+				        SELECTCOLUMNS ( 'Fact_SalesDetail', "Code", 'Fact_SalesDetail'[SalesTypeCode], "Name", 'Fact_SalesDetail'[SalesTypeName] )
+				    )
+				VAR CleanRows =
+				    FILTER ( AllRows, NOT ISBLANK ( [Code] ) && [Code] <> "" )
+				RETURN
+				    SELECTCOLUMNS (
+				        ADDCOLUMNS (
+				            SUMMARIZE ( CleanRows, [Code] ),
+				            "ResolvedName",
+				                VAR k = [Code]
+				                VAR n =
+				                    CALCULATE (
+				                        MINX (
+				                            FILTER ( CleanRows, [Code] = k && NOT ISBLANK ( [Name] ) && [Name] <> "" ),
+				                            [Name]
+				                        )
+				                    )
+				                RETURN COALESCE ( n, k )
+				        ),
+				        "SalesTypeCode", [Code],
+				        "SalesTypeName", [ResolvedName]
+				    )
 
 	annotation PBI_Id = 49b2783602d0483f8324399df5aafda7
 

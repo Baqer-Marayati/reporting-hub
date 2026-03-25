@@ -80,6 +80,9 @@
 ## Revenue Insights — Item business type rule
 - **Revenue by item business type** on **Revenue Insights** groups revenue by **`Fact_SalesDetail[Item Business Type]`**, sourced from SAP **`OITM.U_BusinessType`** (item master UDF) in the sales-detail SQL, with blank UDF values coalesced to **`Unassigned`**. The chart axis binds that column with **`Sales Revenue`**; do not replace this with a static in-model segment map unless product explicitly requests it.
 
+## Revenue Grouping Source Lock (2026-03-26)
+- Keep `Revenue Insights` category grouping on `Fact_SalesDetail[Item Business Type]` (from `OITM.U_BusinessType`), not `ItemGroupName`.
+
 ## Final Page Set
 - As of March 21, 2026, the report is intentionally reduced to 7 live pages only:
 - `Executive Overview`
@@ -90,6 +93,15 @@
 - `Working Capital Health`
 - `Profitability Drivers`
 - Pages outside that set are no longer part of the active report shell and should not be reintroduced unless explicitly requested.
+
+## Slicer And Open-State Contract (2026-03-25)
+- `Dim_Date` slicer years are intentionally constrained to start at `2026`.
+- Main left-rail order uses `Sales Type` above `Department` (swapped from earlier order).
+- Default handoff/open behavior is blank until refresh: package/report flow should strip semantic-model cache unless explicitly overridden.
+
+## Conformed Slicer Dimension Rule
+- Sidebar slicers (`Year/Quarter/Month/Location/Sales Type/Department`) must remain bound to conformed dimensions that cover all relevant facts, not single-fact subsets.
+- Keep dimension keys normalized (`UPPER(TRIM(...))`) in source extracts and use deterministic one-row-per-code dimension outputs to avoid post-refresh filter drift.
 
 ## SAP Domain Rule
 - Assume anything needed from SAP is available unless proven otherwise.

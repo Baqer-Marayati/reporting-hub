@@ -4,7 +4,7 @@
     {
       "label": "Finance: Package report (ready.zip)",
       "type": "shell",
-      "command": "./Reports/Finance/scripts/package-report.sh",
+      "command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}/Reports/Finance/scripts/package-report.ps1\"",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -16,6 +16,32 @@
         "reveal": "always",
         "panel": "shared",
         "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Finance: Validate artifact state",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}/Reports/Finance/scripts/validate-artifact-state.ps1\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Finance: Clear semantic model cache (cache.abf)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}/Reports/Finance/scripts/clear-model-cache.ps1\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
       },
       "problemMatcher": []
     },

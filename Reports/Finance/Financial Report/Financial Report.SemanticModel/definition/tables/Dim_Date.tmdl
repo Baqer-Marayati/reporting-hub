@@ -19,6 +19,24 @@ table Dim_Date
 
 		annotation SummarizationSetBy = Automatic
 
+	column QuarterNo
+		formatString: 0
+		lineageTag: a7b8c9d0-e1f2-43a4-b5c6-d7e8f9a0b1c2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [QuarterNo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: b8c9d0e1-f2a3-44b5-c6d7-e8f9a0b1c2d3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+		sortByColumn: QuarterNo
+
+		annotation SummarizationSetBy = Automatic
+
 	column MonthNo
 		formatString: 0
 		lineageTag: ca35937f-c6ef-4db8-9e8e-f075146b4d91
@@ -60,8 +78,10 @@ table Dim_Date
 		source =
 				
 				ADDCOLUMNS (
-				    CALENDAR ( DATE ( YEAR ( TODAY () ) - 5, 1, 1 ), DATE ( YEAR ( TODAY () ), 12, 31 ) ),
+				    CALENDAR ( DATE ( 2026, 1, 1 ), DATE ( YEAR ( TODAY () ), 12, 31 ) ),
 				    "Year", YEAR ( [Date] ),
+				    "QuarterNo", ROUNDUP ( DIVIDE ( MONTH ( [Date] ), 3, 0 ), 0 ),
+				    "Quarter", "Q" & ROUNDUP ( DIVIDE ( MONTH ( [Date] ), 3, 0 ), 0 ),
 				    "MonthNo", MONTH ( [Date] ),
 				    "MonthName", FORMAT ( [Date], "MMM" ),
 				    "YearMonth", FORMAT ( [Date], "YYYY-MM" ),

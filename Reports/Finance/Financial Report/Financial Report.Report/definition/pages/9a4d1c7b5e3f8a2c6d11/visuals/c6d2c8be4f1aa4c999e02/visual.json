@@ -27,7 +27,7 @@
                 }
               },
               "queryRef": "Fact_SalesDetail.Item Business Type",
-              "nativeQueryRef": "Business type",
+              "nativeQueryRef": "Item Business Type",
               "active": true
             }
           ]
@@ -112,7 +112,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue by item business type (OITM UDF)'"
+                  "Value": "'Revenue by Item Business Type'"
                 }
               }
             }

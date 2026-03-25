@@ -6,7 +6,8 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$SourceDir,
     [string]$CompanyCode = "GLOBAL",
-    [string]$RepoRoot = "C:\Work\reporting-hub"
+    [string]$RepoRoot = "C:\Work\reporting-hub",
+    [switch]$KeepModelCache
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,7 +31,54 @@ if (Test-Path $latestZip) {
     Remove-Item $latestZip -Force
 }
 
-Compress-Archive -Path $SourceDir -DestinationPath $latestZip -CompressionLevel Optimal
+function New-CanonicalZipFromFolder {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$FolderPath,
+        [Parameter(Mandatory = $true)]
+        [string]$ZipPath
+    )
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    $sourceRoot = (Resolve-Path -LiteralPath $FolderPath).Path
+    $parentRoot = Split-Path -Path $sourceRoot -Parent
+
+    if (Test-Path -LiteralPath $ZipPath) {
+        Remove-Item -LiteralPath $ZipPath -Force
+    }
+
+    $zip = [System.IO.Compression.ZipFile]::Open($ZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        Get-ChildItem -LiteralPath $sourceRoot -Recurse -File | ForEach-Object {
+            $fullPath = $_.FullName
+            $relative = $fullPath.Substring($parentRoot.Length).TrimStart('\', '/')
+            $entryName = $relative -replace '\\', '/'
+            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                $zip,
+                $fullPath,
+                $entryName,
+                [System.IO.Compression.CompressionLevel]::Optimal
+            ) | Out-Null
+        }
+    } finally {
+        $zip.Dispose()
+    }
+}
+
+# Import models persist loaded data in SemanticModel/.pbi/cache.abf. Shipping it shows numbers
+# before Refresh; recipients should open empty and load from source after Refresh.
+if (-not $KeepModelCache) {
+    Get-ChildItem -LiteralPath $SourceDir -Filter "cache.abf" -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Directory.Name -eq ".pbi" } |
+        ForEach-Object {
+            Remove-Item -LiteralPath $_.FullName -Force
+            Write-Host "Removed model import cache: $($_.FullName)"
+        }
+}
+
+New-CanonicalZipFromFolder -FolderPath $SourceDir -ZipPath $latestZip
 
 $timestamp = Get-Date -Format "yyyyMMdd_HHmm"
 $shortSha = "nosha"
