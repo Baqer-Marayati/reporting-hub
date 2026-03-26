@@ -3,10 +3,10 @@
   "name": "i5e71c629d4d4b96a1b5",
   "position": {
     "x": 188.12313803376364,
-    "y": 491.91658391261171,
+    "y": 491.9165839126117,
     "z": 7000,
     "height": 219.90069513406155,
-    "width": 483.01886792452831,
+    "width": 483.0188679245283,
     "tabOrder": 18000
   },
   "visual": {
@@ -183,9 +183,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#F8FBFF'"
+                      "Value": "'#C9D5E3'"
                     }
                   }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
                 }
               }
             }
@@ -236,7 +243,14 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "showFocusModeButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }

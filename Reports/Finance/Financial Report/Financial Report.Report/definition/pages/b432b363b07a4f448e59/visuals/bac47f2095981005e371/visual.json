@@ -220,7 +220,7 @@
             "showFocusModeButton": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },

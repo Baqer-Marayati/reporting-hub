@@ -162,9 +162,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#F8FBFF'"
+                      "Value": "'#C9D5E3'"
                     }
                   }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
                 }
               }
             }

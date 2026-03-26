@@ -300,7 +300,7 @@
             "showFocusModeButton": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
@@ -342,23 +342,6 @@
               "expr": {
                 "Literal": {
                   "Value": "16D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "background": [
-        {
-          "properties": {
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#F8FBFF'"
-                    }
-                  }
                 }
               }
             }
