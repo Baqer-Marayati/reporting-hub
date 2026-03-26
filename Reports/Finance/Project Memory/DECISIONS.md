@@ -1,5 +1,13 @@
 # Decisions
 
+## 2026-03-26 — Color palette switch: teal → navy blue
+
+- Data colors changed from teal/green base palette to a navy-blue base palette matching the approved sample screenshot.
+- Primary three: `#1A3C5C` (deep navy), `#2F75B6` (medium blue), `#9DC3E6` (light blue).
+- Page background changed from `#F4F7F5` (light greenish-gray) to `#EBF0F7` (cool light blue-gray) on all 7 pages.
+- Theme root background/backgroundLight/backgroundNeutral updated to match.
+- Visual card backgrounds, borders, typography, layout, and all bindings left untouched.
+
 ## Active Project
 - Active working project: `C:\Work\reporting-hub\Reports\Finance\Financial Report`
 - Do not create parallel experiment folders unless explicitly needed.
