@@ -342,19 +342,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Overduepayables"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "AP Overdue": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.totaloverdue_ar": {
 			      "Definition": {
@@ -363,19 +351,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "TotalOverdue_AR"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "AR Overdue": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "customerledgerentries.totaloutstanding_ar": {
 			      "Definition": {
@@ -547,6 +523,48 @@ cultureInfo en-US
 			      "Terms": [
 			        {
 			          "Gross Profit": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendorledgerentries.accountpayables_ageingreport_new": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendorLedgerEntries",
+			          "ConceptualProperty": "Accountpayables_ageingReport_new"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "AP Due Bucket": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "customerledgerentries.accountreceivables_ageingreport_new": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "customerLedgerEntries",
+			          "ConceptualProperty": "AccountReceivables_ageingReport_new"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "AR Due Bucket": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

@@ -93,14 +93,6 @@ table Fact_SalesDetail
 
 		annotation SummarizationSetBy = Automatic
 
-	column 'Item Business Type'
-		dataType: string
-		lineageTag: 6a39fe7b-f0d4-4b7f-8f64-ccf6b8efc184
-		summarizeBy: none
-		sourceColumn: [Item Business Type]
-
-		annotation SummarizationSetBy = Automatic
-
 	column Quantity
 		dataType: double
 		lineageTag: b2279853-69b3-46bf-85fd-7e06c1f6c7dc
@@ -170,6 +162,14 @@ table Fact_SalesDetail
 		lineageTag: 72e0cbf0-2b83-4ebb-9a57-081278254dbd
 		summarizeBy: none
 		sourceColumn: DepartmentName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Item Business Type'
+		dataType: string
+		lineageTag: 75f07431-1d77-42f9-81a1-6054e48e5c79
+		summarizeBy: none
+		sourceColumn: Item Business Type
 
 		annotation SummarizationSetBy = Automatic
 
