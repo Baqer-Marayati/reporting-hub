@@ -194,6 +194,8 @@ These pages were physically removed from the report definition during cleanup so
 - rebuilt `Dim_Branch`, `Dim_SalesType`, and `Dim_Department` from a union of all three facts so slicers use conformed dimensions instead of single-fact subsets.
 - rebuilt page interaction maps to clean `slicer -> data visual` links only (removed noisy filter mappings to labels/shapes/textboxes) across all 7 live pages.
 - `Revenue Insights` grouping source switched from `Fact_SalesDetail[ItemGroupName]` to SAP item-master UDF `OITM.U_BusinessType` exposed as `Fact_SalesDetail['Item Business Type']` (blank UDF values mapped to `Unassigned`).
+- Color palette/style finalized: navy-blue data colors (#1F4E79, #5B8DB8, #9CC3E6), page background #F8FBFF, card border #C9D5E3, thin navy outer drop shadow on all 38 on-canvas KPI cards as top accent line (shadowDistance 4, shadowBlur 0, shadowSpread 0, angle 270), card titles restored to clean dark 12pt text.
+- **User-approved return point:** `Reports/Finance/Exports/Server Packages/archive/20260326_1947__GLOBAL__Financial Report__506443d.zip` (git commit `6558e6e`)
 
 ## Retained Lessons
 - Ask "which artifact is the user actually opening?" before debugging visual differences.
