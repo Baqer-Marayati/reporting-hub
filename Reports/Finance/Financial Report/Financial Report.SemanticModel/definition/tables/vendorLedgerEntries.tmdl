@@ -87,7 +87,8 @@ table vendorLedgerEntries
 			        "Due next 30 days", SUMX ( FILTER ( 'vendorLedgerEntries', 'vendorLedgerEntries'[open] = 1 && 'vendorLedgerEntries'[dueDate] > TODAY () && 'vendorLedgerEntries'[dueDate] <= TODAY () + 30 ), 'vendorLedgerEntries'[remainingAmount] ),
 			        "Due next 60 days", SUMX ( FILTER ( 'vendorLedgerEntries', 'vendorLedgerEntries'[open] = 1 && 'vendorLedgerEntries'[dueDate] > TODAY () + 30 && 'vendorLedgerEntries'[dueDate] <= TODAY () + 60 ), 'vendorLedgerEntries'[remainingAmount] ),
 			        "Due next 90 days", SUMX ( FILTER ( 'vendorLedgerEntries', 'vendorLedgerEntries'[open] = 1 && 'vendorLedgerEntries'[dueDate] > TODAY () + 60 && 'vendorLedgerEntries'[dueDate] <= TODAY () + 90 ), 'vendorLedgerEntries'[remainingAmount] ),
-			        "Due next >90 days", SUMX ( FILTER ( 'vendorLedgerEntries', 'vendorLedgerEntries'[open] = 1 && 'vendorLedgerEntries'[dueDate] > TODAY () + 90 ), 'vendorLedgerEntries'[remainingAmount] )
+			        "Due next >90 days", SUMX ( FILTER ( 'vendorLedgerEntries', 'vendorLedgerEntries'[open] = 1 && 'vendorLedgerEntries'[dueDate] > TODAY () + 90 ), 'vendorLedgerEntries'[remainingAmount] ),
+			        [Overduepayables]
 			    )
 		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0711
 

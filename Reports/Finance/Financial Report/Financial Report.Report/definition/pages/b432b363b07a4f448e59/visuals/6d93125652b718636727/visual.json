@@ -23,12 +23,12 @@
                       "Entity": "vendorLedgerEntries"
                     }
                   },
-                  "Property": "Overduepayables"
+                  "Property": "Accountpayables_ageingReport_new"
                 }
               },
-              "queryRef": "vendorLedgerEntries.Overduepayables",
-              "nativeQueryRef": "Overduepayables",
-              "displayName": "AP Overdue"
+              "queryRef": "vendorLedgerEntries.Accountpayables_ageingReport_new",
+              "nativeQueryRef": "Accountpayables_ageingReport_new",
+              "displayName": "AP Due Bucket"
             }
           ]
         }
@@ -43,7 +43,7 @@
                     "Entity": "vendorLedgerEntries"
                   }
                 },
-                "Property": "Overduepayables"
+                "Property": "Accountpayables_ageingReport_new"
               }
             },
             "direction": "Descending"
@@ -109,7 +109,7 @@
             }
           },
           "selector": {
-            "metadata": "vendorLedgerEntries.Overduepayables"
+            "metadata": "vendorLedgerEntries.Accountpayables_ageingReport_new"
           }
         }
       ],
@@ -164,7 +164,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'AP Overdue'"
+                  "Value": "'AP Due Bucket'"
                 }
               }
             },

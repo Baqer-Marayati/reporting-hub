@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue Card Display"
+                  "Property": "Net Revenue YTD"
                 }
               },
-              "queryRef": "_Measures.Net Revenue Card Display",
-              "nativeQueryRef": "Net Revenue Card Display"
+              "queryRef": "_Measures.Net Revenue YTD",
+              "nativeQueryRef": "Net Revenue YTD"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Net Revenue Card Display"
+                "Property": "Net Revenue YTD"
               }
             },
             "direction": "Descending"
@@ -74,7 +74,14 @@
             "labelDisplayUnits": {
               "expr": {
                 "Literal": {
-                  "Value": "1D"
+                  "Value": "1000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             },
@@ -101,7 +108,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Net Revenue Card Display"
+            "metadata": "_Measures.Net Revenue YTD"
           }
         }
       ]
@@ -230,7 +237,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Net Revenue'"
+                  "Value": "'Net Revenue (YTD)'"
                 }
               }
             },

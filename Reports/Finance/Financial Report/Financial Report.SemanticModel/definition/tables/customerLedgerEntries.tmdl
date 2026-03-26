@@ -94,7 +94,8 @@ table customerLedgerEntries
 			        "Overdue 31-60 days", SUMX ( FILTER ( 'customerLedgerEntries', 'customerLedgerEntries'[open] = 1 && 'customerLedgerEntries'[dueDate] >= TODAY () - 60 && 'customerLedgerEntries'[dueDate] < TODAY () - 30 ), 'customerLedgerEntries'[remainingAmount] ),
 			        "Overdue 1-30 days", SUMX ( FILTER ( 'customerLedgerEntries', 'customerLedgerEntries'[open] = 1 && 'customerLedgerEntries'[dueDate] >= TODAY () - 30 && 'customerLedgerEntries'[dueDate] < TODAY () ), 'customerLedgerEntries'[remainingAmount] ),
 			        "Due next 30 days", SUMX ( FILTER ( 'customerLedgerEntries', 'customerLedgerEntries'[open] = 1 && 'customerLedgerEntries'[dueDate] >= TODAY () && 'customerLedgerEntries'[dueDate] < TODAY () + 30 ), 'customerLedgerEntries'[remainingAmount] ),
-			        "Still on time", SUMX ( FILTER ( 'customerLedgerEntries', 'customerLedgerEntries'[open] = 1 && 'customerLedgerEntries'[dueDate] >= TODAY () + 30 ), 'customerLedgerEntries'[remainingAmount] )
+			        "Still on time", SUMX ( FILTER ( 'customerLedgerEntries', 'customerLedgerEntries'[open] = 1 && 'customerLedgerEntries'[dueDate] >= TODAY () + 30 ), 'customerLedgerEntries'[remainingAmount] ),
+			        [TotalOverdue_AR]
 			    )
 		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0613
 

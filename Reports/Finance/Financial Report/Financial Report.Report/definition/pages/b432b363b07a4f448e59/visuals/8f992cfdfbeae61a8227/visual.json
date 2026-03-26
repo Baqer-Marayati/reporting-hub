@@ -23,12 +23,12 @@
                       "Entity": "customerLedgerEntries"
                     }
                   },
-                  "Property": "TotalOverdue_AR"
+                  "Property": "AccountReceivables_ageingReport_new"
                 }
               },
-              "queryRef": "customerLedgerEntries.TotalOverdue_AR",
-              "nativeQueryRef": "TotalOverdue_AR",
-              "displayName": "AR Overdue"
+              "queryRef": "customerLedgerEntries.AccountReceivables_ageingReport_new",
+              "nativeQueryRef": "AccountReceivables_ageingReport_new",
+              "displayName": "AR Due Bucket"
             }
           ]
         }
@@ -43,7 +43,7 @@
                     "Entity": "customerLedgerEntries"
                   }
                 },
-                "Property": "TotalOverdue_AR"
+                "Property": "AccountReceivables_ageingReport_new"
               }
             },
             "direction": "Descending"
@@ -116,7 +116,7 @@
             }
           },
           "selector": {
-            "metadata": "customerLedgerEntries.TotalOverdue_AR"
+            "metadata": "customerLedgerEntries.AccountReceivables_ageingReport_new"
           }
         }
       ],
@@ -171,7 +171,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'AR Overdue'"
+                  "Value": "'AR Due Bucket'"
                 }
               }
             },

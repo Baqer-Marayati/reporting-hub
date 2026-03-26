@@ -47,37 +47,7 @@
   "visualInteractions": [
     {
       "source": "b41f771a6c3fd3698afb",
-      "target": "1a47e31004196afa2896",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
-      "target": "32389cb30d27d2e7f752",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
-      "target": "35218e363a6114aa8129",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
-      "target": "6a87c2b87248837d8afa",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
-      "target": "6d93125652b718636727",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
       "target": "8f992cfdfbeae61a8227",
-      "type": "DataFilter"
-    },
-    {
-      "source": "b41f771a6c3fd3698afb",
-      "target": "ae8ed81227a557af870a",
       "type": "DataFilter"
     },
     {
@@ -92,21 +62,6 @@
     },
     {
       "source": "bac47f2095981005e371",
-      "target": "35218e363a6114aa8129",
-      "type": "DataFilter"
-    },
-    {
-      "source": "bac47f2095981005e371",
-      "target": "6a87c2b87248837d8afa",
-      "type": "DataFilter"
-    },
-    {
-      "source": "bac47f2095981005e371",
-      "target": "6d93125652b718636727",
-      "type": "DataFilter"
-    },
-    {
-      "source": "bac47f2095981005e371",
       "target": "8f992cfdfbeae61a8227",
       "type": "DataFilter"
     },
@@ -117,37 +72,7 @@
     },
     {
       "source": "e73aa3326995860b93f6",
-      "target": "1a47e31004196afa2896",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
-      "target": "32389cb30d27d2e7f752",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
-      "target": "35218e363a6114aa8129",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
-      "target": "6a87c2b87248837d8afa",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
       "target": "6d93125652b718636727",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
-      "target": "8f992cfdfbeae61a8227",
-      "type": "DataFilter"
-    },
-    {
-      "source": "e73aa3326995860b93f6",
-      "target": "ae8ed81227a557af870a",
       "type": "DataFilter"
     }
   ]

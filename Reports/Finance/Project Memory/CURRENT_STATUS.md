@@ -184,6 +184,10 @@ These pages were physically removed from the report definition during cleanup so
 - User-approved return point captured after validation pass: `Reports/Finance/Exports/Server Packages/archive/20260325_2339__GLOBAL__Financial Report__1a73ec1.zip`.
 - User-approved return point captured after latest regeneration: `Reports/Finance/Exports/Server Packages/archive/20260325_2356__GLOBAL__Financial Report__1a73ec1.zip`.
 - User-approved return point captured after item-business-type UDF switch: `Reports/Finance/Exports/Server Packages/archive/20260326_0007__GLOBAL__Financial Report__1a73ec1.zip`.
+- Runtime reconciliation pass completed across all 7 live pages; resolved a top-row context mismatch on `Profitability Drivers` by aligning the revenue KPI to YTD semantics and title.
+- Display-only normalization pass completed with no semantic-model changes: `Profitability Drivers` top-left KPI now renders in `M`, and `Balance Sheet` liabilities card now renders in `bn` to match its peer cards.
+- User-approved return point captured after reconciliation + display normalization: `Reports/Finance/Exports/Server Packages/archive/20260326_1436__GLOBAL__Financial Report__2f631f6.zip`.
+- User-approved safe return point captured after slicer-function checks and SAP P&L comparison pass: `Reports/Finance/Exports/Server Packages/archive/20260326_1600__GLOBAL__Financial Report__2f631f6.zip`.
 - Slicer root-cause hardening pass completed:
 - normalized branch/location, sales-type, and department keys in all three fact extracts (`Fact_PNL`, `Fact_BalanceSheet`, `Fact_SalesDetail`) using `UPPER(TRIM(...))` with name fallbacks to code when labels are blank.
 - rebuilt `Dim_Branch`, `Dim_SalesType`, and `Dim_Department` from a union of all three facts so slicers use conformed dimensions instead of single-fact subsets.
