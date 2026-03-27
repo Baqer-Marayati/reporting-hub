@@ -38,9 +38,14 @@
 - Status: Scaffolded
 - Notes: Domain module created with baseline docs/memory and company-template layout
 
+### Inventory
+
+- Module path: `Reports/Inventory`
+- Status: Scaffolded
+- Notes: Inventory Performance Report module scaffolded; prepared to follow the Finance module operating pattern
+
 ## Planned Reports
 
-- Inventory
 - Logistics
 
 Create these as modules under `Reports/` only when real project work begins.

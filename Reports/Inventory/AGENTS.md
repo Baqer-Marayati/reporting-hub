@@ -1,6 +1,6 @@
 # Agent Guide
 
-This file is the AI entrypoint for the <REPORT_TITLE> module.
+This file is the AI entrypoint for the Inventory Performance Report module.
 
 ## Read Order
 
@@ -17,4 +17,3 @@ This file is the AI entrypoint for the <REPORT_TITLE> module.
 - Keep report-specific truth inside this module.
 - Put only shared cross-report assets in the portfolio `Shared/` layer.
 - Archive historical material explicitly instead of mixing it into active work folders.
-- Apply the portfolio-wide visual identity from `Shared/Standards/portfolio-visual-identity.md` and `Shared/Standards/portfolio-theme.tokens.json` unless an approved module exception is recorded.

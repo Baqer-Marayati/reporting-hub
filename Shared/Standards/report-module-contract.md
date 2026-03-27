@@ -75,6 +75,7 @@ Reports/<Domain>/
 
 - PBIP source remains the editable source of truth.
 - Review happens from packaged artifacts, not raw PBIP folders.
+- Modules must adopt the portfolio visual identity standard (shared theme/branding) unless an exception is explicitly approved and recorded in module decisions.
 - Every meaningful report edit must be followed by:
   1) full screenshot capture pass,
   2) packaging to review artifact,

@@ -53,3 +53,9 @@
   - `.github/workflows/validate-structure.yml`
 - Markdown link validation must run in CI on push and pull request via:
   - `.github/workflows/validate-doc-links.yml`
+
+## Cross-Report Branding Decision
+
+- The Finance report visual language is the baseline brand system for the portfolio.
+- All current and future reports (including Inventory) should keep a unified theme across backgrounds, chart palettes, KPI styling, and overall reporting look-and-feel.
+- Portfolio-level shared standards for this live in `Portfolio Memory/SHARED_STANDARDS.md`.

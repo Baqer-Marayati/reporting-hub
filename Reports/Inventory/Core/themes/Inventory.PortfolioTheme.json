@@ -1,0 +1,93 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/refs/heads/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.139.json",
+  "name": "Inventory Portfolio Theme",
+  "dataColors": [
+    "#1F4E79",
+    "#5B8DB8",
+    "#9CC3E6",
+    "#C5DCEF",
+    "#2E6DA4",
+    "#7AADCE",
+    "#163A5C",
+    "#3D7DB5",
+    "#AACFE8",
+    "#DDE9F5"
+  ],
+  "background": "#1F4E79",
+  "backgroundLight": "#F8FBFF",
+  "backgroundNeutral": "#D6E8F5",
+  "foreground": "#485257",
+  "foregroundNeutralSecondary": "#485257",
+  "good": "#6AA312",
+  "neutral": "#BB8F06",
+  "bad": "#C13737",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [
+          {
+            "show": true,
+            "fontColor": {
+              "solid": {
+                "color": "#2E3A42"
+              }
+            },
+            "fontSize": 10,
+            "fontFamily": "Segoe UI"
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#F8FBFF"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    },
+    "cardVisual": {
+      "*": {
+        "labels": [
+          {
+            "fontSize": 18,
+            "color": {
+              "solid": {
+                "color": "#2E3A42"
+              }
+            }
+          }
+        ],
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#C9D5E3"
+              }
+            },
+            "radius": 4
+          }
+        ]
+      }
+    }
+  }
+}

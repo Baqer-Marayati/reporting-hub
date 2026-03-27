@@ -1,0 +1,48 @@
+{
+  "version": "2026-03-27",
+  "source_module": "Reports/Finance",
+  "source_theme_file": "Reports/Finance/Financial Report/Financial Report.Report/StaticResources/RegisteredResources/Custom_Theme49412231581938193.json",
+  "theme": {
+    "background": "#1F4E79",
+    "backgroundLight": "#F8FBFF",
+    "backgroundNeutral": "#D6E8F5",
+    "foreground": "#485257",
+    "foregroundNeutralSecondary": "#485257",
+    "good": "#6AA312",
+    "neutral": "#BB8F06",
+    "bad": "#C13737"
+  },
+  "palette": {
+    "primaryDataColors": [
+      "#1F4E79",
+      "#5B8DB8",
+      "#9CC3E6",
+      "#C5DCEF",
+      "#2E6DA4",
+      "#7AADCE",
+      "#163A5C",
+      "#3D7DB5",
+      "#AACFE8",
+      "#DDE9F5"
+    ]
+  },
+  "kpiCard": {
+    "background": "#FFFFFF",
+    "border": "#C9D5E3",
+    "titleColor": "#2E3A42",
+    "titleFontFamily": "Segoe UI",
+    "titleFontSize": 10,
+    "valueFontSize": 18,
+    "valueBold": false,
+    "cornerRadius": 4,
+    "topAccentShadow": {
+      "color": "#1F4E79",
+      "position": "Outer",
+      "angle": 270,
+      "distance": 4,
+      "blur": 0,
+      "spread": 0,
+      "transparency": 0
+    }
+  }
+}
