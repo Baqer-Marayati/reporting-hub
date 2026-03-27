@@ -11,6 +11,9 @@ Reports/*/Exports/Server Packages/latest/*.zip
 Reports/*/Records/screenshots/*.png
 Reports/*/Records/Screenshots/*.png
 
+# Power BI semantic model data cache (should never be committed — always refresh on open)
+**/.pbi/cache.abf
+
 # Ad-hoc Cursor chat captures (keep folder; do not commit binaries)
 Shared/ChatContext/images/*
 !Shared/ChatContext/images/.gitkeep

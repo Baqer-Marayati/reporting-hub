@@ -41,8 +41,8 @@
 ### Inventory
 
 - Module path: `Reports/Inventory`
-- Status: Scaffolded
-- Notes: Inventory Performance Report module scaffolded; prepared to follow the Finance module operating pattern
+- Status: Active
+- Notes: Inventory Performance Report — 5-page PBIP report with SAP HANA ODBC semantic model (CANON schema). Covers stock position, warehouse distribution, movements, categories, and procurement. Awaiting Desktop validation.
 
 ## Planned Reports
 
