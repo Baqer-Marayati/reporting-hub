@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "label_month",
+  "name": "label_warehouse",
   "position": {
     "x": 24,
-    "y": 258,
+    "y": 188,
     "z": 16500,
     "height": 18,
     "width": 136,
-    "tabOrder": 3500
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "textbox",
@@ -42,7 +42,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Month'"
+                  "Value": "'Warehouse'"
                 }
               }
             },

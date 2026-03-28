@@ -49,7 +49,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Procurement and Replenishment'"
+                  "Value": "'Procurement & Suppliers'"
                 }
               }
             },
@@ -76,7 +76,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Track purchase orders, goods receipts, and replenishment pipeline to ensure stock continuity.'"
+                  "Value": "'Purchase orders, restocking costs, and supplier performance — track your procurement pipeline.'"
                 }
               }
             }

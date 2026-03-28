@@ -3,9 +3,9 @@
   "name": "chart_avail_bar",
   "position": {
     "x": 714,
-    "y": 492,
+    "y": 560,
     "z": 6000,
-    "height": 220,
+    "height": 316,
     "width": 502,
     "tabOrder": 17000
   },
@@ -23,11 +23,11 @@
                       "Entity": "Dim_Item"
                     }
                   },
-                  "Property": "ItemGroup"
+                  "Property": "PriceRange"
                 }
               },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "ItemGroup",
+              "queryRef": "Dim_Item.PriceRange",
+              "nativeQueryRef": "Price Range",
               "active": true
             }
           ]
@@ -46,38 +46,27 @@
                 }
               },
               "queryRef": "_Measures.Total On Hand",
-              "nativeQueryRef": "On Hand"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Available"
-                }
-              },
-              "queryRef": "_Measures.Total Available",
-              "nativeQueryRef": "Available"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Committed"
-                }
-              },
-              "queryRef": "_Measures.Total Committed",
-              "nativeQueryRef": "Committed"
+              "nativeQueryRef": "Stock Qty"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Total On Hand"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
@@ -90,24 +79,6 @@
                   "Value": "false"
                 }
               }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'TopCenter'"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#5C6B66'"
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -118,7 +89,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1L"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }
@@ -233,7 +225,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Availability Breakdown by Item Group'"
+                  "Value": "'Stock Distribution by Price Range'"
                 }
               }
             },

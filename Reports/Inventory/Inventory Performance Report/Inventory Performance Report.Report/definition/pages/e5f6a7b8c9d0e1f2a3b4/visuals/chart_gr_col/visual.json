@@ -3,9 +3,9 @@
   "name": "chart_gr_col",
   "position": {
     "x": 188,
-    "y": 492,
+    "y": 560,
     "z": 6000,
-    "height": 220,
+    "height": 316,
     "width": 502,
     "tabOrder": 17000
   },
@@ -42,25 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "GR Qty"
+                  "Property": "GR Value"
                 }
               },
-              "queryRef": "_Measures.GR Qty",
-              "nativeQueryRef": "GR Qty"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "PO Qty"
-                }
-              },
-              "queryRef": "_Measures.PO Qty",
-              "nativeQueryRef": "PO Qty"
+              "queryRef": "_Measures.GR Value",
+              "nativeQueryRef": "GR Value"
             }
           ]
         }
@@ -121,7 +107,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1L"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
                 }
               }
             }
@@ -141,7 +148,7 @@
             "labelDisplayUnits": {
               "expr": {
                 "Literal": {
-                  "Value": "1000D"
+                  "Value": "1000000D"
                 }
               }
             },
@@ -236,7 +243,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'GR Qty vs PO Qty Trend'"
+                  "Value": "'Restocking Cost by Month'"
                 }
               }
             },

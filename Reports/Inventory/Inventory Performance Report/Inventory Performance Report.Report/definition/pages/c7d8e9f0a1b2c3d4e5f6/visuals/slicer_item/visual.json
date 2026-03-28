@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "slicer_month",
+  "name": "slicer_item",
   "position": {
     "x": 24,
     "y": 278,
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Date"
+                      "Entity": "InventoryValuation"
                     }
                   },
-                  "Property": "MonthName"
+                  "Property": "ItemName"
                 }
               },
-              "queryRef": "Dim_Date.MonthName",
-              "nativeQueryRef": "MonthName",
+              "queryRef": "InventoryValuation.ItemName",
+              "nativeQueryRef": "ItemName1",
               "active": true
             }
           ]
@@ -51,6 +51,20 @@
       "header": [
         {
           "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Item Name'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
             "show": {
               "expr": {
                 "Literal": {
@@ -83,7 +97,15 @@
       ],
       "general": [
         {
-          "properties": {}
+          "properties": {
+            "selfFilterEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
         }
       ]
     },

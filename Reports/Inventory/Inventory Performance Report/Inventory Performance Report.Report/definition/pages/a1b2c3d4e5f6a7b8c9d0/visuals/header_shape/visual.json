@@ -49,7 +49,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Inventory Overview'"
+                  "Value": "'Executive Summary'"
                 }
               }
             },
@@ -76,7 +76,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monitor total stock levels, value, and availability across all warehouses and item groups.'"
+                  "Value": "'Portfolio health at a glance — stock status, fulfillment risk, and value distribution across all warehouses.'"
                 }
               }
             }

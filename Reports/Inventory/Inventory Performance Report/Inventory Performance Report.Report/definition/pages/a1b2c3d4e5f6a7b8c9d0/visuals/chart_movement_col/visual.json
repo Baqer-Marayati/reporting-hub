@@ -3,14 +3,14 @@
   "name": "chart_movement_col",
   "position": {
     "x": 714,
-    "y": 492,
+    "y": 560,
     "z": 6000,
-    "height": 220,
+    "height": 316,
     "width": 502,
     "tabOrder": 17000
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "donutChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Date"
+                      "Entity": "Fact_WarehouseStock"
                     }
                   },
-                  "Property": "YearMonth"
+                  "Property": "StockLevel"
                 }
               },
-              "queryRef": "Dim_Date.YearMonth",
-              "nativeQueryRef": "YearMonth",
+              "queryRef": "Fact_WarehouseStock.StockLevel",
+              "nativeQueryRef": "StockLevel",
               "active": true
             }
           ]
@@ -42,25 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Inbound Qty"
+                  "Property": "Distinct SKUs"
                 }
               },
-              "queryRef": "_Measures.Inbound Qty",
-              "nativeQueryRef": "Inbound"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Outbound Qty"
-                }
-              },
-              "queryRef": "_Measures.Outbound Qty",
-              "nativeQueryRef": "Outbound"
+              "queryRef": "_Measures.Distinct SKUs",
+              "nativeQueryRef": "SKUs"
             }
           ]
         }
@@ -69,16 +55,16 @@
         "sort": [
           {
             "field": {
-              "Column": {
+              "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "Dim_Date"
+                    "Entity": "_Measures"
                   }
                 },
-                "Property": "MonthNo"
+                "Property": "Distinct SKUs"
               }
             },
-            "direction": "Ascending"
+            "direction": "Descending"
           }
         ]
       }
@@ -97,7 +83,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'TopCenter'"
+                  "Value": "'RightCenter'"
                 }
               }
             },
@@ -121,48 +107,194 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "labelStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Both'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "dataPoint": [
         {
           "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "1000D"
-                }
-              }
-            },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "0L"
-                }
-              }
-            },
-            "labelColor": {
+            "fill": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#6F7C78'"
+                      "Value": "'#4AC5BB'"
                     }
                   }
                 }
               }
             }
+          },
+          "selector": {
+            "metadata": "Fact_WarehouseStock.StockLevel",
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Fact_WarehouseStock"
+                          }
+                        },
+                        "Property": "StockLevel"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'High'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B8DB8'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_WarehouseStock.StockLevel",
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Fact_WarehouseStock"
+                          }
+                        },
+                        "Property": "StockLevel"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Mid'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#C13737'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_WarehouseStock.StockLevel",
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Fact_WarehouseStock"
+                          }
+                        },
+                        "Property": "StockLevel"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Low'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#C5DCEF'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_WarehouseStock.StockLevel",
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Fact_WarehouseStock"
+                          }
+                        },
+                        "Property": "StockLevel"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'Out of Stock'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       ]
@@ -236,7 +368,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monthly Stock Movements'"
+                  "Value": "'Stock Level Distribution'"
                 }
               }
             },

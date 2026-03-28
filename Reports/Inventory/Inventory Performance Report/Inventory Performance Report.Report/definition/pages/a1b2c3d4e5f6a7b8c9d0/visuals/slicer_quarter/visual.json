@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Date"
+                      "Entity": "Dim_Item"
                     }
                   },
-                  "Property": "Quarter"
+                  "Property": "ItemGroup"
                 }
               },
-              "queryRef": "Dim_Date.Quarter",
-              "nativeQueryRef": "Quarter",
+              "queryRef": "Dim_Item.ItemGroup",
+              "nativeQueryRef": "ItemGroup",
               "active": true
             }
           ]

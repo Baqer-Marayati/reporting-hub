@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Total SKUs'"
+                  "Value": "'Total Items (Master)'"
                 }
               }
             },

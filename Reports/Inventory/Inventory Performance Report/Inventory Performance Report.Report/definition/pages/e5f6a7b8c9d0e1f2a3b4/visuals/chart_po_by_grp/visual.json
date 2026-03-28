@@ -3,9 +3,9 @@
   "name": "chart_po_by_grp",
   "position": {
     "x": 714,
-    "y": 492,
+    "y": 560,
     "z": 6000,
-    "height": 220,
+    "height": 316,
     "width": 502,
     "tabOrder": 17000
   },
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Item"
+                      "Entity": "Fact_GoodsReceipt"
                     }
                   },
-                  "Property": "ItemGroup"
+                  "Property": "CardName"
                 }
               },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "ItemGroup",
+              "queryRef": "Fact_GoodsReceipt.CardName",
+              "nativeQueryRef": "Supplier",
               "active": true
             }
           ]
@@ -42,28 +42,31 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "PO Value"
+                  "Property": "GR Value"
                 }
               },
-              "queryRef": "_Measures.PO Value",
-              "nativeQueryRef": "PO Value"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Open PO Count"
-                }
-              },
-              "queryRef": "_Measures.Open PO Count",
-              "nativeQueryRef": "Open POs"
+              "queryRef": "_Measures.GR Value",
+              "nativeQueryRef": "Receipt Value"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "GR Value"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
@@ -76,24 +79,6 @@
                   "Value": "false"
                 }
               }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'TopCenter'"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#5C6B66'"
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -104,7 +89,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1L"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }
@@ -124,7 +130,7 @@
             "labelDisplayUnits": {
               "expr": {
                 "Literal": {
-                  "Value": "1000D"
+                  "Value": "1000000D"
                 }
               }
             },
@@ -143,6 +149,19 @@
                       "Value": "'#6F7C78'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "maxMarginFactor": {
+              "expr": {
+                "Literal": {
+                  "Value": "30L"
                 }
               }
             }
@@ -219,7 +238,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Procurement by Item Group'"
+                  "Value": "'Top Suppliers by Restocking Value'"
                 }
               }
             },

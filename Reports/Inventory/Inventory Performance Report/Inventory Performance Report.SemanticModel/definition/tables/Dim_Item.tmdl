@@ -108,6 +108,36 @@ table Dim_Item
 
 		annotation SummarizationSetBy = Automatic
 
+	column PriceRange =
+			VAR _price =
+			    IF (
+			        Dim_Item[AvgPrice] > 0,
+			        Dim_Item[AvgPrice],
+			        Dim_Item[LastPurPrc]
+			    )
+			RETURN
+			    IF (
+			        ISBLANK ( _price ) || _price = 0,
+			        "No Price",
+			        IF (
+			            _price < 50000,
+			            "Below 50K",
+			            IF (
+			                _price < 200000,
+			                "50K - 199K",
+			                IF (
+			                    _price < 500000,
+			                    "200K - 499K",
+			                    "500K+"
+			                )
+			            )
+			        )
+			    )
+		lineageTag: 11111111-1111-1111-1111-111111111015
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Dim_Item = m
 		mode: import
 		source =

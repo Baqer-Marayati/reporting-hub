@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "kpi_total_skus",
+  "name": "kpi_gr_value",
   "position": {
-    "x": 188,
+    "x": 1032,
     "y": 120,
     "z": 0,
     "height": 92,
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total SKUs"
+                  "Property": "Stock Value"
                 }
               },
-              "queryRef": "_Measures.Total SKUs",
-              "nativeQueryRef": "Total SKUs"
+              "queryRef": "_Measures.Stock Value",
+              "nativeQueryRef": "Stock Value"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Total SKUs"
+            "metadata": "_Measures.Stock Value"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Total SKUs'"
+                  "Value": "'Stock Value'"
                 }
               }
             },

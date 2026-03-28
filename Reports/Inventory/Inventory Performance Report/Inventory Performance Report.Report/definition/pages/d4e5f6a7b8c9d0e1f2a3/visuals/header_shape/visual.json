@@ -49,7 +49,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Product Categories'"
+                  "Value": "'Product Deep Dive'"
                 }
               }
             },
@@ -76,7 +76,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Deep-dive into item groups - stock concentration, value mix, and availability breakdown by category.'"
+                  "Value": "'Top products, price distribution, and reorder risk — explore your product portfolio in detail.'"
                 }
               }
             }

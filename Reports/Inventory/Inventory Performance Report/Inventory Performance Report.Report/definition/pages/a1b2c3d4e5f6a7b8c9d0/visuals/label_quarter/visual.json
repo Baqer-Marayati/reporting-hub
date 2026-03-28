@@ -42,7 +42,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Quarter'"
+                  "Value": "'Item Group'"
                 }
               }
             },

@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "kpi_instock_skus",
+  "name": "kpi_avg_cost",
   "position": {
-    "x": 399,
+    "x": 610,
     "y": 120,
     "z": 0,
     "height": 92,
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "In-Stock SKUs"
+                  "Property": "Avg Cost"
                 }
               },
-              "queryRef": "_Measures.In-Stock SKUs",
-              "nativeQueryRef": "In-Stock SKUs"
+              "queryRef": "_Measures.Avg Cost",
+              "nativeQueryRef": "Avg Cost"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.In-Stock SKUs"
+            "metadata": "_Measures.Avg Cost"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'In-Stock SKUs'"
+                  "Value": "'Avg Cost'"
                 }
               }
             },

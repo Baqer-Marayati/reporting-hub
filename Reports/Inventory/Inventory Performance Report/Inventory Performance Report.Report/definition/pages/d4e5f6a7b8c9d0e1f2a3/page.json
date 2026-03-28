@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
   "name": "d4e5f6a7b8c9d0e1f2a3",
-  "displayName": "Product Categories",
+  "displayName": "Product Deep Dive",
   "displayOption": "FitToWidth",
   "height": 960,
   "width": 1280,
@@ -47,12 +47,12 @@
   "visualInteractions": [
     {
       "source": "slicer_quarter",
-      "target": "kpi_total_skus",
+      "target": "kpi_below_reorder",
       "type": "DataFilter"
     },
     {
       "source": "slicer_quarter",
-      "target": "kpi_instock_skus",
+      "target": "kpi_below_reorder_pct",
       "type": "DataFilter"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "source": "slicer_quarter",
-      "target": "kpi_stock_value",
+      "target": "kpi_avg_age",
       "type": "DataFilter"
     },
     {
@@ -82,12 +82,12 @@
     },
     {
       "source": "slicer_month",
-      "target": "kpi_total_skus",
+      "target": "kpi_below_reorder",
       "type": "DataFilter"
     },
     {
       "source": "slicer_month",
-      "target": "kpi_instock_skus",
+      "target": "kpi_below_reorder_pct",
       "type": "DataFilter"
     },
     {
@@ -97,7 +97,7 @@
     },
     {
       "source": "slicer_month",
-      "target": "kpi_stock_value",
+      "target": "kpi_avg_age",
       "type": "DataFilter"
     },
     {
@@ -117,12 +117,12 @@
     },
     {
       "source": "slicer_item_group",
-      "target": "kpi_total_skus",
+      "target": "kpi_below_reorder",
       "type": "DataFilter"
     },
     {
       "source": "slicer_item_group",
-      "target": "kpi_instock_skus",
+      "target": "kpi_below_reorder_pct",
       "type": "DataFilter"
     },
     {
@@ -132,7 +132,7 @@
     },
     {
       "source": "slicer_item_group",
-      "target": "kpi_stock_value",
+      "target": "kpi_avg_age",
       "type": "DataFilter"
     },
     {

@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Distinct SKUs'"
+                  "Value": "'Stocked SKUs'"
                 }
               }
             },

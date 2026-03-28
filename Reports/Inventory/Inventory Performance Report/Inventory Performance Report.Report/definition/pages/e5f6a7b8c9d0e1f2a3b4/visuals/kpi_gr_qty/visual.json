@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "GR Qty"
+                  "Property": "GR Value"
                 }
               },
-              "queryRef": "_Measures.GR Qty",
-              "nativeQueryRef": "GR Qty"
+              "queryRef": "_Measures.GR Value",
+              "nativeQueryRef": "GR Value"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.GR Qty"
+            "metadata": "_Measures.GR Value"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Goods Received Qty'"
+                  "Value": "'Restocking Value'"
                 }
               }
             },

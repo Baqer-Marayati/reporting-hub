@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total On Order"
+                  "Property": "PO Qty"
                 }
               },
-              "queryRef": "_Measures.Total On Order",
-              "nativeQueryRef": "Total On Order"
+              "queryRef": "_Measures.PO Qty",
+              "nativeQueryRef": "PO Qty"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Total On Order"
+            "metadata": "_Measures.PO Qty"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Qty On Order'"
+                  "Value": "'PO Qty'"
                 }
               }
             },

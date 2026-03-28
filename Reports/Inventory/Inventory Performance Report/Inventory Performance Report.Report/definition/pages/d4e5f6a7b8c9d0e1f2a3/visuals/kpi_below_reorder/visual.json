@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "kpi_stock_value",
+  "name": "kpi_below_reorder",
   "position": {
-    "x": 821,
+    "x": 188,
     "y": 120,
     "z": 0,
     "height": 92,
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Stock Value"
+                  "Property": "Below Reorder Count"
                 }
               },
-              "queryRef": "_Measures.Stock Value",
-              "nativeQueryRef": "Stock Value"
+              "queryRef": "_Measures.Below Reorder Count",
+              "nativeQueryRef": "Below Reorder Count"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Stock Value"
+            "metadata": "_Measures.Below Reorder Count"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stock Value'"
+                  "Value": "'Below Reorder'"
                 }
               }
             },

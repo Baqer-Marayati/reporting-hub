@@ -5,16 +5,30 @@
     "x": 188,
     "y": 236,
     "z": 6000,
-    "height": 216,
+    "height": 300,
     "width": 1028,
     "tabOrder": 17000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "tableEx",
     "query": {
       "queryState": {
-        "Category": {
+        "Values": {
           "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Item"
+                    }
+                  },
+                  "Property": "ItemName"
+                }
+              },
+              "queryRef": "Dim_Item.ItemName",
+              "nativeQueryRef": "Product"
+            },
             {
               "field": {
                 "Column": {
@@ -27,13 +41,8 @@
                 }
               },
               "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "ItemGroup",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "nativeQueryRef": "Category"
+            },
             {
               "field": {
                 "Measure": {
@@ -61,30 +70,68 @@
               },
               "queryRef": "_Measures.Total On Hand",
               "nativeQueryRef": "On Hand"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Item"
+                    }
+                  },
+                  "Property": "AvgPrice"
+                }
+              },
+              "queryRef": "Dim_Item.AvgPrice",
+              "nativeQueryRef": "Avg Price"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Item"
+                    }
+                  },
+                  "Property": "LastPurDat"
+                }
+              },
+              "queryRef": "Dim_Item.LastPurDat",
+              "nativeQueryRef": "Last Purchase"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Stock Value"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "objects": {
-      "legend": [
+      "values": [
         {
           "properties": {
-            "showTitle": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "8D"
                 }
               }
             },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'TopCenter'"
-                }
-              }
-            },
-            "labelColor": {
+            "fontColor": {
               "solid": {
                 "color": {
                   "expr": {
@@ -98,51 +145,79 @@
           }
         }
       ],
-      "labels": [
+      "columnHeaders": [
         {
           "properties": {
-            "show": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#223430'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D6E8F5'"
+                    }
+                  }
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "grid": [
         {
           "properties": {
-            "showAxisTitle": {
+            "gridHorizontal": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "1000D"
-                }
-              }
-            },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "0L"
-                }
-              }
-            },
-            "labelColor": {
+            "gridHorizontalColor": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#6F7C78'"
+                      "Value": "'#E2EAE6'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -219,7 +294,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stock Value and On Hand by Item Group'"
+                  "Value": "'Top Products by Stock Value'"
                 }
               }
             },
