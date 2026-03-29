@@ -1,16 +1,20 @@
 # Agent Guide
 
+This file is the AI entrypoint for the Service Performance Report module.
+
 ## Read Order
 
 1. `README.md`
 2. `docs/foundation.md`
-3. `Project Memory/DECISIONS.md`
-4. `Project Memory/CURRENT_STATUS.md`
-5. `Project Memory/NEXT_STEPS.md`
+3. `Project Memory/PROJECT_DNA.md`
+4. `Project Memory/DECISIONS.md`
+5. `Project Memory/CURRENT_STATUS.md`
+6. `Project Memory/NEXT_STEPS.md`
+7. `Project Memory/REFERENCE.md`
 
-## Rules
+## Module Rules
 
-- Keep Service-specific live truth inside this module.
-- Use `Core/` for shared Service baseline assets.
-- Use `Companies/` for company-specific config and overlays.
-- Rebuild package artifacts before review.
+- Keep report-specific truth inside this module.
+- Put only shared cross-report assets in the portfolio `Shared/` layer.
+- Archive historical material explicitly instead of mixing it into active work folders.
+- Apply the portfolio-wide visual identity from `Shared/Standards/portfolio-visual-identity.md` and `Shared/Standards/portfolio-theme.tokens.json` unless an approved module exception is recorded.

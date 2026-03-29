@@ -29,8 +29,8 @@
 ### Service
 
 - Module path: `Reports/Service`
-- Status: Scaffolded
-- Notes: Domain module created with baseline docs/memory and company-template layout
+- Status: Active
+- Notes: Service Performance Report — SAP HANA ODBC semantic model (CANON schema). Module activated with full docs, memory, and CANON company config. Awaiting PBIP baseline creation.
 
 ### Marketing
 

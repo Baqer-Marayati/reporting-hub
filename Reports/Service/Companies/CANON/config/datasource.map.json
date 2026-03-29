@@ -1,0 +1,7 @@
+{
+  "logicalSource": "SAP_HANA",
+  "environment": "production",
+  "connectionType": "ODBC",
+  "schema": "CANON",
+  "domain": "Service"
+}

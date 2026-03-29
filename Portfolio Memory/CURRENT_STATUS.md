@@ -2,13 +2,14 @@
 
 ## Date
 
-- Last updated: March 27, 2026
+- Last updated: March 29, 2026
 
 ## Current Reality
 
 - The repository uses a portfolio-style reporting structure instead of a single-report root layout.
 - `Reports/Finance` remains the active production report module.
 - `Reports/Inventory` is now an active module with a full PBIP project (5 pages, SAP HANA semantic model targeting CANON schema).
+- `Reports/Service` is now an active module (Service Performance Report) with SAP HANA ODBC targeting CANON schema. Awaiting PBIP baseline and page definitions.
 - A separate non-production exchange workspace exists at `Reports/DataExchange/` for extraction and transfer workflows.
 - The portfolio root is reserved for cross-report structure, documentation, shared assets, and report-module orchestration.
 
