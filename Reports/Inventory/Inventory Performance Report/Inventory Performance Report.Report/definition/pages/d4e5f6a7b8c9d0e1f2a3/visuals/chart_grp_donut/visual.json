@@ -23,11 +23,11 @@
                       "Entity": "Dim_Item"
                     }
                   },
-                  "Property": "ItemGroup"
+                  "Property": "U_GroupType"
                 }
               },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "ItemGroup",
+              "queryRef": "Dim_Item.U_GroupType",
+              "nativeQueryRef": "U_GroupType",
               "active": true
             }
           ]
@@ -210,7 +210,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stock Value by Item Group'"
+                  "Value": "'Stock Value by Group Type'"
                 }
               }
             },
@@ -228,7 +228,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "16D"
+                  "Value": "14D"
                 }
               }
             }

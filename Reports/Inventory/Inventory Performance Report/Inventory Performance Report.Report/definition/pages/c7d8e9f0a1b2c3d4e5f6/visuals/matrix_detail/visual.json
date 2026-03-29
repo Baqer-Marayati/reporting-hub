@@ -257,7 +257,7 @@
             "textSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "10D"
                 }
               }
             }
@@ -401,7 +401,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "200.78D"
+                  "Value": "189.09971714733481D"
                 }
               }
             }
@@ -415,7 +415,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "183.25D"
+                  "Value": "173.26364367352218D"
                 }
               }
             }
@@ -429,7 +429,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "207.30D"
+                  "Value": "218.94666942608998D"
                 }
               }
             }

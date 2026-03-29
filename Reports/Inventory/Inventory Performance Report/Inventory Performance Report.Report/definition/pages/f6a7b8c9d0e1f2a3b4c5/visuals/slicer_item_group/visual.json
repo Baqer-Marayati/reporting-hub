@@ -23,11 +23,11 @@
                       "Entity": "Dim_Item"
                     }
                   },
-                  "Property": "ItemGroup"
+                  "Property": "U_BusinessType"
                 }
               },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "Item Group",
+              "queryRef": "Dim_Item.U_BusinessType",
+              "nativeQueryRef": "U_BusinessType",
               "active": true
             }
           ]

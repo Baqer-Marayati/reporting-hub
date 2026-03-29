@@ -251,6 +251,16 @@ table _Measures
 		formatString: #,0
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa044
 
+	measure 'Item Avg Cost' =
+			DIVIDE (
+			    SUM ( Fact_WarehouseStock[StockValue] ),
+			    SUM ( Fact_WarehouseStock[OnHand] )
+			)
+		formatString: #,0.00\ "د.ع.‏";-#,0.00\ "د.ع.‏";#,0.00\ "د.ع.‏"
+		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa045
+
+		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
+
 	partition _Measures = m
 		mode: import
 		source =

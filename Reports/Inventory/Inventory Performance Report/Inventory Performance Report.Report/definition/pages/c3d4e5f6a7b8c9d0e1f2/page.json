@@ -149,6 +149,111 @@
       "source": "slicer_item_group",
       "target": "chart_net_trend",
       "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "kpi_inbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "kpi_outbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "kpi_net_mvt",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "kpi_mvt_count",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "chart_monthly_flow",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "chart_by_type",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_group_type",
+      "target": "chart_net_trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "kpi_inbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "kpi_outbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "kpi_net_mvt",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "kpi_mvt_count",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "chart_monthly_flow",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "chart_by_type",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_product_type",
+      "target": "chart_net_trend",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "kpi_inbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "kpi_outbound",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "kpi_net_mvt",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "kpi_mvt_count",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "chart_monthly_flow",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "chart_by_type",
+      "type": "DataFilter"
+    },
+    {
+      "source": "slicer_segment_type",
+      "target": "chart_net_trend",
+      "type": "DataFilter"
     }
   ]
 }

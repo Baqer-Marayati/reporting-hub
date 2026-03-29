@@ -23,11 +23,11 @@
                       "Entity": "Dim_Item"
                     }
                   },
-                  "Property": "ItemGroup"
+                  "Property": "U_GroupType"
                 }
               },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "Item Group",
+              "queryRef": "Dim_Item.U_GroupType",
+              "nativeQueryRef": "U_GroupType",
               "active": true
             }
           ]
@@ -197,7 +197,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Below Reorder by Item Group'"
+                  "Value": "'Below Reorder by Group Type'"
                 }
               }
             },
@@ -215,7 +215,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "16D"
+                  "Value": "14D"
                 }
               }
             }

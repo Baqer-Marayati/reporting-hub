@@ -27,21 +27,8 @@
                 }
               },
               "queryRef": "Dim_Item.ItemName",
-              "nativeQueryRef": "Product"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Dim_Item"
-                    }
-                  },
-                  "Property": "ItemGroup"
-                }
-              },
-              "queryRef": "Dim_Item.ItemGroup",
-              "nativeQueryRef": "Category"
+              "nativeQueryRef": "Item Name",
+              "displayName": "Item Name"
             },
             {
               "field": {
@@ -73,17 +60,17 @@
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Item"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "AvgPrice"
+                  "Property": "Item Avg Cost"
                 }
               },
-              "queryRef": "Dim_Item.AvgPrice",
-              "nativeQueryRef": "Avg Price"
+              "queryRef": "_Measures.Item Avg Cost",
+              "nativeQueryRef": "Avg Cost"
             },
             {
               "field": {
@@ -97,7 +84,8 @@
                 }
               },
               "queryRef": "Dim_Item.LastPurDat",
-              "nativeQueryRef": "Last Purchase"
+              "nativeQueryRef": "Last Purchase Date",
+              "displayName": "Last Purchase Date"
             }
           ]
         }
@@ -124,13 +112,6 @@
       "values": [
         {
           "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
-                }
-              }
-            },
             "fontColor": {
               "solid": {
                 "color": {
@@ -148,10 +129,10 @@
       "columnHeaders": [
         {
           "properties": {
-            "fontSize": {
+            "alignment": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "'Center'"
                 }
               }
             },
@@ -190,6 +171,13 @@
       "grid": [
         {
           "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
             "gridHorizontal": {
               "expr": {
                 "Literal": {
@@ -221,6 +209,143 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "350D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dim_Item.ItemName"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "170D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Stock Value"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "120D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Total On Hand"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "170D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Item Avg Cost"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "218D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dim_Item.LastPurDat"
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Stock Value"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Total On Hand"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Item Avg Cost"
           }
         }
       ]
@@ -312,7 +437,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "16D"
+                  "Value": "14D"
                 }
               }
             }
