@@ -11,13 +11,13 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "AccessibleDefault",
+      "name": "Custom_Theme49412231581938193.json",
       "reportVersionAtImport": {
         "visual": "2.4.0",
         "report": "3.0.0",
         "page": "2.3.0"
       },
-      "type": "SharedResources"
+      "type": "RegisteredResources"
     }
   },
   "objects": {
@@ -57,11 +57,6 @@
           "name": "CY25SU11",
           "path": "BaseThemes/CY25SU11.json",
           "type": "BaseTheme"
-        },
-        {
-          "name": "AccessibleDefault",
-          "path": "BuiltInThemes/AccessibleDefault.json",
-          "type": "CustomTheme"
         }
       ]
     },
@@ -69,6 +64,11 @@
       "name": "RegisteredResources",
       "type": "RegisteredResources",
       "items": [
+        {
+          "name": "Custom_Theme49412231581938193.json",
+          "path": "Custom_Theme49412231581938193.json",
+          "type": "CustomTheme"
+        },
         {
           "name": "Aljazeera37141862457449826.png",
           "path": "Aljazeera37141862457449826.png",
