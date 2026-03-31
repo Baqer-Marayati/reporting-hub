@@ -9,7 +9,13 @@
     "outspacePane": [
       {
         "properties": {
-          "width": { "expr": { "Literal": { "Value": "195L" } } }
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "195L"
+              }
+            }
+          }
         }
       }
     ],
@@ -18,10 +24,22 @@
         "properties": {
           "color": {
             "solid": {
-              "color": { "expr": { "Literal": { "Value": "'#F8FBFF'" } } }
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F8FBFF'"
+                  }
+                }
+              }
             }
           },
-          "transparency": { "expr": { "Literal": { "Value": "0D" } } }
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
         }
       }
     ]
