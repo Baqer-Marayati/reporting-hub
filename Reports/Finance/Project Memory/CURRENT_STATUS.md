@@ -201,6 +201,12 @@ These pages were physically removed from the report definition during cleanup so
 - Visual polish pass: restored focus mode on all pages (visualHeader.show was false on 7 chart visuals on pages 1-2; showFocusModeButton was false on 14 visuals on pages 6-7). Fixed invisible border (#F8FBFF → #C9D5E3) on 15 visuals across pages 2, 3, 6. Removed incorrect page-bg color from Operating vs Net Profit chart background.
 - **User-approved return point:** `Reports/Finance/Exports/Server Packages/archive/20260327_0142__GLOBAL__Financial Report__8229d02.zip` (git commit `5444a49`)
 
+## Balance Sheet Profit Period Fix (2026-04-01)
+- Root-cause fix for balance sheet equity discrepancy vs SAP: SAP's "Profit Period" line (current-year P&L result under Capital & Reserves) was missing because `Fact_BalanceSheet` only pulled `GroupMask IN (1, 2, 3)`.
+- Fix: added a `UNION ALL` to the BS SQL that aggregates P&L entries (`GroupMask IN (4, 5, 6, 7, 8)`) per month and dimension combination into a synthetic `_PP / Profit Period` equity account.
+- All BS measures (`Total Equity`, `Equity Ratio`, `Total Equity Card Display`), the donut chart, and the bar chart auto-correct from the data — no measure changes needed.
+- Requires a Desktop refresh to validate; the ~13M discrepancy (IQD 12,853,566.99 loss) should disappear and Total Capital & Reserves should match SAP exactly.
+
 ## Retained Lessons
 - Ask "which artifact is the user actually opening?" before debugging visual differences.
 - Prefer Desktop-proven Power BI patterns over speculative JSON-only reconstruction.

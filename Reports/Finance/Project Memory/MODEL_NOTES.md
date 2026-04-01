@@ -93,6 +93,13 @@
 - Keep compatibility budget logic explicit. A visually working page is not the same thing as a source-of-truth budget implementation.
 - The old `Actual vs Budget` dimension-selector path is no longer part of the live page shell. The `dimensions` compatibility table still exists in the model, but the live page no longer depends on that slicer to render.
 
+## Balance Sheet — Profit Period (2026-04)
+- SAP's balance sheet report auto-calculates a **Profit Period** line under Capital & Reserves from P&L account postings (the current year's net income/loss). This is not stored in any equity GL account — it's dynamically derived from `GroupMask 4-8` accounts.
+- The `Fact_BalanceSheet` SQL was extended with a `UNION ALL` that aggregates P&L journal entries per (month, branch, sales type, department) into a synthetic equity account: `AcctCode = '_PP'`, `AcctName = 'Profit Period'`, `BSSection = 'Equity'`.
+- This makes `Total Equity`, `Equity Ratio`, the Balance Sheet Mix donut, and the Largest Accounts bar chart all match SAP automatically — no measure-level patches needed.
+- The aggregation keeps data volume low: one row per month×dimension combination rather than duplicating every individual P&L journal line.
+- Sign convention is natural: `SUM(Debit - Credit)` for P&L accounts produces positive for loss (reducing equity ABS total) and negative for profit (increasing it), which aligns with the BS `Amount` convention.
+
 ## Currency Notes
 - The report should be standardized to Iraqi dinar presentation.
 - Benchmark-derived pages still needed explicit format-string conversion because they came in with dollar formatting.
