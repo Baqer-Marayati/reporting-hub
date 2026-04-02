@@ -6,7 +6,7 @@
     "y": 120,
     "z": 1000,
     "height": 92,
-    "width": 184,
+    "width": 158,
     "tabOrder": 1000
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total AR Outstanding"
+                  "Property": "AR % Future"
                 }
               },
-              "queryRef": "_Measures.Total AR Outstanding",
-              "nativeQueryRef": "Total AR Outstanding",
+              "queryRef": "_Measures.AR % Future",
+              "nativeQueryRef": "AR % Future",
               "active": true
             }
           ]
@@ -165,7 +165,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Total Outstanding'"
+                  "Value": "'% Future'"
                 }
               }
             },

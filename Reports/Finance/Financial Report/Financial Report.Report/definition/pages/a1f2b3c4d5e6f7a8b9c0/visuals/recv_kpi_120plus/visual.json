@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "recv_kpi_overdue",
+  "name": "recv_kpi_120plus",
   "position": {
-    "x": 362,
+    "x": 1058,
     "y": 120,
-    "z": 2000,
+    "z": 6000,
     "height": 92,
     "width": 158,
-    "tabOrder": 2000
+    "tabOrder": 6000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "AR % 0-30"
+                  "Property": "AR % 120+"
                 }
               },
-              "queryRef": "_Measures.AR % 0-30",
-              "nativeQueryRef": "AR % 0-30",
+              "queryRef": "_Measures.AR % 120+",
+              "nativeQueryRef": "AR % 120+",
               "active": true
             }
           ]
@@ -165,7 +165,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'% 0-30'"
+                  "Value": "'% 120+'"
                 }
               }
             },

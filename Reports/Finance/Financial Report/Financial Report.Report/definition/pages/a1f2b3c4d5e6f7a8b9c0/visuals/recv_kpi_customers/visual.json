@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "recv_kpi_customers",
   "position": {
-    "x": 821,
+    "x": 710,
     "y": 120,
     "z": 4000,
     "height": 92,
-    "width": 184,
+    "width": 158,
     "tabOrder": 4000
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "AR Customer Count"
+                  "Property": "AR % 60-90"
                 }
               },
-              "queryRef": "_Measures.AR Customer Count",
-              "nativeQueryRef": "AR Customer Count",
+              "queryRef": "_Measures.AR % 60-90",
+              "nativeQueryRef": "AR % 60-90",
               "active": true
             }
           ]
@@ -165,7 +165,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Customers'"
+                  "Value": "'% 60-90'"
                 }
               }
             },

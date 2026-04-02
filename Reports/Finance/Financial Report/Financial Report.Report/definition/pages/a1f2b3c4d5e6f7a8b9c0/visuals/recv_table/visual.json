@@ -126,8 +126,8 @@
                 }
               },
               "queryRef": "Sum(ReceivablesFact.B31_60)",
-              "nativeQueryRef": "31-60",
-              "displayName": "31-60"
+              "nativeQueryRef": "30-60",
+              "displayName": "30-60"
             },
             {
               "field": {
@@ -146,8 +146,8 @@
                 }
               },
               "queryRef": "Sum(ReceivablesFact.B61_90)",
-              "nativeQueryRef": "61-90",
-              "displayName": "61-90"
+              "nativeQueryRef": "60-90",
+              "displayName": "60-90"
             },
             {
               "field": {
@@ -166,8 +166,8 @@
                 }
               },
               "queryRef": "Sum(ReceivablesFact.B91_120)",
-              "nativeQueryRef": "91-120",
-              "displayName": "91-120"
+              "nativeQueryRef": "90-120",
+              "displayName": "90-120"
             },
             {
               "field": {

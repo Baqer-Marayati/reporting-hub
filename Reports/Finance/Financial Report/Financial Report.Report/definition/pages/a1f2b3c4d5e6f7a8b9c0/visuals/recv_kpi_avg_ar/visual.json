@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "recv_kpi_avg_ar",
   "position": {
-    "x": 1032,
+    "x": 884,
     "y": 120,
     "z": 5000,
     "height": 92,
-    "width": 184,
+    "width": 158,
     "tabOrder": 5000
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Avg AR per Customer"
+                  "Property": "AR % 90-120"
                 }
               },
-              "queryRef": "_Measures.Avg AR per Customer",
-              "nativeQueryRef": "Avg AR per Customer",
+              "queryRef": "_Measures.AR % 90-120",
+              "nativeQueryRef": "AR % 90-120",
               "active": true
             }
           ]
@@ -165,7 +165,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Avg AR / Customer'"
+                  "Value": "'% 90-120'"
                 }
               }
             },

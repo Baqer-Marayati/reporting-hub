@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "recv_kpi_overdue_pct",
   "position": {
-    "x": 610,
+    "x": 536,
     "y": 120,
     "z": 3000,
     "height": 92,
-    "width": 184,
+    "width": 158,
     "tabOrder": 3000
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "AR Overdue %"
+                  "Property": "AR % 30-60"
                 }
               },
-              "queryRef": "_Measures.AR Overdue %",
-              "nativeQueryRef": "AR Overdue %",
+              "queryRef": "_Measures.AR % 30-60",
+              "nativeQueryRef": "AR % 30-60",
               "active": true
             }
           ]
@@ -165,7 +165,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Overdue %'"
+                  "Value": "'% 30-60'"
                 }
               }
             },
