@@ -1,5 +1,13 @@
 # Portfolio Decisions
 
+## 2026-04-04 — PAPERENTITY company branding: no logos or divider on any report page
+
+- All PAPERENTITY company reports across all domains must **not** include the top-right logo group (Aljazeera logo, Canon logo, vertical divider, their parent group).
+- This applies to: Paper Financial Report, Paper Sales Report, Paper Service Report, Paper Inventory Report, Paper Data Exchange Report — and any future PAPERENTITY reports.
+- CANON company reports are unaffected and keep their logo group.
+- If new pages are added to any PAPERENTITY report, do not add the logo/divider group.
+- This is a permanent, company-level branding rule for PAPERENTITY.
+
 ## Structure Decision
 
 - The repository is now organized as a reporting portfolio, not as a single-report folder.

@@ -1,5 +1,14 @@
 # Decisions
 
+## 2026-04-04 — PAPERENTITY company: remove logos and divider from all report pages
+
+- All PAPERENTITY reports (Paper Financial Report, Paper Sales Report, Paper Service Report, Paper Inventory Report, Paper Data Exchange Report) must have **no top-right logo group** on any page.
+- Specifically removed: Aljazeera logo image, Canon logo image, vertical divider shape, and their parent group ("Group 1") from every page.
+- 108 visual folders removed across 27 pages.
+- The equivalent CANON reports are **not** affected — Canon reports keep their logo group.
+- If new pages are added to any PAPERENTITY report, do **not** add the logo/divider group.
+- This is a permanent company-level branding decision for PAPERENTITY.
+
 ## 2026-03-26 — Color palette switch: teal → navy blue
 
 - Data colors changed from teal/green base palette to a navy-blue base palette matching the approved sample screenshot.
