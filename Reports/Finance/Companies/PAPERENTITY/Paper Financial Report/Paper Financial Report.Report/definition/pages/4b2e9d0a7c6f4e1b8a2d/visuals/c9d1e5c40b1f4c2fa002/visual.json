@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Branch"
+                      "Entity": "Dim_Account"
                     }
                   },
-                  "Property": "BranchName"
+                  "Property": "AcctName"
                 }
               },
-              "queryRef": "Dim_Branch.BranchName",
-              "nativeQueryRef": "Location",
+              "queryRef": "Dim_Account.AcctName",
+              "nativeQueryRef": "Account",
               "active": true
             }
           ]
@@ -140,7 +140,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex Share by Location'"
+                  "Value": "'Opex by Account'"
                 }
               }
             }

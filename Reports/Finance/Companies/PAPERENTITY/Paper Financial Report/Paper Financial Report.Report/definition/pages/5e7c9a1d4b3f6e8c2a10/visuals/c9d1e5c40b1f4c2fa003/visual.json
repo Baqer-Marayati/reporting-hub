@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Department"
+                      "Entity": "Dim_BSAccount"
                     }
                   },
-                  "Property": "DepartmentName"
+                  "Property": "BSSection"
                 }
               },
-              "queryRef": "Dim_Department.DepartmentName",
-              "nativeQueryRef": "DepartmentName",
+              "queryRef": "Dim_BSAccount.BSSection",
+              "nativeQueryRef": "Section",
               "active": true
             }
           ]
@@ -112,7 +112,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Balance by Department'"
+                  "Value": "'Balance by Section'"
                 }
               }
             }

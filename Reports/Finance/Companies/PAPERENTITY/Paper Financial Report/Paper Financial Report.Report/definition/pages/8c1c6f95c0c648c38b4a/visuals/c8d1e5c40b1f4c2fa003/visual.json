@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Branch"
+                      "Entity": "DimBusinessPartner"
                     }
                   },
-                  "Property": "BranchName"
+                  "Property": "CardName"
                 }
               },
-              "queryRef": "Dim_Branch.BranchName",
-              "nativeQueryRef": "Location",
+              "queryRef": "DimBusinessPartner.CardName",
+              "nativeQueryRef": "Customer",
               "active": true
             }
           ]
@@ -210,7 +210,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue Mix by Location'"
+                  "Value": "'Revenue by Customer'"
                 }
               }
             },

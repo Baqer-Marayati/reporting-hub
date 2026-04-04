@@ -77,8 +77,8 @@ table Dim_Date
 		mode: import
 		source =
 				
-				ADDCOLUMNS (
-				    CALENDAR ( DATE ( 2026, 1, 1 ), DATE ( YEAR ( TODAY () ), 12, 31 ) ),
+			ADDCOLUMNS (
+			    CALENDAR ( DATE ( 2020, 1, 1 ), DATE ( YEAR ( TODAY () ), 12, 31 ) ),
 				    "Year", YEAR ( [Date] ),
 				    "QuarterNo", ROUNDUP ( DIVIDE ( MONTH ( [Date] ), 3, 0 ), 0 ),
 				    "Quarter", "Q" & ROUNDUP ( DIVIDE ( MONTH ( [Date] ), 3, 0 ), 0 ),

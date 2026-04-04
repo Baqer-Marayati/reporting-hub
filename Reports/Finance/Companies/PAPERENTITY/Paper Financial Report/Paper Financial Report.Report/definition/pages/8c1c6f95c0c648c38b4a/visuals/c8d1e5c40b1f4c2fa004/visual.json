@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_SalesType"
+                      "Entity": "Dim_Account"
                     }
                   },
-                  "Property": "SalesTypeName"
+                  "Property": "PnLSection"
                 }
               },
-              "queryRef": "Dim_SalesType.SalesTypeName",
-              "nativeQueryRef": "Sales Type",
+              "queryRef": "Dim_Account.PnLSection",
+              "nativeQueryRef": "P&L Section",
               "active": true
             }
           ]
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue"
+                  "Property": "Amount Display"
                 }
               },
-              "queryRef": "_Measures.Net Revenue",
-              "nativeQueryRef": "Net Revenue"
+              "queryRef": "_Measures.Amount Display",
+              "nativeQueryRef": "Amount"
             }
           ]
         }
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Net Revenue"
+                "Property": "Amount Display"
               }
             },
             "direction": "Descending"
@@ -194,7 +194,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Net Revenue by Sales Type'"
+                  "Value": "'P&&L Composition'"
                 }
               }
             },

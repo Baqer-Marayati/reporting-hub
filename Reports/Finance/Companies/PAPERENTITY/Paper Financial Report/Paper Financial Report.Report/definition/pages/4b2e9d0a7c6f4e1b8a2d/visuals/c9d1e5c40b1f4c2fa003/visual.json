@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Department"
+                      "Entity": "Dim_Account"
                     }
                   },
-                  "Property": "DepartmentName"
+                  "Property": "AcctName"
                 }
               },
-              "queryRef": "Dim_Department.DepartmentName",
-              "nativeQueryRef": "DepartmentName",
+              "queryRef": "Dim_Account.AcctName",
+              "nativeQueryRef": "Account",
               "active": true
             }
           ]
@@ -125,7 +125,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex by Department'"
+                  "Value": "'Opex by Account'"
                 }
               }
             }

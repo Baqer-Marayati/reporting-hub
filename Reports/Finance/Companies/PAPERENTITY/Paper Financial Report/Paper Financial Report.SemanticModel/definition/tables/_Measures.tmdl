@@ -282,8 +282,8 @@ table _Measures
 		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
 
 	measure 'Selected Period Label' =
-			
-			VAR StartDate = DATE ( 2026, 1, 1 )
+		
+		VAR StartDate = DATE ( 2020, 1, 1 )
 			VAR MinVisibleDate = MIN ( 'Dim_Date'[Date] )
 			VAR MaxVisibleDate = MAX ( 'Dim_Date'[Date] )
 			VAR MinDate =

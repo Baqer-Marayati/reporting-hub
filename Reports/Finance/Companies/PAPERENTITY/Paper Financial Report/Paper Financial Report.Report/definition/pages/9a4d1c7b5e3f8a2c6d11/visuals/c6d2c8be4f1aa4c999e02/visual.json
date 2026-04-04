@@ -23,11 +23,11 @@
                       "Entity": "Fact_SalesDetail"
                     }
                   },
-                  "Property": "Item Business Type"
+                  "Property": "ItemName"
                 }
               },
-              "queryRef": "Fact_SalesDetail.Item Business Type",
-              "nativeQueryRef": "Item Business Type",
+              "queryRef": "Fact_SalesDetail.ItemName",
+              "nativeQueryRef": "Item",
               "active": true
             }
           ]
@@ -125,7 +125,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue by Item Business Type'"
+                  "Value": "'Revenue by Item'"
                 }
               }
             }

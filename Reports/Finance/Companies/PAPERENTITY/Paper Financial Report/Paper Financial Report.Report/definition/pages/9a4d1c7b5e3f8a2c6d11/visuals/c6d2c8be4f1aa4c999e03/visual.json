@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_SalesType"
+                      "Entity": "DimBusinessPartner"
                     }
                   },
-                  "Property": "SalesTypeName"
+                  "Property": "CardName"
                 }
               },
-              "queryRef": "Dim_SalesType.SalesTypeName",
-              "nativeQueryRef": "Sales Type",
+              "queryRef": "DimBusinessPartner.CardName",
+              "nativeQueryRef": "Customer",
               "active": true
             }
           ]
@@ -139,7 +139,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue Mix by Sales Type'"
+                  "Value": "'Revenue by Customer'"
                 }
               }
             }
