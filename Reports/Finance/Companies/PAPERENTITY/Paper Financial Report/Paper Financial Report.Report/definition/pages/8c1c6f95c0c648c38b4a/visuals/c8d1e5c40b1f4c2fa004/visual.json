@@ -10,7 +10,7 @@
     "tabOrder": 20000
   },
   "visual": {
-    "visualType": "pieChart",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Account"
+                      "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "PnLSection"
+                  "Property": "YearMonth"
                 }
               },
-              "queryRef": "Dim_Account.PnLSection",
-              "nativeQueryRef": "P&L Section",
+              "queryRef": "Dim_Date.YearMonth",
+              "nativeQueryRef": "YearMonth",
               "active": true
             }
           ]
@@ -42,11 +42,25 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Amount Display"
+                  "Property": "Gross Margin %"
                 }
               },
-              "queryRef": "_Measures.Amount Display",
-              "nativeQueryRef": "Amount"
+              "queryRef": "_Measures.Gross Margin %",
+              "nativeQueryRef": "Gross Margin %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Margin %"
+                }
+              },
+              "queryRef": "_Measures.Net Margin %",
+              "nativeQueryRef": "Net Margin %"
             }
           ]
         }
@@ -55,22 +69,22 @@
         "sort": [
           {
             "field": {
-              "Measure": {
+              "Column": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "_Measures"
+                    "Entity": "Dim_Date"
                   }
                 },
-                "Property": "Amount Display"
+                "Property": "YearMonth"
               }
             },
-            "direction": "Descending"
+            "direction": "Ascending"
           }
         ]
       }
     },
     "objects": {
-      "labels": [
+      "legend": [
         {
           "properties": {
             "show": {
@@ -80,41 +94,27 @@
                 }
               }
             },
-            "labelDisplayUnits": {
+            "showTitle": {
               "expr": {
                 "Literal": {
-                  "Value": "1000000D"
+                  "Value": "false"
                 }
               }
             },
-            "labelPrecision": {
+            "position": {
               "expr": {
                 "Literal": {
-                  "Value": "2L"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "9D"
-                }
-              }
-            },
-            "labelStyle": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Data value, percent of total'"
+                  "Value": "'TopCenter'"
                 }
               }
             }
           }
         }
       ],
-      "legend": [
+      "labels": [
         {
           "properties": {
-            "showTitle": {
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -194,7 +194,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'P&&L Composition'"
+                  "Value": "'Margin Trend (Monthly)'"
                 }
               }
             },

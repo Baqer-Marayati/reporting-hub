@@ -12,19 +12,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row Actual"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Current Period": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_measures.chart_row_ytd": {
 			      "Definition": {
@@ -84,19 +72,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row Var %"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Variance %": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "budgetvsactualtable.newdynamicexpensedisplay": {
 			      "Definition": {

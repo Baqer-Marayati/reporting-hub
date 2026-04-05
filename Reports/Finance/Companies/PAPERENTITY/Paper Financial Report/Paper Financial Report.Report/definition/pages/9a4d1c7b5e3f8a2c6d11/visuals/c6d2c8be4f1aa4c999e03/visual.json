@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimBusinessPartner"
+                      "Entity": "Fact_SalesDetail"
                     }
                   },
-                  "Property": "CardName"
+                  "Property": "ItemGroupName"
                 }
               },
-              "queryRef": "DimBusinessPartner.CardName",
-              "nativeQueryRef": "Customer",
+              "queryRef": "Fact_SalesDetail.ItemGroupName",
+              "nativeQueryRef": "Item Group",
               "active": true
             }
           ]
@@ -103,7 +103,7 @@
             "labelDisplayUnits": {
               "expr": {
                 "Literal": {
-                  "Value": "1000000000D"
+                  "Value": "1000000D"
                 }
               }
             },
@@ -139,7 +139,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue by Customer'"
+                  "Value": "'Revenue by Item Group'"
                 }
               }
             }

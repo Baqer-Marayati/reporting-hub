@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "c9d1e5c40b1f4c2fa003",
+  "name": "ap_aging_by_bucket",
   "position": {
-    "x": 681.42857142857144,
-    "y": 594.28571428571433,
-    "z": 7000,
-    "height": 341.42857142857144,
-    "width": 534.28571428571433,
-    "tabOrder": 18000
+    "x": 52,
+    "y": 590,
+    "z": 8000,
+    "height": 330,
+    "width": 580,
+    "tabOrder": 21000
   },
   "visual": {
-    "visualType": "donutChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Department"
+                      "Entity": "DueCategorySortTable"
                     }
                   },
-                  "Property": "DepartmentName"
+                  "Property": "DueCategory"
                 }
               },
-              "queryRef": "Dim_Department.DepartmentName",
-              "nativeQueryRef": "Department",
+              "queryRef": "DueCategorySortTable.DueCategory",
+              "nativeQueryRef": "Due Category",
               "active": true
             }
           ]
@@ -39,14 +39,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "_Measures"
+                      "Entity": "vendorLedgerEntries"
                     }
                   },
-                  "Property": "Opex by Department"
+                  "Property": "Accountpayables_ageingReport_new"
                 }
               },
-              "queryRef": "_Measures.Opex by Department",
-              "nativeQueryRef": "Operating Expenses"
+              "queryRef": "vendorLedgerEntries.Accountpayables_ageingReport_new",
+              "nativeQueryRef": "AP Amount"
             }
           ]
         }
@@ -55,21 +55,34 @@
         "sort": [
           {
             "field": {
-              "Measure": {
+              "Column": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "_Measures"
+                    "Entity": "DueCategorySortTable"
                   }
                 },
-                "Property": "Opex by Department"
+                "Property": "SortOrder"
               }
             },
-            "direction": "Descending"
+            "direction": "Ascending"
           }
         ]
       }
     },
     "objects": {
+      "legend": [
+        {
+          "properties": {
+            "showTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "labels": [
         {
           "properties": {
@@ -93,17 +106,11 @@
                   "Value": "1L"
                 }
               }
-            }
-          }
-        }
-      ],
-      "legend": [
-        {
-          "properties": {
-            "showTitle": {
+            },
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "10D"
                 }
               }
             }
@@ -125,7 +132,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex by Department'"
+                  "Value": "'AP Aging by Bucket'"
                 }
               }
             }

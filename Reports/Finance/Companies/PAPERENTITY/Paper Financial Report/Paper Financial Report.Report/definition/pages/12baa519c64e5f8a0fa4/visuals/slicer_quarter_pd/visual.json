@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "a8d1e5c40b1f4c2fa001",
+  "name": "slicer_quarter_pd",
   "position": {
     "x": 24,
-    "y": 140,
-    "z": 10000,
+    "y": 208,
+    "z": 8500,
     "height": 32,
     "width": 136,
-    "tabOrder": 1000
+    "tabOrder": 1500
   },
   "visual": {
     "visualType": "slicer",
@@ -23,11 +23,11 @@
                       "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "Year"
+                  "Property": "Quarter"
                 }
               },
-              "queryRef": "Dim_Date.Year",
-              "nativeQueryRef": "Year",
+              "queryRef": "Dim_Date.Quarter",
+              "nativeQueryRef": "Quarter",
               "active": true
             }
           ]
@@ -54,7 +54,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Year'"
+                  "Value": "'Quarter'"
                 }
               }
             },

@@ -10,7 +10,7 @@
     "tabOrder": 16000
   },
   "visual": {
-    "visualType": "lineClusteredColumnComboChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -42,21 +42,6 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row Actual"
-                }
-              },
-              "queryRef": "_Measures.Chart Row Actual",
-              "nativeQueryRef": "Current Period",
-              "displayName": "Current Period"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
                   "Property": "Chart Row YTD"
                 }
               },
@@ -80,25 +65,6 @@
               "displayName": "YTD LY"
             }
           ]
-        },
-        "Y2": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Chart Row Var %"
-                }
-              },
-              "queryRef": "_Measures.Chart Row Var %",
-              "nativeQueryRef": "Variance %",
-              "displayName": "Variance %"
-            }
-          ]
         }
       },
       "sortDefinition": {
@@ -111,7 +77,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Chart Row Actual"
+                "Property": "Chart Row YTD"
               }
             },
             "direction": "Descending"
@@ -147,7 +113,28 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "1L"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
                 }
               }
             }
@@ -231,7 +218,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Management Performance Lens'"
+                  "Value": "'YTD vs Prior Year'"
                 }
               }
             },
