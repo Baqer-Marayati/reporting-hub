@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Fact_GoodsReceipt"
+                      "Entity": "Fact_PurchaseOrder"
                     }
                   },
                   "Property": "CardName"
                 }
               },
-              "queryRef": "Fact_GoodsReceipt.CardName",
+              "queryRef": "Fact_PurchaseOrder.CardName",
               "nativeQueryRef": "Supplier",
               "active": true
             }
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "GR Value"
+                  "Property": "PO Value"
                 }
               },
-              "queryRef": "_Measures.GR Value",
-              "nativeQueryRef": "Receipt Value"
+              "queryRef": "_Measures.PO Value",
+              "nativeQueryRef": "PO Value"
             }
           ]
         }
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "GR Value"
+                "Property": "PO Value"
               }
             },
             "direction": "Descending"
@@ -238,7 +238,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top Suppliers by Restocking Value'"
+                  "Value": "'Top Suppliers by PO Value'"
                 }
               }
             },

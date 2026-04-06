@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "GR Value"
+                  "Property": "Delivery Value"
                 }
               },
-              "queryRef": "_Measures.GR Value",
-              "nativeQueryRef": "GR Value"
+              "queryRef": "_Measures.Delivery Value",
+              "nativeQueryRef": "Delivery Value"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.GR Value"
+            "metadata": "_Measures.Delivery Value"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'GR Value'"
+                  "Value": "'Delivery Value'"
                 }
               }
             },

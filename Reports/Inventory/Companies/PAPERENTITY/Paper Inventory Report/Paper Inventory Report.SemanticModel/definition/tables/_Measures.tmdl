@@ -1,20 +1,20 @@
 table _Measures
 	lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa001
 
-	measure 'Total On Hand' = SUM ( Fact_WarehouseStock[OnHand] )
-		formatString: #,0
+	measure 'Total On Hand' = SUM ( Fact_WarehouseStock[OnHand] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa002
 
-	measure 'Total Committed' = SUM ( Fact_WarehouseStock[IsCommited] )
-		formatString: #,0
+	measure 'Total Committed' = SUM ( Fact_WarehouseStock[IsCommited] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa003
 
 	measure 'Total Available' = [Total On Hand] - [Total Committed]
-		formatString: #,0
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa004
 
-	measure 'Total On Order' = SUM ( Fact_WarehouseStock[OnOrder] )
-		formatString: #,0
+	measure 'Total On Order' = SUM ( Fact_WarehouseStock[OnOrder] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa005
 
 	measure 'Distinct SKUs' = DISTINCTCOUNT ( Fact_WarehouseStock[ItemCode] )
@@ -39,24 +39,24 @@ table _Measures
 
 		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
 
-	measure 'Inbound Qty' = SUM ( Fact_StockMovement[InQty] )
-		formatString: #,0
+	measure 'Inbound Qty' = SUM ( Fact_StockMovement[InQty] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa010
 
-	measure 'Outbound Qty' = SUM ( Fact_StockMovement[OutQty] )
-		formatString: #,0
+	measure 'Outbound Qty' = SUM ( Fact_StockMovement[OutQty] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa011
 
 	measure 'Net Movement' = [Inbound Qty] - [Outbound Qty]
-		formatString: #,0
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa012
 
 	measure 'Movement Count' = COUNTROWS ( Fact_StockMovement )
 		formatString: #,0
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa013
 
-	measure 'Transfer Qty' = SUM ( Fact_Transfer[Quantity] )
-		formatString: #,0
+	measure 'Transfer Qty' = SUM ( Fact_Transfer[Quantity] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa014
 
 	measure 'Transfer Count' = DISTINCTCOUNT ( Fact_Transfer[DocEntry] )
@@ -67,8 +67,8 @@ table _Measures
 		formatString: #,0
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa016
 
-	measure 'Delivery Qty' = SUM ( Fact_Delivery[Quantity] )
-		formatString: #,0
+	measure 'Delivery Qty' = SUM ( Fact_Delivery[Quantity] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa017
 
 	measure 'Delivery Value' = SUM ( Fact_Delivery[LineTotal] )
@@ -81,8 +81,8 @@ table _Measures
 		formatString: #,0
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa019
 
-	measure 'PO Qty' = SUM ( Fact_PurchaseOrder[Quantity] )
-		formatString: #,0
+	measure 'PO Qty' = SUM ( Fact_PurchaseOrder[Quantity] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa020
 
 	measure 'PO Value' = SUM ( Fact_PurchaseOrder[LineTotal] )
@@ -106,8 +106,8 @@ table _Measures
 		formatString: #,0
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa023
 
-	measure 'GR Qty' = SUM ( Fact_GoodsReceipt[Quantity] )
-		formatString: #,0
+	measure 'GR Qty' = SUM ( Fact_GoodsReceipt[Quantity] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa024
 
 	measure 'GR Value' = SUM ( Fact_GoodsReceipt[LineTotal] )
@@ -159,7 +159,7 @@ table _Measures
 			    [Inbound Qty],
 			    DATEADD ( Dim_Date[Date], -1, MONTH )
 			)
-		formatString: #,0
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa031
 
 	measure 'Inbound Qty MoM %' =
@@ -175,7 +175,7 @@ table _Measures
 			    [Outbound Qty],
 			    DATEADD ( Dim_Date[Date], -1, MONTH )
 			)
-		formatString: #,0
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa033
 
 	measure 'Net Movement PM' =
@@ -183,7 +183,7 @@ table _Measures
 			    [Net Movement],
 			    DATEADD ( Dim_Date[Date], -1, MONTH )
 			)
-		formatString: #,0
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa034
 
 	measure 'Net Movement MoM %' =
@@ -214,11 +214,13 @@ table _Measures
 
 	measure 'Narrative Title' =
 			VAR _value = [Stock Value]
-			VAR _belowPct = [Below Reorder %]
+			VAR _totalTonnes = [Total On Hand]
 			VAR _instockPct = [In-Stock Rate]
+			VAR _belowPct = [Below Reorder %]
 			RETURN
-			    "Inventory Health: " &
+			    "Inventory: " &
 			    FORMAT ( _value, "#,0,,.0" ) & "M د.ع. | " &
+			    FORMAT ( _totalTonnes, "#,0" ) & " T on hand | " &
 			    FORMAT ( _instockPct, "0.0%" ) & " In-Stock | " &
 			    FORMAT ( _belowPct, "0.0%" ) & " Below Reorder"
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa038
@@ -226,7 +228,7 @@ table _Measures
 	measure 'Avg Cost' =
 			DIVIDE (
 			    SUM ( InventoryValuation[StockValue] ),
-			    SUM ( InventoryValuation[StockQty] )
+			    SUM ( InventoryValuation[StockQty] ) / 1000
 			)
 		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa040
@@ -239,8 +241,8 @@ table _Measures
 
 		annotation PBI_FormatHint = {"currencyCulture":"ar-IQ"}
 
-	measure 'IV Stock Qty' = SUM ( InventoryValuation[StockQty] )
-		formatString: #,0
+	measure 'IV Stock Qty' = SUM ( InventoryValuation[StockQty] ) / 1000
+		formatString: #,0.00
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa042
 
 	measure 'IV Item Count' = DISTINCTCOUNT ( InventoryValuation[ItemCode] )
@@ -254,7 +256,7 @@ table _Measures
 	measure 'Item Avg Cost' =
 			DIVIDE (
 			    SUM ( Fact_WarehouseStock[StockValue] ),
-			    SUM ( Fact_WarehouseStock[OnHand] )
+			    SUM ( Fact_WarehouseStock[OnHand] ) / 1000
 			)
 		formatString: #,0.00\ "د.ع.‏";-#,0.00\ "د.ع.‏";#,0.00\ "د.ع.‏"
 		lineageTag: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaa045

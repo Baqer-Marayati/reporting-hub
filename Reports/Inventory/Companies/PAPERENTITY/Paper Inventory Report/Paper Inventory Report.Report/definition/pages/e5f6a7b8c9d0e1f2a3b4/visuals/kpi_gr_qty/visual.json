@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "GR Value"
+                  "Property": "PO Value"
                 }
               },
-              "queryRef": "_Measures.GR Value",
-              "nativeQueryRef": "GR Value"
+              "queryRef": "_Measures.PO Value",
+              "nativeQueryRef": "PO Value"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.GR Value"
+            "metadata": "_Measures.PO Value"
           }
         }
       ]
@@ -185,7 +185,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Restocking Value'"
+                  "Value": "'Total PO Value (Alt)'"
                 }
               }
             },
