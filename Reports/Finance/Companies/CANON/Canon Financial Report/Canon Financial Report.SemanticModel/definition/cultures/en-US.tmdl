@@ -15,7 +15,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Current Period": {
+			          "Actual": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -26,38 +26,17 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "table_measures.chart_row_ytd": {
+			    "table_measures.chart_row_ly": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "_Measures",
-			          "ConceptualProperty": "Chart Row YTD"
+			          "ConceptualProperty": "Chart Row LY"
 			        }
 			      },
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "YTD": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
-			    },
-			    "table_measures.chart_row_ytd_ly": {
-			      "Definition": {
-			        "Binding": {
-			          "ConceptualEntity": "_Measures",
-			          "ConceptualProperty": "Chart Row YTD LY"
-			        }
-			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "YTD LY": {
+			          "Prior Year": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

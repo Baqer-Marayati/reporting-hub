@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Sales Gross Profit YTD Card Display"
+                  "Property": "Sales Gross Profit Card Display"
                 }
               },
-              "queryRef": "_Measures.Sales Gross Profit YTD Card Display",
-              "nativeQueryRef": "Sales Gross Profit YTD Card Display"
+              "queryRef": "_Measures.Sales Gross Profit Card Display",
+              "nativeQueryRef": "Sales Gross Profit Card Display"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Sales Gross Profit YTD Card Display"
+            "metadata": "_Measures.Sales Gross Profit Card Display"
           }
         }
       ]
@@ -192,7 +192,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sales Gross Profit YTD'"
+                  "Value": "'Sales Gross Profit'"
                 }
               }
             },

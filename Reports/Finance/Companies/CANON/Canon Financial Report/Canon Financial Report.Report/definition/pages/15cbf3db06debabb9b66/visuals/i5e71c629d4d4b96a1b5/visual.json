@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Gross Profit YTD"
+                  "Property": "Gross Profit"
                 }
               },
-              "queryRef": "_Measures.Gross Profit YTD",
-              "nativeQueryRef": "Gross Profit YTD"
+              "queryRef": "_Measures.Gross Profit",
+              "nativeQueryRef": "Gross Profit"
             }
           ]
         }
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Gross Profit YTD"
+                "Property": "Gross Profit"
               }
             },
             "direction": "Descending"

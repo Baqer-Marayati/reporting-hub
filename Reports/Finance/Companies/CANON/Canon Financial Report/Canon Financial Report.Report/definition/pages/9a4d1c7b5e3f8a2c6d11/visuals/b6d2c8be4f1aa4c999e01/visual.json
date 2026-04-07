@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Sales Revenue YTD Card Display"
+                  "Property": "Sales Revenue Card Display"
                 }
               },
-              "queryRef": "_Measures.Sales Revenue YTD Card Display",
-              "nativeQueryRef": "Sales Revenue YTD Card Display"
+              "queryRef": "_Measures.Sales Revenue Card Display",
+              "nativeQueryRef": "Sales Revenue Card Display"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Sales Revenue YTD Card Display"
+            "metadata": "_Measures.Sales Revenue Card Display"
           }
         }
       ]
@@ -192,7 +192,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sales Revenue YTD'"
+                  "Value": "'Sales Revenue'"
                 }
               }
             },

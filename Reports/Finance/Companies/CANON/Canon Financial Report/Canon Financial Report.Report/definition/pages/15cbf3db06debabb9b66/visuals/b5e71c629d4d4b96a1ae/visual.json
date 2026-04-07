@@ -46,8 +46,8 @@
                 }
               },
               "queryRef": "_Measures.Chart Row Actual",
-              "nativeQueryRef": "Current Period",
-              "displayName": "Current Period"
+              "nativeQueryRef": "Actual",
+              "displayName": "Actual"
             },
             {
               "field": {
@@ -57,27 +57,12 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row YTD"
+                  "Property": "Chart Row LY"
                 }
               },
-              "queryRef": "_Measures.Chart Row YTD",
-              "nativeQueryRef": "YTD",
-              "displayName": "YTD"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Chart Row YTD LY"
-                }
-              },
-              "queryRef": "_Measures.Chart Row YTD LY",
-              "nativeQueryRef": "YTD LY",
-              "displayName": "YTD LY"
+              "queryRef": "_Measures.Chart Row LY",
+              "nativeQueryRef": "Prior Year",
+              "displayName": "Prior Year"
             }
           ]
         },

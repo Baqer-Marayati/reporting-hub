@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Operating Profit YTD Card Display"
+                  "Property": "Operating Profit Card Display"
                 }
               },
-              "queryRef": "_Measures.Operating Profit YTD Card Display",
-              "nativeQueryRef": "Operating Profit YTD Card Display"
+              "queryRef": "_Measures.Operating Profit Card Display",
+              "nativeQueryRef": "Operating Profit Card Display"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Operating Profit YTD Card Display"
+            "metadata": "_Measures.Operating Profit Card Display"
           }
         }
       ]
@@ -192,7 +192,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Operating Profit YTD'"
+                  "Value": "'Operating Profit'"
                 }
               }
             },

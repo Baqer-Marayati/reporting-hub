@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Profit YTD Card Display"
+                  "Property": "Net Profit Card Display"
                 }
               },
-              "queryRef": "_Measures.Net Profit YTD Card Display",
-              "nativeQueryRef": "Net Profit YTD Card Display"
+              "queryRef": "_Measures.Net Profit Card Display",
+              "nativeQueryRef": "Net Profit Card Display"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Net Profit YTD Card Display"
+            "metadata": "_Measures.Net Profit Card Display"
           }
         }
       ]
@@ -192,7 +192,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Net Profit YTD'"
+                  "Value": "'Net Profit'"
                 }
               }
             },
