@@ -10,7 +10,7 @@
     "tabOrder": 19000
   },
   "visual": {
-    "visualType": "donutChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimBusinessPartner"
+                      "Entity": "Fact_SalesDetail"
                     }
                   },
                   "Property": "CardName"
                 }
               },
-              "queryRef": "DimBusinessPartner.CardName",
+              "queryRef": "Fact_SalesDetail.CardName",
               "nativeQueryRef": "Customer",
               "active": true
             }
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue"
+                  "Property": "Sales Revenue"
                 }
               },
-              "queryRef": "_Measures.Net Revenue",
-              "nativeQueryRef": "Net Revenue"
+              "queryRef": "_Measures.Sales Revenue",
+              "nativeQueryRef": "Sales Revenue"
             }
           ]
         }
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Net Revenue"
+                "Property": "Sales Revenue"
               }
             },
             "direction": "Descending"
@@ -210,7 +210,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue by Customer'"
+                  "Value": "'Sales Revenue by Customer'"
                 }
               }
             },

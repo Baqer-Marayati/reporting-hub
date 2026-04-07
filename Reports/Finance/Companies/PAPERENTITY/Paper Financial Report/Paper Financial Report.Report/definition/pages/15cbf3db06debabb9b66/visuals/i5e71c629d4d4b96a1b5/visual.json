@@ -10,7 +10,7 @@
     "tabOrder": 18000
   },
   "visual": {
-    "visualType": "donutChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimBusinessPartner"
+                      "Entity": "Fact_SalesDetail"
                     }
                   },
                   "Property": "CardName"
                 }
               },
-              "queryRef": "DimBusinessPartner.CardName",
+              "queryRef": "Fact_SalesDetail.CardName",
               "nativeQueryRef": "Customer",
               "active": true
             }
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Gross Profit YTD"
+                  "Property": "Sales Gross Profit"
                 }
               },
-              "queryRef": "_Measures.Gross Profit YTD",
-              "nativeQueryRef": "Gross Profit YTD"
+              "queryRef": "_Measures.Sales Gross Profit",
+              "nativeQueryRef": "Sales Gross Profit"
             }
           ]
         }
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Gross Profit YTD"
+                "Property": "Sales Gross Profit"
               }
             },
             "direction": "Descending"
@@ -212,7 +212,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Gross Profit by Customer'"
+                  "Value": "'Sales Gross Profit by Customer'"
                 }
               }
             },
