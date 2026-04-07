@@ -42,12 +42,12 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row YTD"
+                  "Property": "Chart Row Actual"
                 }
               },
-              "queryRef": "_Measures.Chart Row YTD",
-              "nativeQueryRef": "YTD",
-              "displayName": "YTD"
+              "queryRef": "_Measures.Chart Row Actual",
+              "nativeQueryRef": "Actual",
+              "displayName": "Actual"
             },
             {
               "field": {
@@ -57,12 +57,12 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row YTD LY"
+                  "Property": "Chart Row LY"
                 }
               },
-              "queryRef": "_Measures.Chart Row YTD LY",
-              "nativeQueryRef": "YTD LY",
-              "displayName": "YTD LY"
+              "queryRef": "_Measures.Chart Row LY",
+              "nativeQueryRef": "Prior Year",
+              "displayName": "Prior Year"
             }
           ]
         }
@@ -77,7 +77,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Chart Row YTD"
+                "Property": "Chart Row Actual"
               }
             },
             "direction": "Descending"
@@ -218,7 +218,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'YTD vs Prior Year'"
+                  "Value": "'Actual vs Prior Year'"
                 }
               }
             },

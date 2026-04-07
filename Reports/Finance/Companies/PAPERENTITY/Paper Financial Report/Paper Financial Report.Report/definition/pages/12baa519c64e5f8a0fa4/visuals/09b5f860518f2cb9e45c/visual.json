@@ -3,10 +3,10 @@
   "name": "09b5f860518f2cb9e45c",
   "position": {
     "x": 188,
-    "y": 596,
+    "y": 668,
     "z": 10000,
-    "height": 260,
-    "width": 502,
+    "height": 140,
+    "width": 506,
     "tabOrder": 10000
   },
   "visual": {
@@ -103,6 +103,13 @@
               "expr": {
                 "Literal": {
                   "Value": "1D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
                 }
               }
             }

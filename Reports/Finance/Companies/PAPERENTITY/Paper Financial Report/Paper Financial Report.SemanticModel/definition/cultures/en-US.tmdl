@@ -12,7 +12,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row Actual"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Actual": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_measures.chart_row_ytd": {
 			      "Definition": {
@@ -21,19 +33,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row YTD"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "YTD": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_measures.chart_row_ytd_ly": {
 			      "Definition": {
@@ -42,19 +42,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Chart Row YTD LY"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "YTD LY": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_measures.chart_row_var": {
 			      "Definition": {
@@ -541,6 +529,27 @@ cultureInfo en-US
 			      "Terms": [
 			        {
 			          "AR Due Bucket": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_measures.chart_row_ly": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Measures",
+			          "ConceptualProperty": "Chart Row LY"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Prior Year": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue YTD Card Display"
+                  "Property": "Net Revenue Card Display"
                 }
               },
-              "queryRef": "_Measures.Net Revenue YTD Card Display",
-              "nativeQueryRef": "Net Revenue YTD Card Display"
+              "queryRef": "_Measures.Net Revenue Card Display",
+              "nativeQueryRef": "Net Revenue Card Display"
             }
           ]
         }
@@ -83,7 +83,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Net Revenue YTD Card Display"
+            "metadata": "_Measures.Net Revenue Card Display"
           }
         }
       ]
@@ -192,7 +192,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Net Revenue YTD'"
+                  "Value": "'Net Revenue'"
                 }
               }
             },

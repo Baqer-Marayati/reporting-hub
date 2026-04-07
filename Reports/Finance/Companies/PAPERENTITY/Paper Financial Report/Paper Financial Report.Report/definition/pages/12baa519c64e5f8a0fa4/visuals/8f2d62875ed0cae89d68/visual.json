@@ -23,11 +23,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Net Revenue YTD"
+                  "Property": "Net Revenue"
                 }
               },
-              "queryRef": "_Measures.Net Revenue YTD",
-              "nativeQueryRef": "Net Revenue YTD"
+              "queryRef": "_Measures.Net Revenue",
+              "nativeQueryRef": "Net Revenue"
             }
           ]
         }
@@ -42,7 +42,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Net Revenue YTD"
+                "Property": "Net Revenue"
               }
             },
             "direction": "Descending"
@@ -108,7 +108,7 @@
             }
           },
           "selector": {
-            "metadata": "_Measures.Net Revenue YTD"
+            "metadata": "_Measures.Net Revenue"
           }
         }
       ]
@@ -237,7 +237,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Net Revenue (YTD)'"
+                  "Value": "'Net Revenue'"
                 }
               }
             },

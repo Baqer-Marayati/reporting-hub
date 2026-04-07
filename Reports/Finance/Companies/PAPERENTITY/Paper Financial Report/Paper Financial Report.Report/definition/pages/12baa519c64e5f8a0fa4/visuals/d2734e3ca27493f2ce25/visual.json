@@ -76,7 +76,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Monthly profitability movement and YTD variance story.'"
+                  "Value": "'Monthly profitability movement and variance story.'"
                 }
               }
             }
