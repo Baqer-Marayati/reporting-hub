@@ -1083,13 +1083,14 @@ table _Measures
 	measure 'AP Balance Due Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[OpenAmount] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60301
@@ -1097,13 +1098,14 @@ table _Measures
 	measure 'AP Future Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[FutureRemit] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60302
@@ -1111,13 +1113,14 @@ table _Measures
 	measure 'AP 0-30 Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[B0_30] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60303
@@ -1125,13 +1128,14 @@ table _Measures
 	measure 'AP 30-60 Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[B31_60] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60304
@@ -1139,13 +1143,14 @@ table _Measures
 	measure 'AP 60-90 Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[B61_90] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60305
@@ -1153,13 +1158,14 @@ table _Measures
 	measure 'AP 90-120 Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[B91_120] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60306
@@ -1167,13 +1173,14 @@ table _Measures
 	measure 'AP 120+ Display' =
 			
 			VAR Curr = SELECTEDVALUE ( PayablesFact[FCCurrency] )
+			VAR Prefix = SWITCH ( Curr, "USD", "$ ", "EUR", "€ ", "IQD", "", Curr & " " )
 			VAR Amt = SUM ( PayablesFact[B121Plus] )
 			RETURN
 			    IF (
 			        ISBLANK ( Amt ) || Amt = 0, BLANK (),
 			        IF ( Amt >= 0,
-			            Curr & " " & FORMAT ( Amt, "#,##0.00" ),
-			            Curr & " (" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
+			            Prefix & FORMAT ( Amt, "#,##0.00" ),
+			            Prefix & "(" & FORMAT ( ABS ( Amt ), "#,##0.00" ) & ")"
 			        )
 			    )
 		lineageTag: d1a2b3c4-e5f6-7890-a1b2-c3d4e5f60307
