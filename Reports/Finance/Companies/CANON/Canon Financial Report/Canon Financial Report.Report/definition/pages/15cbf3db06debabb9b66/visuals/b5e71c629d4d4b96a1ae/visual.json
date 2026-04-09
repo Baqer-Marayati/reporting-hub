@@ -10,7 +10,7 @@
     "tabOrder": 16000
   },
   "visual": {
-    "visualType": "lineClusteredColumnComboChart",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_StatementSummaryRows"
+                      "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "RowLabel"
+                  "Property": "YearMonth"
                 }
               },
-              "queryRef": "Dim_StatementSummaryRows.RowLabel",
-              "nativeQueryRef": "RowLabel",
+              "queryRef": "Dim_Date.YearMonth",
+              "nativeQueryRef": "YearMonth",
               "active": true
             }
           ]
@@ -42,12 +42,12 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row Actual"
+                  "Property": "Gross Margin %"
                 }
               },
-              "queryRef": "_Measures.Chart Row Actual",
-              "nativeQueryRef": "Actual",
-              "displayName": "Actual"
+              "queryRef": "_Measures.Gross Margin %",
+              "nativeQueryRef": "Gross Margin %",
+              "displayName": "Gross Margin %"
             },
             {
               "field": {
@@ -57,17 +57,13 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row LY"
+                  "Property": "Operating Margin %"
                 }
               },
-              "queryRef": "_Measures.Chart Row LY",
-              "nativeQueryRef": "Prior Year",
-              "displayName": "Prior Year"
-            }
-          ]
-        },
-        "Y2": {
-          "projections": [
+              "queryRef": "_Measures.Operating Margin %",
+              "nativeQueryRef": "Operating Margin %",
+              "displayName": "Operating Margin %"
+            },
             {
               "field": {
                 "Measure": {
@@ -76,33 +72,15 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Chart Row Var %"
+                  "Property": "Net Margin %"
                 }
               },
-              "queryRef": "_Measures.Chart Row Var %",
-              "nativeQueryRef": "Variance %",
-              "displayName": "Variance %"
+              "queryRef": "_Measures.Net Margin %",
+              "nativeQueryRef": "Net Margin %",
+              "displayName": "Net Margin %"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Chart Row Actual"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -216,7 +194,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Management Performance Lens'"
+                  "Value": "'Margin Trend'"
                 }
               }
             },
