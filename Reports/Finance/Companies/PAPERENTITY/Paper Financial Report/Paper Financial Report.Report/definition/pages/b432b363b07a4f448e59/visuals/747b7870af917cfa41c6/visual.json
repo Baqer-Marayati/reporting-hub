@@ -49,7 +49,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Working Capital Health'"
+                  "Value": "'Working capital'"
                 }
               }
             },

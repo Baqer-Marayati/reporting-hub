@@ -49,7 +49,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Balance Sheet'"
+                  "Value": "'Balance sheet'"
                 }
               }
             },

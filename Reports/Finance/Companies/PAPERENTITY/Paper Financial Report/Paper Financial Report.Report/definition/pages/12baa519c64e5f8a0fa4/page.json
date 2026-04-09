@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
   "name": "12baa519c64e5f8a0fa4",
-  "displayName": "Profitability Drivers",
+  "displayName": "ROI",
   "displayOption": "FitToWidth",
   "height": 960,
   "width": 1280,
