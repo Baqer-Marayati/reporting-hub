@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "cash_chart_donut",
   "position": {
-    "x": 720,
+    "x": 658,
     "y": 236,
     "z": 500,
     "height": 420,
