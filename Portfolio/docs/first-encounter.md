@@ -91,14 +91,16 @@ If no additional context is provided:
 3. confirm source-of-truth path in the domain `README.md`
 4. follow contribution constraints in `../CONTRIBUTING.md`
 
-## 9) GitHub and local IDE tooling (Cursor / VS Code)
+## 9) Another Mac, another Cursor account, or another AI client
 
-This repository is already a Git project. Clone it from your GitHub remote (for example `git clone git@github.com:Baqer-Marayati/reporting-hub.git`), then work from the cloned folder as the workspace root so `.cursor/rules/`, `.vscode/`, and `AGENTS.md` resolve correctly.
+Use this when you are **not** on your usual machine, or you use a **different Cursor (or VS Code) sign-in**: the repository and GitHub remote are shared; **MCP config, skills, and plugins are per machine / per account**, not cloned with the repo.
 
-**Agent rules (in-repo, no download):** `.cursor/rules/` — portfolio and Finance rules apply automatically when you open this folder in Cursor.
+1. **GitHub:** Clone or pull this repo on the new Mac (for example `git clone git@github.com:Baqer-Marayati/reporting-hub.git`). Open the clone as the **workspace root** so `.cursor/rules/`, `.vscode/`, and `AGENTS.md` resolve correctly.
 
-**Power BI Modeling MCP (semantic model / TMDL):** Optional but recommended for model work. Microsoft documents installation in the [Power BI Modeling MCP Server](https://github.com/microsoft/powerbi-modeling-mcp) repository (VS Code extension with Copilot, or `npx @microsoft/powerbi-modeling-mcp`). For Cursor, copy `.cursor/mcp.json.example` to `.cursor/mcp.json` and adjust if your client expects a different top-level shape; the real `mcp.json` stays local and is listed in `.gitignore`.
+2. **Agent rules (come with the repo):** `.cursor/rules/` — no separate download; they apply when this folder is the workspace.
 
-**Skills and plugins:** Skills are not vendored inside this repo; they live in your personal skills directories (for example Cursor or Codex skill folders on your machine). Install or sync the Power BI–related skills you use from your own skill sources. Codex-style plugins, if you use them, are configured in your Codex or client plugin paths, not in Reporting Hub by default.
+3. **Power BI Modeling MCP:** Optional for semantic model / TMDL work. Install per Microsoft’s [Power BI Modeling MCP Server](https://github.com/microsoft/powerbi-modeling-mcp) docs (VS Code extension, or `npx @microsoft/powerbi-modeling-mcp`). On this Mac, copy `.cursor/mcp.json.example` to `.cursor/mcp.json` if you use Cursor’s workspace MCP file (the real `mcp.json` is gitignored).
 
-**Finance design benchmark PBIP:** The tracked Wiise Sample 2 benchmark lives only under `Reports/Finance/Module/Design Benchmarks/Sample 2/`. Do not maintain a second copy under `Reports/Finance/Design Benchmarks/` — Power BI Desktop can create stray `.pbi` folders there if the project is opened from the wrong path; delete that duplicate if it appears. Use the VS Code task **Finance: Open design benchmark (Wiise Sample 2) in Power BI Desktop** (or run `Reports/Finance/Module/scripts/open-design-benchmark.ps1`) to open the canonical `.pbip`.
+4. **Skills and plugins:** Not stored in Reporting Hub. Reinstall or copy the skill folders and plugin config you use into that Mac’s Cursor/Codex (or other client) paths, or sync them however you already manage personal tooling.
+
+**Finance benchmark note (Power BI only):** The tracked Wiise Sample 2 shell lives under `Reports/Finance/Module/Design Benchmarks/Sample 2/`. Avoid a duplicate tree under `Reports/Finance/Design Benchmarks/` (Desktop can leave stray `.pbi` files there if the wrong folder is opened). Prefer the VS Code task **Finance: Open design benchmark (Wiise Sample 2) in Power BI Desktop** or `Reports/Finance/Module/scripts/open-design-benchmark.ps1` to open the canonical `.pbip`.
