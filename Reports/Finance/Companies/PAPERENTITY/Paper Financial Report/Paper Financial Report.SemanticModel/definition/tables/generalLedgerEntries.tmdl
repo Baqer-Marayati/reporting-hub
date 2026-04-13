@@ -168,139 +168,84 @@ table generalLedgerEntries
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column postingDate
-		dataType: dateTime
-		formatString: Long Date
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0122
-		summarizeBy: none
-		sourceColumn: postingDate
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 199c528b-f8e7-4430-85da-c7229704e7b0
+		isNameInferred
+		sourceColumn: [postingDate]
 
 	column no
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0123
-		summarizeBy: none
-		sourceColumn: no
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: be5592d6-74bd-4c0d-95a7-7c72181f6d63
+		isNameInferred
+		sourceColumn: [no]
 
 	column name
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0124
-		summarizeBy: none
-		sourceColumn: name
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: c00cf2d1-a267-462c-9730-dbe321f93d5e
+		isNameInferred
+		sourceColumn: [name]
 
 	column description
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0125
-		summarizeBy: none
-		sourceColumn: description
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 7b820c94-b5c5-4a9c-9613-b7c8a95990ca
+		isNameInferred
+		sourceColumn: [description]
 
 	column accountCategory
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0126
-		summarizeBy: none
-		sourceColumn: accountCategory
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: a8c9e244-b444-4760-8a0b-8e408035d5bc
+		isNameInferred
+		sourceColumn: [accountCategory]
 
 	column accountType
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0127
-		summarizeBy: none
-		sourceColumn: accountType
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: e05626e9-28ad-4f63-a08a-13502111879e
+		isNameInferred
+		sourceColumn: [accountType]
 
 	column incomeBalance
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0128
-		summarizeBy: none
-		sourceColumn: incomeBalance
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: d9d320b1-e09c-4b1b-b845-9b0ea1981c1d
+		isNameInferred
+		sourceColumn: [incomeBalance]
 
 	column amount
-		dataType: double
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0129
-		summarizeBy: sum
-		sourceColumn: amount
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		lineageTag: 7cfdb5da-df73-41ec-9c60-2ae78aa8c057
+		isNameInferred
+		sourceColumn: [amount]
 
 	column AmountABS
-		dataType: double
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0130
-		summarizeBy: sum
-		sourceColumn: AmountABS
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
+		lineageTag: 0f6da60c-4dce-4f38-8a62-b7a12149c221
+		isNameInferred
+		sourceColumn: [AmountABS]
 
 	column globalDimension1Code
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0131
-		summarizeBy: none
-		sourceColumn: globalDimension1Code
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 29f62c55-0f09-44cc-b365-849ca11865f5
+		isNameInferred
+		sourceColumn: [globalDimension1Code]
 
 	column globalDimension2Code
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0132
-		summarizeBy: none
-		sourceColumn: globalDimension2Code
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 25d5a295-38a2-4259-9b8e-4553d8f7c24f
+		isNameInferred
+		sourceColumn: [globalDimension2Code]
 
 	column shortcutDimension3Code
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0133
-		summarizeBy: none
-		sourceColumn: shortcutDimension3Code
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 1c16bed9-2c75-4423-b0fd-113278fd7a0b
+		isNameInferred
+		sourceColumn: [shortcutDimension3Code]
 
 	column LegendColumnForCashflow
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0134
-		summarizeBy: none
-		sourceColumn: LegendColumnForCashflow
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 7b2f2b7d-efbf-45a4-b7f1-220754bd39bf
+		isNameInferred
+		sourceColumn: [LegendColumnForCashflow]
 
 	column 'Legend Label'
-		dataType: string
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0134a
-		summarizeBy: none
-		sourceColumn: Legend Label
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: 9237cecd-0a32-4600-a59d-3eb985ee438d
+		isNameInferred
+		sourceColumn: [Legend Label]
 
 	column IsCurrentOrLastYear
-		dataType: boolean
-		formatString: """TRUE"";""TRUE"";""FALSE"""
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0135
-		summarizeBy: none
-		sourceColumn: IsCurrentOrLastYear
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: ef6e4bdb-50f7-4980-9b26-ba3b54c76ee7
+		isNameInferred
+		sourceColumn: [IsCurrentOrLastYear]
 
 	column IsInLast6Months
-		dataType: boolean
-		formatString: """TRUE"";""TRUE"";""FALSE"""
-		lineageTag: 4f1c4f8e-3cc3-4d18-9a8c-3f2e189a0136
-		summarizeBy: none
-		sourceColumn: IsInLast6Months
-
-		annotation SummarizationSetBy = Automatic
+		lineageTag: c51072ce-cbf4-4cd6-9c48-442fafc660da
+		isNameInferred
+		sourceColumn: [IsInLast6Months]
 
 	partition generalLedgerEntries = calculated
 		mode: import

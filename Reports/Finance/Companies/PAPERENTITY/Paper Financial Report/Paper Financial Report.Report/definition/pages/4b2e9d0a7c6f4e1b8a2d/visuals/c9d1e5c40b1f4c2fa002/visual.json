@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "c9d1e5c40b1f4c2fa002",
   "position": {
-    "x": 681.42857142857144,
-    "y": 235.71428571428572,
+    "x": 188.33333333333334,
+    "y": 235,
     "z": 6000,
-    "height": 338.57142857142861,
-    "width": 534.28571428571433,
+    "height": 340,
+    "width": 1026.6666666666667,
     "tabOrder": 17000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "areaChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Account"
+                      "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "AcctName"
+                  "Property": "YearMonth"
                 }
               },
-              "queryRef": "Dim_Account.AcctName",
-              "nativeQueryRef": "Account",
+              "queryRef": "Dim_Date.YearMonth",
+              "nativeQueryRef": "YearMonth",
               "active": true
             }
           ]
@@ -50,24 +50,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Operating Expenses Display"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -84,7 +66,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'RightCenter'"
+                  "Value": "'TopCenter'"
                 }
               }
             }
@@ -97,7 +79,20 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             },
@@ -111,14 +106,7 @@
             "labelPrecision": {
               "expr": {
                 "Literal": {
-                  "Value": "2L"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
+                  "Value": "1L"
                 }
               }
             }
@@ -140,7 +128,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex by Account'"
+                  "Value": "'Total Expenses vs Months'"
                 }
               }
             }

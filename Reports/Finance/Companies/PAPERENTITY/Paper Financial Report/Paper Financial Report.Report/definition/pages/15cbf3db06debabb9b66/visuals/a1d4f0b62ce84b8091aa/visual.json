@@ -94,6 +94,11 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
       ]
     },
     "drillFilterOtherVisuals": true
