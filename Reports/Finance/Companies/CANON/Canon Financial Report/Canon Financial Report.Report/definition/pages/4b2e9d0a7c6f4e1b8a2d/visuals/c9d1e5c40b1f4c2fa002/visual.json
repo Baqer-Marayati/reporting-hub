@@ -10,7 +10,7 @@
     "tabOrder": 17000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "areaChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Branch"
+                      "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "BranchName"
+                  "Property": "YearMonth"
                 }
               },
-              "queryRef": "Dim_Branch.BranchName",
-              "nativeQueryRef": "Location",
+              "queryRef": "Dim_Date.YearMonth",
+              "nativeQueryRef": "YearMonth",
               "active": true
             }
           ]
@@ -50,24 +50,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Operating Expenses Display"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -84,7 +66,7 @@
             "position": {
               "expr": {
                 "Literal": {
-                  "Value": "'RightCenter'"
+                  "Value": "'TopCenter'"
                 }
               }
             }
@@ -97,7 +79,20 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             },
@@ -111,14 +106,7 @@
             "labelPrecision": {
               "expr": {
                 "Literal": {
-                  "Value": "2L"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
+                  "Value": "1L"
                 }
               }
             }
@@ -140,7 +128,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex Share by Location'"
+                  "Value": "'Total Expenses vs Months'"
                 }
               }
             }

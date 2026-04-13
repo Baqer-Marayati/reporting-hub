@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Department"
+                      "Entity": "Dim_SalesType"
                     }
                   },
-                  "Property": "DepartmentName"
+                  "Property": "SalesTypeName"
                 }
               },
-              "queryRef": "Dim_Department.DepartmentName",
-              "nativeQueryRef": "DepartmentName",
+              "queryRef": "Dim_SalesType.SalesTypeName",
+              "nativeQueryRef": "SalesTypeName",
               "active": true
             }
           ]
@@ -42,10 +42,10 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Opex by Department"
+                  "Property": "Operating Expenses Display"
                 }
               },
-              "queryRef": "_Measures.Opex by Department",
+              "queryRef": "_Measures.Operating Expenses Display",
               "nativeQueryRef": "Operating Expenses"
             }
           ]
@@ -61,7 +61,7 @@
                     "Entity": "_Measures"
                   }
                 },
-                "Property": "Opex by Department"
+                "Property": "Operating Expenses Display"
               }
             },
             "direction": "Descending"
@@ -125,7 +125,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Opex by Department'"
+                  "Value": "'Opex by Sales Type'"
                 }
               }
             }
