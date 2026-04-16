@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "coll_slicer_sector",
+  "name": "coll_slicer_year",
   "position": {
     "x": 24,
-    "y": 410,
-    "z": 10100,
+    "y": 138,
+    "z": 8000,
     "height": 32,
     "width": 136,
-    "tabOrder": 10000
+    "tabOrder": 0
   },
   "visual": {
     "visualType": "slicer",
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "DimBusinessPartner"
+                      "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "U_SectorType"
+                  "Property": "Year"
                 }
               },
-              "queryRef": "DimBusinessPartner.U_SectorType",
-              "nativeQueryRef": "U_SectorType",
+              "queryRef": "Dim_Date.Year",
+              "nativeQueryRef": "Year",
               "active": true
             }
           ]
@@ -51,6 +51,20 @@
       "header": [
         {
           "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Year'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
             "show": {
               "expr": {
                 "Literal": {

@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
-  "name": "coll_label_customer",
+  "name": "coll_label_month",
   "position": {
     "x": 24,
-    "y": 528,
-    "z": 17500,
+    "y": 256,
+    "z": 19800,
     "height": 18,
     "width": 136,
-    "tabOrder": 13000
+    "tabOrder": 16300
   },
   "visual": {
     "visualType": "textbox",
@@ -42,7 +42,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Customer'"
+                  "Value": "'Month'"
                 }
               }
             },
