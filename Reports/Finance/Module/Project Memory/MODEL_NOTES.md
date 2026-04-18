@@ -242,6 +242,38 @@ The previous note's "Known limit — historical cutoffs that span post-cutoff cl
 - **Verified against SAP (PAPERENTITY, 2026-04-15) — section totals.** Assets 4,539,178,295 IQD, Liabilities −1,757,027,718 IQD, Equity −2,779,529,072 IQD; residual +2,621,506 = YTD 2026 P&L (loss); BS balances to exactly 0 once `_PP` is added. Top-15 accounts and contra-asset (`1700022 Furniture Accumulated Depreciation = −2,596,216`) all reconcile.
 - **Verified expected post-fix bar count.** Chart of accounts has 72 BS accounts, but only 26 have ever posted; only 18 have non-zero balance at 2026-04-15. With the synthetic `_PP` Equity row, the **Largest Accounts** bar should show ~19 bars at typical 2026 cutoffs (up from 16 with the old broken measure: 15 with 2026 movements + 1 `_PP`).
 
+## CANON — Balance sheet ported to PAPERENTITY pattern (2026-04-18)
+
+The full PAPERENTITY Balance-sheet rebuild (per-day `_PP` + PEC-reversal rows + as-of `[BS Amount]` + single "As of" date slicer) was ported to `Reports/Finance/Companies/CANON/Canon Financial Report/`. SAP-validated; all six cutoffs balance to zero.
+
+**Data layer (`Canon Financial Report.SemanticModel/definition/tables/Fact_BalanceSheet.tmdl`):** Replaced the old `_PP` UNION block (per-month, current-FY-only, with branch/sales-type/dept dims) with the same two SQL sub-blocks used in PAPERENTITY:
+1. Per-day P&L net for **all** posting dates (no year filter), `WHERE T2."GroupMask" IN (4,5,6,7,8) AND T0."TransType" >= 0`, dims set to `NULL`.
+2. PEC-reversal rows joined on `OJDT.TransType = -3` posting to `JDT1.Account = '310101010107'` (CANON's Retained Earnings GL — verified via SAP, see below).
+
+**Measure (`_Measures.tmdl`):** `[BS Amount]` rewritten identically to PAPERENTITY's as-of form (`MAX(Dim_Date[Date])`, `REMOVEFILTERS('Dim_Date')`, filter `Fact_BalanceSheet[PostingDate] <= MaxDate`).
+
+**BS page slicer rail (`Canon Financial Report.Report/.../pages/5e7c9a1d4b3f6e8c2a10/`):** Collapsed to a single "As of" date slicer mirroring SAP B1's "Posting Date To" UX:
+- Visual `a9d1e5c40b1f4c2fa001` (was Year `Dropdown` on `Dim_Date[Year]`) → date slicer in `'Before'` mode bound to `Dim_Date[Date]`, with a `general.filter` ComparisonKind=3 + `datetime'2026-04-01T00:00:00'` literal so Desktop persists the cutoff and renders "Before" instead of "Between".
+- `label_year` text `Year` → `As of`.
+- **Deleted:** Month slicer `a9d1e5c40b1f4c2fa002`, Quarter slicer `slicer_quarter`, Location slicer `a9d1e5c40b1f4c2fa003`, Department slicer `a9d1e5c40b1f4c2fa004`, Sales Type slicer `a9d1e5c40b1f4c2fa005`, plus their five labels (`label_month`, `label_quarter`, `label_location`, `label_department`, `label_sales_type`). All 38 stale `visualInteractions` entries pointing at those eight removed sources were also stripped from `page.json`, leaving only the 8 interactions from `a9d1e5c40b1f4c2fa001` (As-of date) to the four KPI cards (`b9d1e5c40b1f4c2fa001/2/3/4`), the Largest Accounts / Mix / Sections charts (`c9d1e5c40b1f4c2fa001/2/3`), and the BS Balance card (`d9d1e5c40b1f4c2fa005`).
+
+**The dim slicers were dropped intentionally (Path A).** The new `_PP` row carries `NULL` for branch/sales-type/dept; if the user filtered on any of those dims, the entire `_PP` Equity row would be silently excluded and the BS would no longer balance. Dropping the three dim slicers makes CANON's BS page exactly match SAP B1's BS UX (single posting-date cutoff, no per-branch / per-dept partition) and matches PAPERENTITY's final shape. If a future requirement needs branch-level BS reporting, migrate `_PP` to a DAX measure first; do not re-add the dim slicers with the current data shape.
+
+**CANON's PEC pattern as of 2026-04-18.** SAP returned **zero** rows for `WHERE TransType = -3` against `CANON.OJDT`/`JDT1` — CANON has not yet executed its first Period-End Closing. RE GL `310101010107` was confirmed via the SAP chart of accounts as the closure target. The PEC-reversal sub-block produces zero rows today (the `INNER JOIN` to `PEC` finds no matches), but the Power Query is **already correct** for the moment SAP posts CANON's first PEC: the next refresh will automatically emit the FY24 (or whichever is the first closed year) reversal row and the BS will continue to balance at all historical cutoffs without any code change. Until then, CANON is in the equivalent of PAPERENTITY's "everything is the open FY" regime, and the per-day sub-block alone correctly reflects cumulative P&L from inception → cutoff for every date.
+
+**SAP-verified reconciliation (CANON, all six cutoffs Σ = 0 IQD):**
+
+| Cutoff      | Assets         | Liabilities    | Equity (incl. `_PP`) | Σ |
+| ----------- | -------------- | -------------- | -------------------- | --- |
+| 2025-12-31  | 14,541,385,866 | −2,113,000,760 | −12,428,385,106      | 0 |
+| 2026-01-31  | 13,982,578,381 | −1,558,530,812 | −12,424,047,569      | 0 |
+| 2026-02-28  | 13,262,143,050 |   −872,732,843 | −12,389,410,207      | 0 |
+| 2026-03-31  | 13,392,229,628 |   −990,968,877 | −12,401,260,751      | 0 |
+| 2026-04-15  | 13,741,959,440 | −1,260,603,675 | −12,481,355,765      | 0 |
+| 2026-12-31  | 13,749,052,836 | −1,260,829,925 | −12,488,222,911      | 0 |
+
+**Validation in Desktop:** open `Canon Financial Report.pbip`, refresh, change the **As of** date on the BS page, and confirm Total Assets + Total Liabilities + Total Equity (with the synthetic `Profit Period` row) sum to 0 at any cutoff. Hide the "BS Amount" card column for `_PP` if the section total is preferred to the per-account row breakdown — same as PAPERENTITY.
+
 ## PBIP / Semantic Handling Notes
 - Visual JSON changes are often the fastest safe route for layout and binding repairs.
 - Slicer polish can require structural report changes, not just font-size changes.
