@@ -10,7 +10,7 @@
     "tabOrder": 12000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "donutChart",
     "query": {
       "queryState": {
         "Category": {
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Fact_ServiceParts"
+                      "Entity": "Fact_ServiceRevenue"
                     }
                   },
-                  "Property": "Description"
+                  "Property": "RevenueType"
                 }
               },
-              "queryRef": "Fact_ServiceParts.Description",
-              "nativeQueryRef": "Description",
+              "queryRef": "Fact_ServiceRevenue.RevenueType",
+              "nativeQueryRef": "RevenueType",
               "active": true
             }
           ]
@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Total Parts Cost"
+                  "Property": "Total Service Revenue"
                 }
               },
-              "queryRef": "_Measures.Total Parts Cost",
-              "nativeQueryRef": "Total Parts Cost"
+              "queryRef": "_Measures.Total Service Revenue",
+              "nativeQueryRef": "Total Service Revenue"
             }
           ]
         }
@@ -59,55 +59,34 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "legend": [
         {
           "properties": {
-            "showAxisTitle": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6F7C78'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
+            "position": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Bottom'"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#6F7C78'"
-                    }
-                  }
+            "showTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -184,7 +163,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top Parts by Cost'"
+                  "Value": "'Revenue by Type'"
                 }
               }
             },

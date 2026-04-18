@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Dim_Item"
+                      "Entity": "Dim_Customer"
                     }
                   },
-                  "Property": "MachineClass"
+                  "Property": "CustomerType"
                 }
               },
-              "queryRef": "Dim_Item.MachineClass",
-              "nativeQueryRef": "MachineClass",
+              "queryRef": "Dim_Customer.CustomerType",
+              "nativeQueryRef": "CustomerType",
               "active": true
             }
           ]

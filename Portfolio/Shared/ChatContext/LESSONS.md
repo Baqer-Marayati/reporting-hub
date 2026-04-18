@@ -10,6 +10,13 @@ Short, **durable** notes the assistant adds after reviewing captures in `images/
 
 ## Log
 
+### 2026-04-18 — PBIR visual category swap can silently break aggregations
+
+- `[repo]` In a PBIR `visual.json`, the row/category `Entity` must be a **dimension key column** if any of the visual's measures aggregate from a fact that isn't connected to that entity. Switching from a related dim (e.g. `Dim_Customer.CustomerName`) to a denormalized **string in another fact** (`Fact_ServiceCalls.CustomerName`) makes those measures return the **grand total on every row**, because the string is not a relationship key. Symptom: every customer's bar shows the same length.
+- `[repo]` Fix the inverse problem (slicer doesn't reach a related dim through a single-direction many-to-one chain) with a **visual-level filter measure** (e.g. `[Total Service Calls] > 0`) in PBIR `filterConfig`, **not** by reassigning the visual's category. Bidirectional cross-filter on `Fact → Dim` is risky: it usually creates an ambiguous date-path with `Dim_Date` and breaks model load.
+- `[repo]` Before changing a visual's category column, list the visual's measures and confirm every measure either (a) lives in the same fact as the new category, or (b) is reachable from the new category through an active relationship. If neither, leave the category on the dim.
+- `[repo]` `Fact_ServiceRevenue` and `Fact_ServiceParts` in the **Service** model have **no relationship to `Dim_Equipment`**. A `MachineClass` slicer therefore cannot filter revenue/parts via the equipment path; it can only filter `Fact_ServiceCalls` and (via `EquipmentKey`) `Fact_ServiceActivities`.
+
 ### 2026-03-25 — Revenue Insights product tree + Cursor screenshots
 
 - `[cursor]` Chat image upload can reject PNGs; saving captures under `Shared/ChatContext/images/` and asking for the **latest by file time** avoids relying on unsupported attach paths.

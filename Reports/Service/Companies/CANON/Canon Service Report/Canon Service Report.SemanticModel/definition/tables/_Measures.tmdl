@@ -125,7 +125,7 @@ table _Measures
 			CALCULATE (
 			    SUM ( Fact_ServiceParts[LineTotal] ),
 			    Fact_ServiceParts[TaxCode] IN { "FSMA", "SMA" }
-			)
+			) + 0
 		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
 		lineageTag: m1a00001-0001-4000-d001-000000000043
 
@@ -238,6 +238,43 @@ table _Measures
 	measure 'Client Profitability' = [Total Service Revenue] - [Total Parts Cost]
 		formatString: #,0\ "د.ع.‏";-#,0\ "د.ع.‏";#,0\ "د.ع.‏"
 		lineageTag: m1a00001-0001-4000-d001-000000000072
+
+	measure 'Production Machines (Tagged)' =
+			CALCULATE (
+			    DISTINCTCOUNT ( Dim_Equipment[EquipmentKey] ),
+			    Dim_Equipment[MachineClass] = "Production"
+			)
+		formatString: #,##0
+		lineageTag: m1a00001-0001-4000-d001-000000000080
+
+	measure 'Untagged Production Machines' =
+			VAR Untagged =
+			    CALCULATETABLE (
+			        VALUES ( Dim_Equipment[EquipmentKey] ),
+			        Dim_Equipment[ItemGroupClass] = "Production",
+			        Dim_Equipment[MachineClass] <> "Production"
+			    )
+			RETURN
+			    COUNTROWS ( Untagged )
+		formatString: #,##0
+		lineageTag: m1a00001-0001-4000-d001-000000000081
+
+	measure 'Untagged Production Calls' =
+			CALCULATE (
+			    COUNTROWS ( Fact_ServiceCalls ),
+			    Dim_Equipment[ItemGroupClass] = "Production",
+			    Dim_Equipment[MachineClass] <> "Production"
+			)
+		formatString: #,##0
+		lineageTag: m1a00001-0001-4000-d001-000000000082
+
+	measure 'Project Tag Coverage %' =
+			DIVIDE (
+			    [Production Machines (Tagged)],
+			    [Production Machines (Tagged)] + [Untagged Production Machines]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: m1a00001-0001-4000-d001-000000000083
 
 	column Value
 		lineageTag: 04bd747f-402f-4182-b785-0ec95fdf7d29

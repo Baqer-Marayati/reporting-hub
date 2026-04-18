@@ -42,7 +42,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Machine Type'"
+                  "Value": "'Customer Type'"
                 }
               }
             },
