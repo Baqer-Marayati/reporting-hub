@@ -1,26 +1,25 @@
-# Server Package Workflow
+# Finance Review Workflow
 
 ## Purpose
-Use one stable zip file for server transfer instead of copying the whole PBIP folder every time.
 
-## Standard Output
-- Folder: `/Users/baqer/Dropbox/Work/Microsoft Platform/Power BI/Reports/Finance/Exports/Server Packages`
-- Package file: `Financial Report - ready.zip`
+Finance review happens directly from the active company PBIP. There is no required `ready.zip` package or `package-report.sh` step.
+
+## Active PBIP Entry Points
+
+- CANON: `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- PAPERENTITY: `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 
 ## Routine
-1. Finish report edits in the PBIP project.
-2. Run the packaging script:
-   `./scripts/package-report.sh`
-3. Copy `Exports/Server Packages/Financial Report - ready.zip` to the server.
-4. Unzip it on the server.
-5. Run or review the report there.
 
-## Why This Is Better
-- One predictable file name every time
-- Faster copy and paste than moving the whole PBIP folder
-- Keeps transfer artifacts out of the main project root
-- Avoids committing large export zips into Git history
+1. Finish report edits in the relevant company PBIP.
+2. Validate report definitions and semantic-model paths with the repository validation checks.
+3. Open the active company PBIP in Power BI Desktop.
+4. Refresh and review the affected pages/visuals.
+5. Capture screenshots when review evidence is needed.
+6. Update Project Memory if current truth, decisions, or caveats changed.
 
 ## Notes
-- The zip contains the full `Financial Report` folder, not only the `.pbip` file.
-- The export folder is part of the project structure, but the generated zip files are ignored by Git.
+
+- PBIP remains the development source of truth.
+- `PBIX` may still be created as a temporary review or transfer snapshot when explicitly needed, but it must not become the editable master.
+- Generated package artifacts are not part of Finance done criteria.

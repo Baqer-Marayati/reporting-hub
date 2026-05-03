@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reporting-hub.local/schemas/module-manifest.schema.json",
+  "title": "Reporting Hub Module Manifest",
+  "type": "object",
+  "required": ["manifestVersion", "module", "companies"],
+  "additionalProperties": true,
+  "properties": {
+    "manifestVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "module": {
+      "type": "object",
+      "required": ["code", "name", "status", "sourceOfTruth"],
+      "additionalProperties": true,
+      "properties": {
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "sourceOfTruth": { "type": "string" },
+        "defaultCompanyCode": { "type": "string" },
+        "activeBenchmarkPath": { "type": "string" },
+        "reviewArtifactPolicy": {
+          "type": ["object", "string"]
+        }
+      }
+    },
+    "companies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "pbipPath"],
+        "additionalProperties": true,
+        "properties": {
+          "code": { "type": "string" },
+          "displayName": { "type": "string" },
+          "databaseName": { "type": "string" },
+          "schemaName": { "type": "string" },
+          "pbipPath": { "type": "string" },
+          "reportFolder": { "type": "string" },
+          "semanticModelFolder": { "type": "string" },
+          "configPath": { "type": "string" },
+          "packagePolicy": { "type": "string" }
+        }
+      }
+    },
+    "expectedPages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "displayName"],
+        "properties": {
+          "id": { "type": "string" },
+          "displayName": { "type": "string" }
+        }
+      }
+    },
+    "protectedPaths": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

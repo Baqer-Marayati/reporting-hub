@@ -11,7 +11,8 @@ The project is in a hybrid state:
 ## Primary Technical Source
 
 The semantic-model definition lives in:
-- `Financial Report/Financial Report.SemanticModel/definition`
+- CANON: `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.SemanticModel/definition`
+- PAPERENTITY: `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.SemanticModel/definition`
 
 Core files:
 - `model.tmdl`

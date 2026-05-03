@@ -33,8 +33,8 @@ Key columns on `SalesFact`:
 
 ## Packaging
 
-- Package script: `scripts/package-report.ps1`
-- Output: `Exports/Server Packages/Sales Report - ready.zip`
+- Work and review directly from the active company PBIP.
+- There is no zip packaging workflow for Sales.
 
 ## Currency
 

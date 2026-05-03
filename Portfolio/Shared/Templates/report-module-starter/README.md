@@ -12,7 +12,8 @@ Use this module for:
 
 ## Expected Working Areas
 
-- `Companies/<CODE>/` — config, overlays, and `/<REPORT_TITLE> - <CODE>/` (PBIP + `.Report` / `.SemanticModel`)
+- `module.manifest.json` — module/company machine-readable path and policy map
+- `Companies/<CODE>/` — config, overlays, and `/<Actual Report Folder>/` (PBIP + `.Report` / `.SemanticModel`)
 - `Module/` — container for module internals:
   - `Module/docs/`
   - `Module/Project Memory/`
@@ -34,5 +35,6 @@ When authoring a new PBIP, see [`Module/docs/pbip-snippets/README.md`](Module/do
 
 ## Source Of Truth
 
-- The PBIP under `Companies/<CODE>/<REPORT_TITLE> - <CODE>/` is the editable source of truth for that company.
-- Work and review in Power BI Desktop from that PBIP; do not rely on a separate zip packaging step.
+- The PBIP under `Companies/<CODE>/<Actual Report Folder>/` is the editable source of truth for that company.
+- Work and review in Power BI Desktop from that PBIP.
+- Generated package/review artifacts are optional per module policy and must not replace PBIP as the development source.

@@ -1,0 +1,87 @@
+{
+  "$schema": "../../Portfolio/Shared/Standards/module-manifest.schema.json",
+  "manifestVersion": 1,
+  "module": {
+    "code": "Finance",
+    "name": "Finance",
+    "status": "active",
+    "sourceOfTruth": "PBIP",
+    "defaultCompanyCode": "CANON",
+    "activeBenchmarkPath": "Reports/Finance/Module/Design Benchmarks/Sample 2/Wiise Financial Dashboards-2.pbip",
+    "reviewArtifactPolicy": {
+      "status": "direct-pbip-review",
+      "notes": "PBIP is the development source of truth. Finance review happens directly from the active company PBIP; no ready.zip/package-report step is required."
+    }
+  },
+  "companies": [
+    {
+      "code": "CANON",
+      "displayName": "Canon",
+      "databaseName": "CANON",
+      "schemaName": "CANON",
+      "pbipPath": "Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip",
+      "reportFolder": "Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.Report",
+      "semanticModelFolder": "Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.SemanticModel",
+      "configPath": "Reports/Finance/Companies/CANON/config",
+      "packagePolicy": "none"
+    },
+    {
+      "code": "PAPERENTITY",
+      "displayName": "Paper Company",
+      "databaseName": "PAPERENTITY",
+      "schemaName": "PAPERENTITY",
+      "pbipPath": "Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip",
+      "reportFolder": "Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.Report",
+      "semanticModelFolder": "Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.SemanticModel",
+      "configPath": "Reports/Finance/Companies/PAPERENTITY/config",
+      "packagePolicy": "none"
+    }
+  ],
+  "expectedPages": [
+    {
+      "id": "8c1c6f95c0c648c38b4a",
+      "displayName": "Financial summary"
+    },
+    {
+      "id": "15cbf3db06debabb9b66",
+      "displayName": "Profit & loss"
+    },
+    {
+      "id": "9a4d1c7b5e3f8a2c6d11",
+      "displayName": "Sales & revenue"
+    },
+    {
+      "id": "4b2e9d0a7c6f4e1b8a2d",
+      "displayName": "Operating expenses"
+    },
+    {
+      "id": "5e7c9a1d4b3f6e8c2a10",
+      "displayName": "Balance sheet"
+    },
+    {
+      "id": "12baa519c64e5f8a0fa4",
+      "displayName": "ROI"
+    },
+    {
+      "id": "a1f2b3c4d5e6f7a8b9c0",
+      "displayName": "Accounts receivable"
+    },
+    {
+      "id": "a2e4f5a6b7c8d9e0f1a2",
+      "displayName": "Accounts payable"
+    },
+    {
+      "id": "b2f3c4d5e6f7a8b9c1d0",
+      "displayName": "Collections"
+    },
+    {
+      "id": "c3f4d5e6f7a8b9c1d2e0",
+      "displayName": "Cash & bank"
+    }
+  ],
+  "protectedPaths": [
+    "Reports/Finance/Companies/CANON/Canon Financial Report",
+    "Reports/Finance/Companies/PAPERENTITY/Paper Financial Report",
+    "Reports/Finance/Module/Design Benchmarks/Sample 2"
+  ]
+}

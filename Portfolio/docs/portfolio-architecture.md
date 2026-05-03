@@ -32,11 +32,12 @@ Each report module should follow this shape:
 Reports/<Department>/
 ├── AGENTS.md
 ├── README.md
+├── module.manifest.json
 ├── Companies/
 │   └── <CompanyCode>/
 │       ├── config/
 │       ├── overlays/
-│       └── <ReportName> - <CompanyCode>/   # PBIP + .Report / .SemanticModel
+│       └── <ActualReportFolder>/            # PBIP + .Report / .SemanticModel
 └── Module/
     ├── Core/
     ├── docs/
@@ -64,7 +65,7 @@ Example:
 ./Portfolio/scripts/create-report-module.sh HR "HR Reporting"
 ```
 
-That creates `Reports/HR` with standard docs/memory plus contract folders (`Core`, `Companies`, `scripts`, `Records`, `Archive`). Add each company’s PBIP under `Companies/<CODE>/<ReportTitle> - <CODE>/` when the report exists.
+That creates `Reports/HR` with standard docs/memory plus contract folders (`Core`, `Companies`, `scripts`, `Records`, `Archive`) and a starter `module.manifest.json`. Add each company’s PBIP under `Companies/<CODE>/<Actual Report Folder>/` when the report exists, then record the real paths in the manifest.
 
 ## Why This Works
 

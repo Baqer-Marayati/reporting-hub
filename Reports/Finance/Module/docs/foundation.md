@@ -23,10 +23,11 @@ Primary purpose:
 - Power BI financial reporting project for Al Jazeera management reporting
 
 Active editable report:
-- `Financial Report/Financial Report.pbip`
+- `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 
 Primary visual benchmark:
-- `Design Benchmarks/Sample 2`
+- `Reports/Finance/Module/Design Benchmarks/Sample 2`
 
 Live project brain:
 - `Project Memory/`
@@ -35,10 +36,10 @@ Live project brain:
 
 Use these rules consistently:
 
-- `Financial Report` is the only active editable report.
+- Each active company report lives under `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/`.
 - `PBIP` is the development source of truth.
 - `PBIX` may be used as a review convenience, but not as the master.
-- User review should happen from the packaged export artifact when report edits are ready for inspection.
+- Finance packaging/review artifact policy is pending the explicit user decision; PBIP remains the development source of truth either way.
 
 ## Read Order
 
@@ -113,15 +114,10 @@ Paths currently verified:
 
 ### Packaging Workflow
 
-Packaging script:
-- `scripts/package-report.sh`
-
-Behavior:
-- rebuilds `Exports/Server Packages/Financial Report - ready.zip`
-- packages the full `Financial Report` folder for review or server transfer
-
-Rule:
-- after meaningful report edits, regenerate the package before asking for user review
+Current state:
+- PBIP remains the development source of truth.
+- Review happens directly from the active company PBIP.
+- There is no required `package-report.sh` or `ready.zip` step for Finance.
 
 ### Skills
 
@@ -166,7 +162,7 @@ That means:
 - Use IQD formatting consistently.
 - Treat repeated UI elements such as KPI rows and slicer rails as shared systems.
 - Update `Project Memory` after meaningful work.
-- Treat packaging and validation as part of done-ness.
+- Treat validation as part of done-ness; apply the documented package/review artifact policy once it is resolved.
 
 ## Where To Document What
 

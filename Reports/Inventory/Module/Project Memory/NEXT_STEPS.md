@@ -22,4 +22,4 @@
 
 ## Packaging
 
-- After Desktop validation, create `Exports/Server Packages/` folder and build a `ready.zip` package for review, following the Finance module pattern.
+- Work and review directly from the active company PBIP. There is no zip packaging workflow for Inventory.

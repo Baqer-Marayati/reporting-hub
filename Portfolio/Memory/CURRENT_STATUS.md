@@ -2,7 +2,7 @@
 
 ## Date
 
-- Last updated: April 20, 2026
+- Last updated: April 24, 2026
 
 ## Current Reality
 
@@ -12,7 +12,7 @@
 - `Reports/Sales`, `Reports/Service`, and `Reports/Inventory` are active PBIP modules in the repo for both CANON and PAPERENTITY company copies.
 - `Reports/HR` and `Reports/Marketing` remain scaffolded modules.
 - The portfolio root is reserved for cross-report structure, documentation, shared assets, and report-module orchestration.
-- The Mac repo root now lives at `/Users/baqer/Dropbox/Work/Microsoft Platform/Power BI`.
+- The Mac repo root now lives at `/Users/baqer/Code/Power BI`.
 - `History` and `Models` are no longer part of this Git repo; the repo root is now the active Power BI project root only.
 
 ## Current Routing
@@ -24,7 +24,7 @@
 ## Active Environments (Dual-Workstation Setup)
 
 - Mac development workspace:
-  - Cursor + GitHub + repo path: `/Users/baqer/Dropbox/Work/Microsoft Platform/Power BI`
+  - Cursor + GitHub + repo path: `/Users/baqer/Code/Power BI`
 - Windows server execution workspace:
   - Cursor + GitHub + repo path: `C:\Work\reporting-hub` (Git Bash path: `/c/Work/reporting-hub`)
 - GitHub `main` is the shared source of truth across both environments.

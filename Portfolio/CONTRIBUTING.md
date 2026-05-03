@@ -18,7 +18,7 @@ This is the portfolio-level contribution guide for `reporting-hub`.
 ## Source of Truth Rules
 
 - Edit PBIP source files in the domain module.
-- Treat packaged zip files as review artifacts, not editable masters.
+- Treat any optional generated review artifacts as disposable outputs, not editable masters.
 - Keep live status in `Project Memory/CURRENT_STATUS.md` for the affected scope.
 
 ## Required Validation

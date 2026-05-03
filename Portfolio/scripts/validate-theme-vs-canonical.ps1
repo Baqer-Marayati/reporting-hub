@@ -1,12 +1,13 @@
 param(
     [switch]$All,
-    [ValidateSet("Finance", "Sales", "Service", "DataExchange")]
+    [ValidateSet("Finance", "Sales", "Service", "Inventory", "DataExchange")]
     [string]$Domain,
-    [string]$RepoRoot = $(Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+    [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 )
 
 $ErrorActionPreference = "Stop"
-$canonical = Join-Path $RepoRoot "Shared\Themes\Custom_Theme49412231581938193.json"
+$RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
+$canonical = Join-Path $RepoRoot "Portfolio\Shared\Themes\Custom_Theme49412231581938193.json"
 if (!(Test-Path -LiteralPath $canonical)) {
     throw "Canonical theme missing: $canonical"
 }
@@ -25,22 +26,40 @@ $paths = @()
 
 # Only active PBIP report roots (excludes Archive/, Exports/, Design Benchmarks/, etc.)
 $activeRelative = @{
-    Finance      = "Reports\Finance\Financial Report\Financial Report.Report\StaticResources\RegisteredResources\$themeName"
-    Sales        = "Reports\Sales\Sales Report\Sales Report.Report\StaticResources\RegisteredResources\$themeName"
-    Service      = "Reports\Service\Service Report\Service Report.Report\StaticResources\RegisteredResources\$themeName"
-    DataExchange = "Reports\DataExchange\Data Exchange Report\Data Exchange Report.Report\StaticResources\RegisteredResources\$themeName"
+    Finance      = @(
+        "Reports\Finance\Companies\CANON\Canon Financial Report\Canon Financial Report.Report\StaticResources\RegisteredResources\$themeName",
+        "Reports\Finance\Companies\PAPERENTITY\Paper Financial Report\Paper Financial Report.Report\StaticResources\RegisteredResources\$themeName"
+    )
+    Sales        = @(
+        "Reports\Sales\Companies\CANON\Canon Sales Report\Canon Sales Report.Report\StaticResources\RegisteredResources\$themeName",
+        "Reports\Sales\Companies\PAPERENTITY\Paper Sales Report\Paper Sales Report.Report\StaticResources\RegisteredResources\$themeName"
+    )
+    Service      = @(
+        "Reports\Service\Companies\CANON\Canon Service Report\Canon Service Report.Report\StaticResources\RegisteredResources\$themeName",
+        "Reports\Service\Companies\PAPERENTITY\Paper Service Report\Paper Service Report.Report\StaticResources\RegisteredResources\$themeName"
+    )
+    Inventory    = @(
+        "Reports\Inventory\Companies\CANON\Canon Inventory Report\Canon Inventory Report.Report\StaticResources\RegisteredResources\$themeName",
+        "Reports\Inventory\Companies\PAPERENTITY\Paper Inventory Report\Paper Inventory Report.Report\StaticResources\RegisteredResources\$themeName"
+    )
+    DataExchange = @(
+        "Reports\DataExchange\Companies\CANON\Canon Data Exchange Report\Canon Data Exchange Report.Report\StaticResources\RegisteredResources\$themeName",
+        "Reports\DataExchange\Companies\PAPERENTITY\Paper Data Exchange Report\Paper Data Exchange Report.Report\StaticResources\RegisteredResources\$themeName"
+    )
 }
 
 if ($All) {
-    $paths = foreach ($rel in $activeRelative.Values) {
+    $paths = foreach ($rel in @($activeRelative.Values | ForEach-Object { $_ })) {
         $p = Join-Path $RepoRoot $rel
         if (Test-Path -LiteralPath $p) { $p }
     }
 } elseif ($Domain) {
-    $p = Join-Path $RepoRoot $activeRelative[$Domain]
-    if (Test-Path -LiteralPath $p) { $paths = @($p) }
+    $paths = foreach ($rel in @($activeRelative[$Domain])) {
+        $p = Join-Path $RepoRoot $rel
+        if (Test-Path -LiteralPath $p) { $p }
+    }
 } else {
-    throw "Specify -All or -Domain (Finance|Sales|Service|DataExchange)."
+    throw "Specify -All or -Domain (Finance|Sales|Service|Inventory|DataExchange)."
 }
 
 $exit = 0

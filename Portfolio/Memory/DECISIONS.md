@@ -12,9 +12,9 @@
 
 - The repository is now organized as a reporting portfolio, not as a single-report folder.
 - Each department report should live in its own module under `Reports/`.
-- The active repo root on Mac is `/Users/baqer/Dropbox/Work/Microsoft Platform/Power BI`.
+- The active repo root on Mac is `/Users/baqer/Code/Power BI`.
 - `History` and `Models` are not part of this repo; keep them outside the Power BI Git root.
-- Non-Power-BI projects should live as siblings under `Microsoft Platform/`, not inside this repo.
+- Non-Power-BI projects should live as siblings under the same dev root (for example `~/Code/`), not inside this repo.
 
 ## Modularity Decision
 
@@ -30,7 +30,7 @@
 ## Environment and Sync Decision
 
 - The project now runs as a dual-workstation setup:
-  - Mac authoring path: `/Users/baqer/Dropbox/Work/Microsoft Platform/Power BI`
+  - Mac authoring path: `/Users/baqer/Code/Power BI`
   - Windows server execution path: `C:\Work\reporting-hub` (`/c/Work/reporting-hub` in Git Bash)
 - GitHub `main` is the canonical synchronization layer between Mac and server.
 - Required protocol before any implementation work:

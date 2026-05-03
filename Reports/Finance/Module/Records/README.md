@@ -3,7 +3,7 @@
 This folder stores reference artifacts for the Finance module that are useful but not part of the live PBIP source itself.
 
 Suggested use:
-- `Screenshots/`
+- `screenshots/`
 - `References/`
 - `Decisions/`
 

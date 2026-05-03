@@ -6,7 +6,8 @@ This is the fastest high-signal orientation file for the <REPORT_TITLE> module.
 
 ## What This Module Should Contain
 
-- the active PBIP project(s) for <REPORT_TITLE> under `Companies/<CODE>/<REPORT_TITLE> - <CODE>/`
+- the active PBIP project(s) for <REPORT_TITLE> under `Companies/<CODE>/<Actual Report Folder>/`
+- the module/company manifest at `module.manifest.json`
 - report-specific docs
 - report-specific memory
 - records and archives as needed
@@ -15,6 +16,7 @@ This is the fastest high-signal orientation file for the <REPORT_TITLE> module.
 
 Use this file for:
 - source-of-truth path (per company PBIP)
+- package/review artifact policy, if this module uses one
 - benchmark choice
 - environment/tooling assumptions specific to this report
 - Desktop validation or delivery notes specific to this report

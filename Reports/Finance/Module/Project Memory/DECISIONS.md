@@ -26,6 +26,11 @@
 ## Domain Contract Alignment
 - Finance now follows the portfolio domain-first contract with dedicated `Core/`, `Companies/`, and `scripts/` areas.
 - Company PBIPs under `Companies/` are the active source paths for edits; do not route new work through the older pre-portfolio folder layout.
+- Finance company paths and basic report metadata are now recorded in `Reports/Finance/module.manifest.json`; scripts and validators should prefer that manifest over hardcoded legacy paths.
+
+## Cleanup Guardrail Decision
+- Active PBIP trios and `Module/Design Benchmarks/Sample 2/` are protected from casual rename/move cleanup.
+- Archive PBIP snapshots in `Module/Archive/` should be indexed before any retention decision and must not be deleted or moved out of Git without explicit user approval.
 
 ## Source Of Truth
 - The financial PBIP project is the source of truth.
@@ -46,17 +51,14 @@
 - Do not treat a review `PBIX` as the editable master.
 - If a `PBIX` is created for review, all real changes must still be made back in the `PBIP` project.
 - Use `PBIX` for convenience; use `PBIP` for development truth.
-- User review should happen from the packaged export artifact, not from the raw `PBIP` folder.
-- After any meaningful report edit that the user is expected to inspect, rebuild `Exports/Server Packages/Financial Report - ready.zip` before asking the user to review.
-- Do not rely on the user to manually zip, copy, or package the report after edits. Packaging is part of done-ness.
-- Keep zip packaging available every time (`Financial Report - ready.zip`) because it is still needed periodically.
-- Use the relevant company PBIP under `Companies/CANON/` or `Companies/PAPERENTITY/` as the local preview working path when validating recent edits between packaging runs.
+- User review should happen directly from the relevant active company PBIP under `Companies/CANON/` or `Companies/PAPERENTITY/`.
+- There is no required Finance `ready.zip` or `package-report.sh` step.
+- If a one-off transfer snapshot is explicitly needed, create it as a temporary artifact and keep PBIP as the development source.
 
 ## Review And Sync Rule
 - Treat the user-reviewed Desktop result as the strongest evidence of what Power BI really renders.
 - If the user manually adjusts layout in Desktop and approves it, sync that Desktop-generated report definition back into source instead of forcing an older Codex-only grid or pattern.
-- Do not assume that a packaged zip and the source PBIP are in sync unless the package was rebuilt after the latest change.
-- If a user review screenshot conflicts with what the source files seem to suggest, trust the screenshot as the first debugging signal and verify the artifact chain.
+- If a user review screenshot conflicts with what the source files seem to suggest, trust the screenshot as the first debugging signal and verify the user opened the intended active company PBIP.
 
 ## Project Memory Rule
 - `PROJECT_DNA.md` is a living project memory.

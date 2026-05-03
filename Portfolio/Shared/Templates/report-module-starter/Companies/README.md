@@ -9,11 +9,12 @@ Companies/
   <CompanyCode>/
     config/
     overlays/
-    <ReportTitle> - <CompanyCode>/
-      <ReportTitle> - <CompanyCode>.pbip
-      <ReportTitle> - <CompanyCode>.Report/
-      <ReportTitle> - <CompanyCode>.SemanticModel/
+    <Actual Report Folder>/
+      <Actual Report Folder>.pbip
+      <Actual Report Folder>.Report/
+      <Actual Report Folder>.SemanticModel/
     Records/screenshots/    # optional; module-level Records/ is also valid
 ```
 
 Start from `_template/` and duplicate per company.
+Record the final company PBIP paths in `../module.manifest.json` before treating the module as active.

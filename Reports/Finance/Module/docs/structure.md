@@ -2,16 +2,21 @@
 
 ## Top-Level Layout
 
-### `Financial Report`
+### `Companies`
 
-The active PBIP project and source of truth for development.
+Company-specific active PBIP projects and source-of-truth report files.
 
 Contains:
-- report definition files
-- semantic-model TMDL files
+- one folder per company code
+- the real report folder name for that company
+- `.pbip`, `.Report/`, and `.SemanticModel/` trios that must stay aligned
 - local Power BI metadata excluded by `.gitignore`
 
-### `Design Benchmarks`
+Current active entry points:
+- `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
+
+### `Module/Design Benchmarks`
 
 Living benchmark and visual reference area.
 
@@ -21,7 +26,7 @@ Use this folder for:
 - reference themes
 - inspiration or replacement design records
 
-### `Project Memory`
+### `Module/Project Memory`
 
 Operational memory for continuity across work sessions.
 
@@ -36,7 +41,7 @@ Key files:
 - `DATA_GAPS.md`
 - `POWERBI_PATTERNS.md`
 
-### `docs`
+### `Module/docs`
 
 Stable documentation for repository onboarding and structure.
 
@@ -49,11 +54,7 @@ Use this folder for:
 - stable standards
 - glossary and quick-scan issue summaries
 
-### `.github`
-
-Workflow templates for disciplined issue and PR tracking.
-
-### `CHANGELOG.md`
+### `Module/CHANGELOG.md`
 
 High-level milestone record only.
 Do not turn it into a detailed diary of every micro-edit.
@@ -83,8 +84,8 @@ Recommended substructure inside `docs/`:
 
 ## Source Of Truth Rules
 
-- The active editable report is `Financial Report`.
+- Active editable reports live under `Companies/<CODE>/<Actual Report Folder>/`.
 - `PBIP` is the development source of truth.
 - `PBIX` can be created temporarily for review but must not replace the PBIP workflow.
-- `Design Benchmarks/Sample 2` is the active design benchmark unless memory states otherwise.
+- `Module/Design Benchmarks/Sample 2` is the active design benchmark unless memory states otherwise.
 - `AGENTS.md` should stay aligned with `README.md`, `docs/`, and `Project Memory` so new agents can recover context quickly.

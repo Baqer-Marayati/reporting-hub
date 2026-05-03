@@ -63,7 +63,7 @@ Edit and repair the active PBIP project: report definitions (JSON under the .Rep
 - **Logic first, styling second:** fix bindings, measures, stale filters before cosmetic work.
 - **Semantic safety:** prefer report-side rewires and safe compatibility patterns over risky custom relationships; see MODEL_NOTES and DECISIONS.
 - **After meaningful changes:** update the right `Reports/Finance/Module/Project Memory/*.md` files (CURRENT_STATUS, DECISIONS, MODEL_NOTES, NEXT_STEPS as appropriate). Do not use README as a running log.
-- **User review handoff:** when report files change and the user should verify in Power BI Desktop, remind them to rebuild the package: `Reports/Finance/Module/scripts/package-report.sh` (or Cursor task “Finance: Package report (ready.zip)”).
+- **User review handoff:** when report files change and the user should verify in Power BI Desktop, direct review to the active company PBIP; Finance has no required `ready.zip` package step.
 - **Desktop is validation:** you cannot run Power BI; assume the user validates on a Windows machine with SAP access.
 
 ## Working style

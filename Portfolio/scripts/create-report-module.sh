@@ -10,9 +10,10 @@ fi
 
 MODULE_NAME="$1"
 REPORT_TITLE="$2"
-ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-TEMPLATE_DIR="$ROOT_DIR/Shared/Templates/report-module-starter"
-TARGET_DIR="$ROOT_DIR/Reports/$MODULE_NAME"
+PORTFOLIO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT="$(cd "$PORTFOLIO_DIR/.." && pwd)"
+TEMPLATE_DIR="$PORTFOLIO_DIR/Shared/Templates/report-module-starter"
+TARGET_DIR="$REPO_ROOT/Reports/$MODULE_NAME"
 DATE_LABEL="$(date +'%B %d, %Y')"
 
 if [[ ! -d "$TEMPLATE_DIR" ]]; then
@@ -25,10 +26,10 @@ if [[ -e "$TARGET_DIR" ]]; then
   exit 1
 fi
 
-mkdir -p "$ROOT_DIR/Reports"
+mkdir -p "$REPO_ROOT/Reports"
 cp -R "$TEMPLATE_DIR" "$TARGET_DIR"
 
-find "$TARGET_DIR" -type f -name '*.md' -print0 | xargs -0 perl -0pi -e \
+find "$TARGET_DIR" -type f \( -name '*.md' -o -name '*.json' \) -print0 | xargs -0 perl -0pi -e \
   "s#<MODULE_NAME>#$MODULE_NAME#g; s#<REPORT_TITLE>#$REPORT_TITLE#g; s#<DATE>#$DATE_LABEL#g"
 
 echo "Created report module: $TARGET_DIR"

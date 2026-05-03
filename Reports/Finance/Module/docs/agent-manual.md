@@ -9,10 +9,10 @@ Use it as the stable onboarding guide for any AI agent or new collaborator enter
 ## What This Repository Is
 
 This is a Power BI financial reporting workspace built around:
-- an active PBIP source project in `Financial Report`
-- a living design benchmark in `Design Benchmarks`
-- a live memory layer in `Project Memory`
-- stable onboarding and workflow docs in `docs`
+- active company PBIP source projects under `Companies/<CODE>/<Actual Report Folder>/`
+- a living design benchmark in `Module/Design Benchmarks`
+- a live memory layer in `Module/Project Memory`
+- stable onboarding and workflow docs in `Module/docs`
 
 ## What To Read First
 
@@ -31,17 +31,20 @@ Recommended order:
 
 ## File-System Mental Model
 
-### `Financial Report`
+### `Companies/<CODE>/<Actual Report Folder>`
 
-The active editable PBIP project.
+The active editable PBIP projects.
 
 Use this for:
 - report definition edits
 - semantic-model changes
 - page repairs
-- packaging for review
 
-### `Design Benchmarks`
+Current entry points:
+- CANON: `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- PAPERENTITY: `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
+
+### `Module/Design Benchmarks`
 
 The visual benchmark and taste reference.
 
@@ -51,7 +54,7 @@ Use this for:
 - screenshot comparison
 - replacement benchmark sources if the visual direction evolves
 
-### `Project Memory`
+### `Module/Project Memory`
 
 The live project brain.
 
@@ -63,7 +66,7 @@ Use this for:
 - known data gaps
 - next-step sequencing
 
-### `docs`
+### `Module/docs`
 
 The stable manual layer.
 
@@ -109,12 +112,11 @@ It is the combination of:
 ## Current Operating Assumptions
 
 Unless later memory updates replace them:
-- `Financial Report` is the only active editable report
+- each company PBIP under `Companies/<CODE>/<Actual Report Folder>/` is the active editable report for that company
 - `PBIP` is the development source of truth
-- `Design Benchmarks/Sample 2` is the active benchmark
+- `Module/Design Benchmarks/Sample 2` is the active benchmark
 - the report should preserve a CFO / management-report tone
 - IQD formatting is the standard
-- `Actual vs Budget` and `Cashflow` are the main recovery pages
 
 ## Update Map
 

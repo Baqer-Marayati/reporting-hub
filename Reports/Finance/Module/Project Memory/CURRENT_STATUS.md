@@ -2,7 +2,7 @@
 
 ## Date
 
-- Last updated: April 18, 2026
+- Last updated: May 3, 2026
 
 ## Current Source Of Truth
 
@@ -50,6 +50,13 @@ The active report shell currently contains these 10 pages in `pages.json` order:
 - Recheck any remaining semantic warnings on compatibility-heavy tables such as `generalLedgerEntries` and `accounts`.
 - Validate page behavior and interactions on the active 10-page shell, especially after changes to shared KPI rows, slicer rails, or transferred AR/AP/cash pages.
 - Keep packaging, review artifacts, and screenshot capture aligned with the actual workflow documented in `DECISIONS.md` and `Module/scripts/README.md`.
+
+## Repository Cleanup Guardrails
+
+- Finance now has a machine-readable module manifest at `Reports/Finance/module.manifest.json` with CANON/PAPERENTITY PBIP paths, schema names, expected page metadata, and protected paths.
+- Repo structure validation now checks active PBIP paths from `Portfolio/Memory/ACTIVE_FOCUS.md`, `.pbip` report references, `definition.pbir` semantic-model references, `pages.json`, and report-definition JSON parseability.
+- Finance archive snapshots under `Reports/Finance/Module/Archive/` are indexed and retained in Git pending an explicit retention decision.
+- Finance review now happens directly from the active company PBIP; no `ready.zip` or `package-report.sh` step is required. PBIP remains the development source of truth.
 
 ## Where To Look Next
 

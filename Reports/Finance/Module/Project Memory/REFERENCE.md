@@ -7,6 +7,10 @@ Main PBIPs:
 - `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
 - `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 
+Module manifest:
+
+- `Reports/Finance/module.manifest.json`
+
 Primary semantic model:
 
 - `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.SemanticModel/definition/model.tmdl`
@@ -96,6 +100,12 @@ Use these repo-facing docs for fast orientation before dropping into detailed me
 - `Reports/Finance/Module/docs/standards/currency-formatting.md`
 - `Reports/Finance/Module/docs/standards/page-layout-rules.md`
 - `Reports/Finance/Module/CHANGELOG.md`
+
+Cleanup and validation anchors:
+
+- `Portfolio/Memory/CLEANUP_INVENTORY.md`
+- `Portfolio/scripts/validate-structure.ps1`
+- `Portfolio/scripts/clear-model-cache.ps1`
 
 Use `AGENTS.md` for AI onboarding and read order.
 Use `docs/foundation.md` for the broad operating foundation and tool/integration context.

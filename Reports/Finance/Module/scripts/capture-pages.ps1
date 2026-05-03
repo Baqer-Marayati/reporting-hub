@@ -13,10 +13,10 @@
       - The PBIP file must be loadable
 
 .PARAMETER PbipPath
-    Path to the .pbip file. Defaults to the Finance report.
+    Path to the .pbip file. Defaults to the selected Finance company PBIP from module.manifest.json.
 
 .PARAMETER OutputDir
-    Folder where page screenshots are saved. Defaults to Records/screenshots.
+    Folder where page screenshots are saved. Defaults to Module/Records/screenshots/<CompanyCode>.
 
 .PARAMETER PageCount
     Number of report pages to cycle through. Use -1 (default) to read the count from the
@@ -33,8 +33,11 @@
 #>
 
 param(
-    [string]$PbipPath  = "C:\Work\reporting-hub\Reports\Finance\Financial Report\Financial Report.pbip",
-    [string]$OutputDir = "C:\Work\reporting-hub\Reports\Finance\Records\screenshots",
+    [ValidateSet("CANON", "PAPERENTITY")]
+    [string]$CompanyCode = "CANON",
+    [string]$RepoRoot = "C:\Work\reporting-hub",
+    [string]$PbipPath = "",
+    [string]$OutputDir = "",
     [int]$PageCount    = -1,
     [int]$LoadWaitSeconds = 45,
     [int]$PageWaitSeconds = 4,
@@ -42,6 +45,30 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+function Resolve-RepoPath([string]$RelativePath) {
+    if ([System.IO.Path]::IsPathRooted($RelativePath)) { return $RelativePath }
+    return [System.IO.Path]::GetFullPath((Join-Path $RepoRoot $RelativePath))
+}
+
+if ([string]::IsNullOrWhiteSpace($PbipPath)) {
+    $manifestPath = Resolve-RepoPath "Reports/Finance/module.manifest.json"
+    if (!(Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+        throw "Finance manifest not found: $manifestPath"
+    }
+
+    $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $company = @($manifest.companies | Where-Object { $_.code -eq $CompanyCode } | Select-Object -First 1)
+    if ($company.Count -eq 0) {
+        throw "Company code not found in Finance manifest: $CompanyCode"
+    }
+
+    $PbipPath = Resolve-RepoPath $company[0].pbipPath
+}
+
+if ([string]::IsNullOrWhiteSpace($OutputDir)) {
+    $OutputDir = Resolve-RepoPath "Reports/Finance/Module/Records/screenshots/$CompanyCode"
+}
 
 $pbipParent = Split-Path -LiteralPath $PbipPath
 $pbipBaseName = [System.IO.Path]::GetFileNameWithoutExtension($PbipPath)

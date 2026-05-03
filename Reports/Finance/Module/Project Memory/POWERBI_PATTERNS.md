@@ -10,16 +10,13 @@ This file captures what we have learned about handling PBIP report files, TMDL s
 - Page and visual JSON should be read before making assumptions about what Power BI is actually doing.
 - `PBIP` should remain the development master even when a `PBIX` review snapshot is created for convenience or faster server transfer.
 - If a `PBIX` review copy exists, treat it as disposable output, not as the place where new fixes should live.
-- For server handoff, use a generated zip package instead of copying the whole PBIP folder manually.
-- The standard package path is `Exports/Server Packages/Financial Report - ready.zip`, created by `./scripts/package-report.sh`.
-- Generated server-transfer zips should stay out of Git history; the export folder exists in the repo, but the zip outputs are ignored.
-- In this project, user review should default to the generated zip package, not the raw PBIP folder. If the user is about to check changes, regenerate the package first.
+- Finance review now happens directly from the active company PBIP under `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/`.
+- There is no required `ready.zip` or `package-report.sh` step for Finance done-ness.
 - Power BI debugging in this project must follow the artifact chain explicitly:
 - source PBIP files
-- rebuilt packaged zip
-- user-opened review artifact
+- user-opened active company PBIP
 - screenshot of what Desktop actually rendered
-- Most recent user screenshot beats assumptions. If the screenshot and source disagree, verify whether the user opened an older package, an unsynced Desktop copy, or a broken build.
+- Most recent user screenshot beats assumptions. If the screenshot and source disagree, verify whether the user opened the intended company PBIP, an unsynced Desktop copy, or a broken build.
 
 ## TMDL Handling
 - TMDL is useful for adding compatibility tables, measures, and semantic aliases.
@@ -39,13 +36,13 @@ This file captures what we have learned about handling PBIP report files, TMDL s
 4. fix the safest layer first
 5. reopen the PBIP and verify with screenshots
 
-## Safe Sync And Packaging Order
+## Safe Sync And Review Order
 1. make or sync the intended source changes
-2. validate `Financial Report.Report/definition/*.json`
-3. validate `Financial Report.Report/StaticResources/RegisteredResources/*`
-4. rebuild `Exports/Server Packages/Financial Report - ready.zip`
-5. sanity-check the packaged contents when the last pass touched definitions or static resources
-6. only then ask the user to review
+2. validate the active company `.Report/definition/*.json`
+3. validate the active company `.Report/StaticResources/RegisteredResources/*` when static resources changed
+4. open the active company PBIP in Power BI Desktop
+5. refresh and review the affected pages
+6. capture screenshots when review evidence is needed
 
 ## Report-Side Discoveries
 - Hard-coded benchmark drillthrough filters can silently break otherwise valid pages.

@@ -1,0 +1,18 @@
+{
+  "$schema": "../../Portfolio/Shared/Standards/module-manifest.schema.json",
+  "manifestVersion": 1,
+  "module": {
+    "code": "<MODULE_NAME>",
+    "name": "<REPORT_TITLE>",
+    "status": "scaffolded",
+    "sourceOfTruth": "PBIP",
+    "defaultCompanyCode": "",
+    "reviewArtifactPolicy": {
+      "status": "module-specific",
+      "notes": "PBIP is the development source of truth. Package/review artifacts are optional per module policy."
+    }
+  },
+  "companies": [],
+  "expectedPages": [],
+  "protectedPaths": []
+}

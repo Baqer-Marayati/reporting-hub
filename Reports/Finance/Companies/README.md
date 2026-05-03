@@ -25,4 +25,4 @@ Companies/
 
 Prefer config-first. Use overlays only when configuration cannot satisfy the requirement.
 
-There is **no** zip packaging step; work and review directly from the PBIP in Desktop.
+PBIP is the development source of truth. Finance review happens directly from the active company PBIP; there is no required `ready.zip` or package artifact step.

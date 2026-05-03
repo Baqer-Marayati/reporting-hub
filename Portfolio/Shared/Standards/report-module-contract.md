@@ -17,6 +17,7 @@ Each domain module must include:
 Reports/<Domain>/
   AGENTS.md
   README.md
+  module.manifest.json
   Companies/
   Module/
     Core/
@@ -40,6 +41,12 @@ Companies/<CompanyCode>/<ActualReportFolder>/
 
 Example codes in this portfolio: **CANON**, **PAPERENTITY** (Paper Company). Add additional `Companies/<CODE>/` folders as needed.
 Use the real business/report folder name for that module; do not assume every module follows a synthetic `<ReportName> - <CompanyCode>` pattern.
+
+## Module Manifest
+
+Active PBIP modules should include `module.manifest.json` at the module root. The manifest records company codes, actual PBIP paths, schema/database names when known, package/review artifact policy, and expected report/page metadata when practical.
+
+Use the shared schema at `Portfolio/Shared/Standards/module-manifest.schema.json` as the baseline shape. Scripts and validation should prefer the manifest over hardcoded legacy paths when a module has one.
 
 ## Folder Responsibilities
 

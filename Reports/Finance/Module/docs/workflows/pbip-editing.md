@@ -2,13 +2,15 @@
 
 ## Purpose
 
-Use this workflow when editing the active Power BI project in `Financial Report`.
+Use this workflow when editing an active Finance company PBIP under `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/`.
 
 The goal is to keep PBIP work safe, structured, and easy to verify.
 
 ## Source Of Truth
 
-- The editable master is `Financial Report/Financial Report.pbip`.
+- The editable masters are the company PBIPs:
+  - `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+  - `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 - The PBIP project remains the development source of truth.
 - A `PBIX` may be created temporarily for review or transfer, but it must not replace the PBIP workflow.
 

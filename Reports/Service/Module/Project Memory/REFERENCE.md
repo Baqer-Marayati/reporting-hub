@@ -27,7 +27,7 @@
 
 ## Automation (module)
 
-- Package: `Reports/Service/Module/scripts/package-report.ps1` (defaults to this module's PBIP folder)
+- Review: direct from the active company PBIP; no zip packaging workflow
 - Clear model cache: `Reports/Service/Module/scripts/clear-model-cache.ps1`
 - Structure check: `Reports/Service/Module/scripts/validate-structure.ps1`
 - Discovery / verification helpers (untracked at time of writing — commit when stable):

@@ -17,26 +17,27 @@ For the broader operating foundation, toolchain status, and integration notes, r
 
 ## Active Working File
 
-Open this file as the active project:
-- `Financial Report/Financial Report.pbip`
+Open the company PBIP you are working on:
+- CANON: `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- PAPERENTITY: `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 
 ## Important Related Paths
 
 - Semantic model:
-  - `Financial Report/Financial Report.SemanticModel/definition`
+  - `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/<Actual Report Folder>.SemanticModel/definition`
 - Report pages:
-  - `Financial Report/Financial Report.Report/definition/pages`
+  - `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/<Actual Report Folder>.Report/definition/pages`
 - Benchmark reference:
-  - `Design Benchmarks/Sample 2`
+  - `Reports/Finance/Module/Design Benchmarks/Sample 2`
 - Working memory:
-  - `Project Memory`
+  - `Reports/Finance/Module/Project Memory`
 
 ## Recommended Start Sequence
 
 1. Pull the latest changes from GitHub.
 2. Read `README.md`.
 3. Read the key files inside `Project Memory`.
-4. Open `Financial Report/Financial Report.pbip`.
+4. Open the target company PBIP under `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/`.
 5. Verify the target page or model area before editing.
 6. Make focused changes.
 7. Reopen and validate in Power BI.

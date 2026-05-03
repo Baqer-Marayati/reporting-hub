@@ -18,9 +18,11 @@ The goal is to make changes safely, document them clearly, and keep the PBIP pro
 
 ## Source Of Truth
 
-- `Financial Report/Financial Report.pbip` is the active editable master.
+- The active editable masters are the company PBIPs under `Reports/Finance/Companies/<CODE>/<Actual Report Folder>/`.
+- CANON: `Reports/Finance/Companies/CANON/Canon Financial Report/Canon Financial Report.pbip`
+- PAPERENTITY: `Reports/Finance/Companies/PAPERENTITY/Paper Financial Report/Paper Financial Report.pbip`
 - `PBIX` may be used temporarily for review, but not as the development source of truth.
-- `Design Benchmarks/Sample 2` is the active benchmark shell unless project memory says otherwise.
+- `Reports/Finance/Module/Design Benchmarks/Sample 2` is the active benchmark shell unless project memory says otherwise.
 
 ## Change Expectations
 
